@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookMarkRepository.cs" />
     <Compile Include="BookRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\Bookie.Repository.rd.xml" />

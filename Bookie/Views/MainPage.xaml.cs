@@ -159,7 +159,7 @@ namespace Bookie.Views
 
         private void Button_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            var s = "t";
+           
         }
 
         private void Grid_OnRightTapped(object sender, TappedRoutedEventArgs e)

@@ -131,14 +131,24 @@ namespace Bookie.ViewModels
             ProgressService.RegisterSubscriber(this);
             Grouped();
             RefreshBooks();
-            var b = new BookMark();
-            b.PageNumber = 35;
-            if (B.Count > 1)
-            {
-                B[0].BookMarks = new List<BookMark>();
-                B[0].BookMarks.Add(b);
-                _repository.Update(B[0]);
-            }
+
+
+
+
+            //var b = new BookMark();
+            //b.PageNumber = 35;
+            //if (B.Count > 1)
+            //{
+            //    b.Book = B[0];
+            //    var bookmark = new BookMarkRepository().Add(b);
+            //    B[0].BookMarks = new List<BookMark>();
+            //    B[0].BookMarks.Add(bookmark);
+            //    _repository.Update(B[0]);
+            //}
+
+
+
+
 
         }
 

@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="BookDal.cs" />
     <Compile Include="BookieContext.cs" />
+    <Compile Include="BookMarkDal.cs" />
     <Compile Include="CoverDal.cs" />
     <Compile Include="Migrations\20151023085939_Initial.cs" />
     <Compile Include="Migrations\20151023085939_Initial.Designer.cs">

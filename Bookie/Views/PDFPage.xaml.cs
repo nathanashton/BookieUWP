@@ -30,7 +30,7 @@ namespace Bookie.Views
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            var s = "T";
+           
         }
 
      

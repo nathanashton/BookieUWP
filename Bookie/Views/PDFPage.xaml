@@ -81,9 +81,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center">
-                                <bookie:BookmarkToggle Margin="10" Width="60" Height="160" IsChecked="{Binding BookMark}" Command="{Binding DataContext.BookMarkCommand, ElementName=lv}" CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right" Canvas.ZIndex="1000" VerticalAlignment="Top" Content="" >
+                                <ToggleButton Margin="10" Width="60" Height="160" IsChecked="{Binding BookMark}" Command="{Binding DataContext.BookMarkCommand, ElementName=lv}" CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right" Canvas.ZIndex="1000" VerticalAlignment="Top" Content="" >
                                  
-                                </bookie:BookmarkToggle>
+                                </ToggleButton>
                                 <Border Margin="20" BorderBrush="Black" BorderThickness="1"  Height="{Binding Height}" Width="{Binding Width}">
                                     <Image Source="{Binding ImageSourceVsisBackground}" HorizontalAlignment="Center" Height="{Binding Height}" Width="{Binding Width}"></Image>
                                 </Border>

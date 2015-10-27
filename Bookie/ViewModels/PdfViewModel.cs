@@ -76,7 +76,39 @@ namespace Bookie.ViewModels
         private void BookMarkPage(object parameter)
         {
             var page = V[Convert.ToInt32(parameter)] as PdfPageViewModel;
-            page.BookMark = page.BookMark != true;
+            if (page.BookMark)
+            {
+                page.BookMark = false;
+            } else
+            {
+                page.BookMark = true;
+            }
+
+            var b = new BookMark();
+            b.Book = SelectedBook;
+            b.PageNumber = Convert.ToInt32(page.PageNumber);
+
+            var repo = new Repository.BookMarkRepository();
+
+            //If false and bookmark exists then delete it
+            if (!page.BookMark)
+            {
+                var exists = repo.Exists(b);
+                if (exists)
+                {
+                    repo.Remove(b);
+                }
+            }
+
+            //if true and bookmark doesnt exists, add it.
+            if (page.BookMark)
+            {
+                var exists = repo.Exists(b);
+                if (!exists)
+                {
+                    SelectedBook.BookMarks.Add(repo.Add(b));
+                }
+            }
         }
 
         public Book SelectedBook
@@ -156,18 +188,17 @@ namespace Bookie.ViewModels
 
             try
             {
-                //Test load a bookmark
-                ShellViewModel.SelectedBook.BookMarks.Add(new Common.Model.BookMark { Id = 1, PageNumber = 4 });
-
                 V = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource);
-                var s = V.GetPage(2) as PdfPageViewModel;
+
+
                 foreach (var bookmark in ShellViewModel.SelectedBook.BookMarks)
                 {
                     var page = V.GetPage(Convert.ToUInt32(bookmark.PageNumber)) as PdfPageViewModel;
                     page.BookMark = true;
                 }
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Log error
             }
@@ -182,7 +213,7 @@ namespace Bookie.ViewModels
         public async void LoadDefaultFile()
         {
             var storageFolder = await
-   StorageApplicationPermissions.FutureAccessList.GetFolderAsync(ShellViewModel.SelectedBook.Source.Token);
+            StorageApplicationPermissions.FutureAccessList.GetFolderAsync(ShellViewModel.SelectedBook.Source.Token);
             var file = await storageFolder.GetFileAsync(ShellViewModel.SelectedBook.FileName);
             _loadedFile = file ?? null;
             LoadPdf(_loadedFile);

@@ -9,17 +9,14 @@ using Microsoft.Data.Entity.ChangeTracking;
 
 namespace Bookie.Data
 {
-    public class BookDal : IBookieData<Book>
+    public class BookMarkDal : IBookieData<BookMark>
     {
-        public Book GetSingle(string query)
+        public BookMark GetSingle(string query)
         {
-            using (var context = new BookieContext())
-            {
-                return context.Books.FirstOrDefault(x => x.Title == query);
-            }
+            throw new NotImplementedException();
         }
 
-        Book IBookieData<Book>.Add(Book item)
+        BookMark IBookieData<BookMark>.Add(BookMark item)
         {
             using (var context = new BookieContext())
             {
@@ -27,58 +24,54 @@ namespace Bookie.Data
                 {
                     return null;
                 }
-                var addedBook = context.Books.Add(item);
+                var addedBookMark = context.BookMarks.Add(item);
                 context.SaveChanges();
-                return addedBook.Entity;
+                return addedBookMark.Entity;
             }
         }
 
-        public bool Exists(Book book)
+        public bool Exists(BookMark bookmark)
         {
             using (var context = new BookieContext())
             {
-                return context.Books.FirstOrDefault(x => x.FullPathAndFileName == book.FullPathAndFileName) != null;
+                return context.BookMarks.FirstOrDefault(x => x.PageNumber == bookmark.PageNumber && x.Book.Id == bookmark.Book.Id) != null;
             }
         }
 
-        public void Remove(Book item)
+        public void Remove(BookMark item)
         {
             using (var context = new BookieContext())
             {
-                context.Books.Remove(item);
+             context.Attach(item);
+                context.Entry(item).State = EntityState.Deleted;
                 context.SaveChanges();
             }
         }
 
-        public void Udpate(Book item)
+        public void Udpate(BookMark item)
         {
             using (var context = new BookieContext())
             {
-                context.Books.Attach(item);
+                context.Attach(item);
                 context.Entry(item).State = EntityState.Modified;
                 context.SaveChanges();
             }
         }
 
-        private void U(object item)
+        public List<BookMark> GetAll()
         {
-            var s = (EntityEntryGraphNode)item;
+            using (var context = new BookieContext())
+            {
 
+                return context.BookMarks.Include(x => x.Book).ToList();
+            }
         }
 
-       public List<Book> GetAll()
+        public BookMark GetSingle(int id)
         {
             using (var context = new BookieContext())
             {
-                return context.Books.Include(x => x.Source).Include(y => y.Cover).Include(w=> w.BookMarks).ToList();
-            }
-}
-
-        public Book GetSingle(int id)
-        {
-            using (var context = new BookieContext())
-            {
-                return context.Books.FirstOrDefault(x => x.Id == id);
+                return context.BookMarks.FirstOrDefault(x => x.Id == id);
             }
         }
     }
