@@ -1,27 +1,28 @@
-﻿using Bookie.Common;
-using Bookie.Common.Model;
-using System;
-using System.IO;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.Data.Pdf;
 using Windows.Storage;
-using Bookie.Data;
+using Bookie.Common;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using Bookie.Domain.Services;
 
-namespace Bookie.Core
+namespace Bookie.Domain
 {
     public class PdfCover
     {
         private PdfDocument _pdfDocument;
 
-        public async Task<string> GenerateCoverImage(Book book, uint pageIndex)
+        public async Task<string> GenerateCoverImage(Book book, uint pageIndex, ISourceRepository sourceRepository)
         {
             try
             {
-                var sources = new SourceDal();
+                var sources = new SourceService(sourceRepository);
                 var storageFolder = await sources.GetStorageFolderFromSource(book.Source);
 
                 var pdfFile = await storageFolder.GetFileAsync(book.FileName);
-                //Load Pdf File
+                ///Load Pdf File
+              //  StorageFile pdfFile = null;
 
                 _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
 

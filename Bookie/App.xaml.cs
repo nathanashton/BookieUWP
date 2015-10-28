@@ -1,5 +1,4 @@
 ﻿using Bookie.Common;
-using Bookie.Core;
 using Bookie.Views;
 using Microsoft.Data.Entity;
 using System;
@@ -27,7 +26,7 @@ namespace Bookie
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            using (var db = new Bookie.Data.BookieContext())
+            using (var db = new Bookie.Data.Context())
             {
                 db.Database.Migrate();
             }

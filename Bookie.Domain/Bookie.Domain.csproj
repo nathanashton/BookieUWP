@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{805BCF9F-861B-4747-A394-42955257430F}</ProjectGuid>
+    <ProjectGuid>{5E94EE36-FAFB-487B-A438-3DB7874518C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bookie.Repository</RootNamespace>
-    <AssemblyName>Bookie.Repository</AssemblyName>
+    <RootNamespace>Bookie.Domain</RootNamespace>
+    <AssemblyName>Bookie.Domain</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
@@ -107,19 +107,21 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookMarkRepository.cs" />
-    <Compile Include="BookRepository.cs" />
+    <Compile Include="Interfaces\ISourceRepository.cs" />
+    <Compile Include="Interfaces\ISourceService.cs" />
+    <Compile Include="Services\BookService.cs" />
+    <Compile Include="Importer.cs" />
+    <Compile Include="Interfaces\IBookRepository.cs" />
+    <Compile Include="Interfaces\IBookService.cs" />
+    <Compile Include="PDFCover.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Properties\Bookie.Repository.rd.xml" />
+    <Compile Include="Services\SourceService.cs" />
+    <Content Include="Properties\Bookie.Domain.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bookie.Common\Bookie.Common.csproj">
       <Project>{bf2c2c78-db60-4a1a-976f-ea931b38d0ea}</Project>
       <Name>Bookie.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Bookie.Data\Bookie.Data.csproj">
-      <Project>{a432a204-7c4f-4099-81ca-1f2b8b1a00c8}</Project>
-      <Name>Bookie.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

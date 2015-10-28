@@ -1,9 +1,11 @@
 ﻿using Bookie.Common.Model;
-using Bookie.Core;
 using Bookie.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Windows.Storage.AccessCache;
 using Bookie.Data;
+using Bookie.Domain.Services;
 
 namespace Bookie.ViewModels
 {
@@ -66,8 +68,12 @@ namespace Bookie.ViewModels
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
             var folder = await picker.PickSingleFolderAsync();
             if (folder == null) return;
-            var sources = new SourceDal();
-            sources.Add(folder);
+            var source = new Source
+            {
+                Path = folder.Path,
+                Token = StorageApplicationPermissions.FutureAccessList.Add(folder)
+            };
+            new SourceService(new SourceRepository()).Add(source);  
             GetAllSources();
         }
 
@@ -81,9 +87,8 @@ namespace Bookie.ViewModels
 
         private void GetAllSources()
         {
-         var sources = new SourceDal();
-         var all = sources.GetAllAsSources();
-      Sources = new ObservableCollection<Source>(all);
+            List<Source> all = new SourceService(new SourceRepository()).GetAll();
+            Sources = new ObservableCollection<Source>(all);
         }
     }
 }

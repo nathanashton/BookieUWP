@@ -1,26 +1,37 @@
 ﻿using Bookie.Common;
 using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using Bookie.Domain.Services;
 using System;
 using System.ComponentModel;
 using System.IO;
-using Bookie.Data;
-using Bookie.Repository;
 
-namespace Bookie.Core
+namespace Bookie.Domain
 {
     public class Importer : IProgressPublisher
     {
         public event EventHandler<BookEventArgs> BookChanged;
 
         public readonly BackgroundWorker Worker;
-        private SourceDal sources = new SourceDal();
-        private PdfCover pdfCover = new PdfCover();
-        private CoverDal covers = new CoverDal();
-        private BookRepository books = new BookRepository();
-        private ProgressWindowEventArgs ProgressArgs = new ProgressWindowEventArgs();
 
-        public Importer()
+        // private SourceDal sources = new SourceDal();
+        private PdfCover pdfCover = new PdfCover();
+
+        // private CoverDal covers = new CoverDal();
+        private BookService _bookService;
+        private SourceService _sourceService;
+        private ISourceRepository _sourcerepo;
+
+
+        private readonly ProgressWindowEventArgs _progressArgs = new ProgressWindowEventArgs();
+
+
+
+        public Importer(IBookRepository bookRepository, ISourceRepository sourceRepository)
         {
+            _sourcerepo = sourceRepository;
+            _bookService = new BookService(bookRepository);
+            _sourceService = new SourceService(sourceRepository);
             ProgressService.RegisterPublisher(this);
             Worker = new BackgroundWorker
             {
@@ -37,17 +48,17 @@ namespace Bookie.Core
             var book = (Book)e.UserState;
             if (book != null)
             {
-                ProgressArgs.OperationName = "Importing Books";
-                ProgressArgs.ProgressPercentage = Convert.ToInt32(e.ProgressPercentage);
-                ProgressArgs.ProgressText = book.Title;
-                OnProgressChange(ProgressArgs);
+                _progressArgs.OperationName = "Importing Books";
+                _progressArgs.ProgressPercentage = Convert.ToInt32(e.ProgressPercentage);
+                _progressArgs.ProgressText = book.Title;
+                OnProgressChange(_progressArgs);
             }
             else
             {
-                ProgressArgs.OperationName = "Importing Books";
-                ProgressArgs.ProgressPercentage = Convert.ToInt32(e.ProgressPercentage);
-                ProgressArgs.ProgressText = "Book exists";
-                OnProgressChange(ProgressArgs);
+                _progressArgs.OperationName = "Importing Books";
+                _progressArgs.ProgressPercentage = Convert.ToInt32(e.ProgressPercentage);
+                _progressArgs.ProgressText = "Book exists";
+                OnProgressChange(_progressArgs);
             }
         }
 
@@ -58,11 +69,13 @@ namespace Bookie.Core
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            var storageFolders = sources.GetAllAsStorageFolders().Result;
+            var storageFolders = _sourceService.GetAllAsStorageFolders().Result;
 
             foreach (var storageFolder in storageFolders)
             {
-                var source = sources.GetSourceFromStorageFolderPath(storageFolder.Path);
+                var source = _sourceService.GetByUrl(storageFolder.Path);
+
+
                 var storageFiles = storageFolder.GetFilesAsync().GetAwaiter().GetResult();
                 for (var i = 0; i < storageFiles.Count; i++)
                 {
@@ -81,21 +94,20 @@ namespace Bookie.Core
                         FullPathAndFileName = storageFiles[i].Path
                     };
 
-                    // var exists = books.Exists(book);
-                    var exists = false;
-                    if (!exists)
+                    var existingBook = _bookService.Find(b => b.FullPathAndFileName == book.FullPathAndFileName);
+                    if (existingBook.Count == 0) // Add Book
                     {
                         var cover = new Cover();
-                        var coverPath = pdfCover.GenerateCoverImage(book, 0).Result;
+                        var coverPath = pdfCover.GenerateCoverImage(book, 0, _sourcerepo).Result;
                         cover.FileName = Path.GetFileName(coverPath);
 
                         book.Cover = cover;
-                        book = books.Add(book);
+                        book = _bookService.Add(book);
 
-                        if (book != null)
-                        {
-                            sources.AddBookToSource(book);
-                        }
+                        //if (book != null)
+                        //{
+                        //    sources.AddBookToSource(book);
+                        //}
                         Worker.ReportProgress(progress, book);
                     }
                     else

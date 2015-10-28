@@ -1,6 +1,7 @@
 ﻿using Bookie.Common;
 using Bookie.Common.Model;
-using Bookie.Core;
+using Bookie.Data;
+using Bookie.Domain;
 using Bookie.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -9,26 +10,22 @@ using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Bookie.Repository;
+using Bookie.Domain.Services;
 using static System.String;
 
 namespace Bookie.ViewModels
 {
     public class MainPageViewModel : NotifyBase, IProgressSubscriber
     {
-
-        private BookRepository _repository = new BookRepository();
-
+        private readonly BookService _bookService = new BookService(new BookRepository());
 
         private CollectionViewSource _collectionView;
-        private ImportProgress importProgress;
+        private ImportProgress _importProgress;
         private List<GroupInfoList<Book>> _groupedbooks;
         private Book _selectedBook;
         private string _filterQuery;
-        private RelayCommand _openBookCommand;
-        private RelayCommand _updateCommand;
-        private ObservableCollection<Book> _books;
-        private List<Book> _b;
+        private ObservableCollection<Book> _filteredBooks;
+        private List<Book> _allBooks;
 
         public CollectionViewSource CollectionView
         {
@@ -74,7 +71,7 @@ namespace Bookie.ViewModels
 
         private void OpenBook()
         {
-            if (SelectedBook != null && SelectedBook.FileName != null)
+            if (SelectedBook?.FileName != null)
             {
                 ShellViewModel.SelectedBook = SelectedBook;
             }
@@ -101,55 +98,36 @@ namespace Bookie.ViewModels
             {
                 _filterQuery = value;
                 GroupedBooks = FilterByTitleGrouped(value);
-                Books = FilterByTitleNotGrouped(value);
-                NotifyPropertyChanged("Books");
+                FilteredBooks = FilterByTitleNotGrouped(value);
+                NotifyPropertyChanged("FilteredBooks");
                 NotifyPropertyChanged("FilterColor");
                 NotifyPropertyChanged("FilterQuery");
             }
         }
 
-        public ObservableCollection<Book> Books
+        public ObservableCollection<Book> FilteredBooks
         {
-            get { return _books; }
-            set { _books = value; NotifyPropertyChanged("Books"); }
+            get { return _filteredBooks; }
+            set { _filteredBooks = value; NotifyPropertyChanged("FilteredBooks"); }
         }
 
-        public List<Book> B
+        public List<Book> AllBooks
         {
-            get { return _b; }
+            get { return _allBooks; }
             set
             {
-                _b = value;
-                NotifyPropertyChanged("B");
+                _allBooks = value;
+                NotifyPropertyChanged("AllBooks");
             }
         }
 
         public MainPageViewModel()
         {
-            CollectionView = new CollectionViewSource();
-            B = new List<Book>();
             ProgressService.RegisterSubscriber(this);
+            CollectionView = new CollectionViewSource();
+            AllBooks = new List<Book>();
             Grouped();
             RefreshBooks();
-
-
-
-
-            //var b = new BookMark();
-            //b.PageNumber = 35;
-            //if (B.Count > 1)
-            //{
-            //    b.Book = B[0];
-            //    var bookmark = new BookMarkRepository().Add(b);
-            //    B[0].BookMarks = new List<BookMark>();
-            //    B[0].BookMarks.Add(bookmark);
-            //    _repository.Update(B[0]);
-            //}
-
-
-
-
-
         }
 
         private string _filterCount;
@@ -166,27 +144,18 @@ namespace Bookie.ViewModels
 
         private void UpdateBooksFromSources()
         {
-            var importer = new Importer();
+            var importer = new Importer(new BookRepository(), new SourceRepository());
 
             importer.UpdateBooksFromSources();
             RefreshBooks();
         }
 
-        private  void RefreshBooks()
+        private void RefreshBooks()
         {
-
-            B =  _repository.GetAll();
-
-
-
-            Books = new ObservableCollection<Book>(B);
+            AllBooks = _bookService.GetAll();
+            FilteredBooks = new ObservableCollection<Book>(AllBooks);
             GroupedBooks = GetGroupsByLetter();
             CountResults(GroupedBooks);
-
-            //if (GroupedBooks != null && GroupedBooks[0][0] != null)
-            //{
-            //    SelectedBook  = (Book)GroupedBooks[0][0];
-            //}
         }
 
         internal List<GroupInfoList<Book>> GetGroupsByLetter()
@@ -194,7 +163,7 @@ namespace Bookie.ViewModels
             var groups = new List<GroupInfoList<Book>>();
 
             var query =
-                B.OrderBy(item => item.Title.ToLower())
+                AllBooks.OrderBy(item => item.Title.ToLower())
                     .GroupBy(item => item.Title[0].ToString().ToLower())
                     .Select(g => new { GroupName = g.Key, Items = g }); // not finding any results
             foreach (var g in query)
@@ -225,7 +194,7 @@ namespace Bookie.ViewModels
 
         internal ObservableCollection<Book> FilterByTitleNotGrouped(string filterQuery)
         {
-            var result = Books.Where(x => x.Title.Contains(filterQuery)).ToList();
+            var result = FilteredBooks.Where(x => x.Title.Contains(filterQuery)).ToList();
             return new ObservableCollection<Book>(result);
         }
 
@@ -234,7 +203,7 @@ namespace Bookie.ViewModels
             var groups = new List<GroupInfoList<Book>>();
 
             var query =
-                B.OrderBy(item => item.Title)
+                AllBooks.OrderBy(item => item.Title)
                     .Where(item => item.Title.ToLower().Contains(filterQuery.ToLower()))
                     .GroupBy(item => item.Title[0])
                     .Select(g => new { GroupName = g.Key, Items = g });
@@ -263,34 +232,29 @@ namespace Bookie.ViewModels
         public void NotGrouped()
         {
             CollectionView.IsSourceGrouped = false;
-            CollectionView.Source = B;
+            CollectionView.Source = AllBooks;
             RefreshBooks();
         }
 
         public void _progress_ProgressChanged(object sender, ProgressWindowEventArgs e)
         {
-            importProgress.ViewModel.Title = e.OperationName;
-            importProgress.ViewModel.Operation = e.ProgressText;
-            importProgress.ViewModel.Progress = e.ProgressPercentage;
+            _importProgress.ViewModel.Title = e.OperationName;
+            _importProgress.ViewModel.Operation = e.ProgressText;
+            _importProgress.ViewModel.Progress = e.ProgressPercentage;
         }
 
         public async void _progress_ProgressStarted(object sender, EventArgs e)
         {
-            importProgress = new ImportProgress();
-            await importProgress.ShowAsync();
+            _importProgress = new ImportProgress();
+            await _importProgress.ShowAsync();
         }
 
         public void _progress_ProgressCompleted(object sender, EventArgs e)
         {
-            importProgress.Hide();
+            _importProgress.Hide();
             RefreshBooks();
         }
 
-        public Brush FilterColor
-        {
-            get {
-                return IsNullOrEmpty(FilterQuery) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Yellow);
-            }
-        }
+        public Brush FilterColor => IsNullOrEmpty(FilterQuery) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Yellow);
     }
 }

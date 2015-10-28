@@ -64,7 +64,7 @@
 
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="Wiey Books" />
+                                                <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="Wiey FilteredBooks" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Grid>
@@ -150,7 +150,7 @@
 
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12" VerticalAlignment="Center" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="12" VerticalAlignment="Center" Text="Wiley Books" />
+                                                <TextBlock FontSize="12" VerticalAlignment="Center" Text="Wiley FilteredBooks" />
                                             </StackPanel>
                                         </StackPanel>
 

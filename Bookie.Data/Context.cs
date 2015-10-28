@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Bookie.Common.Model;
+using Microsoft.Data.Entity;
+using System;
 using System.IO;
 using Windows.Storage;
-using Bookie.Common.Model;
-using Microsoft.Data.Entity;
 
 namespace Bookie.Data
 {
-    public class BookieContext : DbContext
+    public class Context : DbContext
     {
+
         public DbSet<Book> Books { get; set; }
         public DbSet<Source> Sources { get; set; }
+        public DbSet<BookMark> Bookmarks { get; set; }
         public DbSet<Cover> Covers { get; set; }
-        public DbSet<BookMark> BookMarks { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,7 +31,7 @@ namespace Bookie.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Book>().Ignore(e => e.Image);
-            modelBuilder.Entity<Book>().HasOne(e => e.Source).WithMany(r=> r.Books);
+            modelBuilder.Entity<Book>().HasOne(e => e.Source).WithMany(r => r.Books);
             modelBuilder.Entity<Book>().HasOne(e => e.Cover).WithOne(r => r.Book);
             modelBuilder.Entity<Book>().HasMany(e => e.BookMarks).WithOne(t => t.Book);
         }

@@ -88,27 +88,27 @@ namespace Bookie.ViewModels
             b.Book = SelectedBook;
             b.PageNumber = Convert.ToInt32(page.PageNumber);
 
-            var repo = new Repository.BookMarkRepository();
+           // var repo = new Repository.BookMarkRepository();
 
-            //If false and bookmark exists then delete it
-            if (!page.BookMark)
-            {
-                var exists = repo.Exists(b);
-                if (exists)
-                {
-                    repo.Remove(b);
-                }
-            }
+            ////If false and bookmark exists then delete it
+            //if (!page.BookMark)
+            //{
+            //    var exists = repo.Exists(b);
+            //    if (exists)
+            //    {
+            //        repo.Remove(b);
+            //    }
+            //}
 
-            //if true and bookmark doesnt exists, add it.
-            if (page.BookMark)
-            {
-                var exists = repo.Exists(b);
-                if (!exists)
-                {
-                    SelectedBook.BookMarks.Add(repo.Add(b));
-                }
-            }
+            ////if true and bookmark doesnt exists, add it.
+            //if (page.BookMark)
+            //{
+            //    var exists = repo.Exists(b);
+            //    if (!exists)
+            //    {
+            //        SelectedBook.BookMarks.Add(repo.Add(b));
+            //    }
+            //}
         }
 
         public Book SelectedBook

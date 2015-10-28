@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Bookie
+namespace Bookie.Common
 {
     public static class Utils
     {

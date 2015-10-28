@@ -1,5 +1,5 @@
 ﻿<ViewModels:MainPageViewModel xmlns:ViewModels="using:Bookie.ViewModels" xmlns:Model="using:Bookie.Common.Model" xmlns:Mvvm="using:Bookie.Mvvm" FilterQuery="Rutrum adipiscing neque posuere potenti">
-    <ViewModels:MainPageViewModel.Books>
+    <ViewModels:MainPageViewModel.FilteredBooks>
         <Model:Book Abstract="Rhoncus per sodales netus" FullPathAndFileName="Viverra parturient" FileName="Aliquam vulputate vestibulum vestibulum" Id="88" Title="Non sapien quam pretium pulvinar">
             <Model:Book.BookMarks>
                 <Model:BookMark Id="78" PageNumber="53" />
@@ -18,7 +18,7 @@
                         <Model:Book Abstract="Elementum risus vestibulum facilisis turpis" FullPathAndFileName="Fermentum sociosqu varius" FileName="Ante vestibulum suscipit" Id="89" Title="Vivamus aliquam tempus tortor" />
                         <Model:Book Abstract="Velit torquent" FullPathAndFileName="Sit aliquet fringilla blandit" FileName="Commodo vitae ultrices mauris" Id="36" Title="Aenean adipiscing parturient" />
                         <Model:Book Abstract="Arcu maecenas class curae" FullPathAndFileName="Diam vestibulum adipiscing aptent" FileName="Conubia donec parturient praesent accumsan" Id="73" Title="Habitasse vestibulum nullam vehicula volutpat" />
-                        <Model:Book Abstract="Bibendum vel nam" FullPathAndFileName="Hendrerit dictumst" FileName="Himenaeos sed" Id="47" Title="Etiam eget" />
+                        <Model:Book Abstract="AllFilteredBooksibendum vel nam" FullPathAndFileName="Hendrerit dictumst" FileName="Himenaeos sed" Id="47" Title="Etiam eget" />
                     </Model:Source.Books>
                 </Model:Source>
             </Model:Book.Source>
@@ -61,7 +61,7 @@
                 <Model:Source Id="38" Path="Montes parturient vivamus" Token="Quisque adipiscing">
                     <Model:Source.Books>
                         <Model:Book Abstract="Vel nam magna ultrices ornare" FullPathAndFileName="Vehicula orci" FileName="Pede elementum" Id="49" Title="Sit nostra" />
-                        <Model:Book Abstract="Blandit commodo conubia" FullPathAndFileName="Platea volutpat massa quam" FileName="Metus primis quis" Id="68" Title="Aliquam aliquet sed" />
+                        <Model:Book Abstract="AllFilteredBookslandit commodo conubia" FullPathAndFileName="Platea volutpat massa quam" FileName="Metus primis quis" Id="68" Title="Aliquam aliquet sed" />
                         <Model:Book Abstract="Est sapien" FullPathAndFileName="Semper vestibulum fringilla cras vestibulum" FileName="Habitasse maecenas sociis taciti" Id="54" Title="Rutrum urna dis facilisis fermentum" />
                         <Model:Book Abstract="Accumsan himenaeos adipiscing leo" FullPathAndFileName="Mus cubilia" FileName="Parturient tellus imperdiet bibendum neque" Id="84" Title="Hendrerit praesent hac morbi" />
                         <Model:Book Abstract="Vestibulum dictumst non dapibus eleifend" FullPathAndFileName="Vestibulum per facilisi netus faucibus" FileName="Penatibus porttitor" Id="11" Title="Malesuada nec" />
@@ -107,7 +107,7 @@
                 <Model:Source Id="27" Path="Sem ultrices" Token="Aliquam torquent morbi">
                     <Model:Source.Books>
                         <Model:Book Abstract="Penatibus nulla nam nunc" FullPathAndFileName="Litora volutpat parturient sed" FileName="Maecenas luctus" Id="77" Title="Integer sit vehicula vel" />
-                        <Model:Book Abstract="Porttitor accumsan odio" FullPathAndFileName="Bibendum orci dictumst mauris" FileName="Dis pede quam augue dolor" Id="26" Title="Proin magnis praesent mattis" />
+                        <Model:Book Abstract="Porttitor accumsan odio" FullPathAndFileName="AllFilteredBooksibendum orci dictumst mauris" FileName="Dis pede quam augue dolor" Id="26" Title="Proin magnis praesent mattis" />
                         <Model:Book Abstract="Quisque nostra facilisi vivamus tincidunt" FullPathAndFileName="Fames aliquam est vestibulum quis" FileName="Urna felis tristique ipsum justo" Id="27" Title="Eleifend mollis vestibulum montes" />
                         <Model:Book Abstract="Lacus ornare platea blandit parturient" FullPathAndFileName="Vestibulum vestibulum" FileName="Faucibus habitant cras adipiscing" Id="36" Title="Aliquet adipiscing" />
                         <Model:Book Abstract="Leo commodo mus" FullPathAndFileName="Lorem venenatis" FileName="Vulputate curabitur nec conubia cubilia" Id="70" Title="Ultricies hac" />
@@ -200,7 +200,7 @@
                     <Model:Source.Books>
                         <Model:Book Abstract="Augue dolor" FullPathAndFileName="Phasellus consequat vestibulum vivamus nullam" FileName="Vestibulum adipiscing dis aptent parturient" Id="37" Title="Diam curabitur proin" />
                         <Model:Book Abstract="Eget est convallis" FullPathAndFileName="Elit congue enim erat" FileName="Dictumst cursus" Id="67" Title="Auctor vestibulum aliquam" />
-                        <Model:Book Abstract="Dictum lectus hac faucibus eros" FullPathAndFileName="Felis nibh vestibulum libero aliquet" FileName="Blandit ipsum leo facilisis adipiscing" Id="53" Title="Fames eleifend dignissim elementum facilisi" />
+                        <Model:Book Abstract="Dictum lectus hac faucibus eros" FullPathAndFileName="Felis nibh vestibulum libero aliquet" FileName="AllFilteredBookslandit ipsum leo facilisis adipiscing" Id="53" Title="Fames eleifend dignissim elementum facilisi" />
                         <Model:Book Abstract="Nisi nec luctus habitant parturient" FullPathAndFileName="Justo nisl non inceptos lacus" FileName="Magnis lorem fermentum interdum nunc" Id="96" Title="Ligula litora mus commodo" />
                         <Model:Book Abstract="Odio nascetur" FullPathAndFileName="Massa orci pharetra metus placerat" FileName="Pede quam" Id="46" Title="Conubia lobortis mattis magna" />
                     </Model:Source.Books>
@@ -230,8 +230,8 @@
                 </Model:Source>
             </Model:Book.Source>
         </Model:Book>
-    </ViewModels:MainPageViewModel.Books>
-    <ViewModels:MainPageViewModel.B>
+    </ViewModels:MainPageViewModel.FilteredBooks>
+    <ViewModels:MainPageViewModel.AllBooks>
         <Model:Book Abstract="Viverra aliquam" FullPathAndFileName="Curabitur phasellus nec lorem" FileName="Elit enim taciti integer erat" Id="70" Title="Mus sociis rhoncus sodales">
             <Model:Book.BookMarks>
                 <Model:BookMark Id="63" PageNumber="13" />
@@ -431,7 +431,7 @@
                 <Model:Source Id="21" Path="Vivamus ultrices vehicula neque" Token="Hendrerit himenaeos primis">
                     <Model:Source.Books>
                         <Model:Book Abstract="Netus maecenas malesuada aliquet" FullPathAndFileName="Sapien praesent est nulla" FileName="Quis semper urna" Id="27" Title="Aliquam volutpat imperdiet rutrum" />
-                        <Model:Book Abstract="Bibendum cras porta adipiscing penatibus" FullPathAndFileName="Blandit dictumst" FileName="Purus eleifend porttitor" Id="73" Title="Accumsan hac sociis" />
+                        <Model:Book Abstract="AllFilteredBooksibendum cras porta adipiscing penatibus" FullPathAndFileName="AllFilteredBookslandit dictumst" FileName="Purus eleifend porttitor" Id="73" Title="Accumsan hac sociis" />
                         <Model:Book Abstract="Taciti habitant duis tellus" FullPathAndFileName="Commodo mus tempor parturient" FileName="Inceptos vestibulum" Id="98" Title="Leo facilisi risus faucibus" />
                         <Model:Book Abstract="Tortor turpis interdum nec" FullPathAndFileName="Velit non adipiscing" FileName="Conubia parturient" Id="92" Title="Tempus tincidunt vestibulum nunc" />
                         <Model:Book Abstract="Vestibulum per vestibulum varius" FullPathAndFileName="Pharetra aenean" FileName="Mauris ultricies nullam vitae" Id="60" Title="Lobortis tristique amet nascetur" />
@@ -462,7 +462,7 @@
                 </Model:Source>
             </Model:Book.Source>
         </Model:Book>
-    </ViewModels:MainPageViewModel.B>
+    </ViewModels:MainPageViewModel.AllBooks>
 
     <ViewModels:MainPageViewModel.SelectedBook>
         <Model:Book Abstract="Academic literature uses the abstract to succinctly communicate complex research. An abstract may act as a stand-alone entity instead of a full paper. As such, an abstract is used by many organizations as the basis for selecting research that is proposed for presentation in the form of a poster, platform/oral presentation or workshop presentation at an academic conference. Most literature database search engines index only abstracts rather than providing the entire text of the paper. Full texts of scientific papers must often be purchased because of copyright and/or publisher fees and therefore the abstract is a significant selling point for the reprint or electronic form of the full text.[2]
@@ -489,7 +489,7 @@ Abstracts are protected under copyright law just as any other form of written sp
                         <Model:Book Abstract="Fusce accumsan" FullPathAndFileName="Integer bibendum" FileName="Amet leo lorem quisque" Id="26" Title="Est hac etiam aliquam" />
                         <Model:Book Abstract="Phasellus diam consequat nec vestibulum" FullPathAndFileName="Convallis dictumst dignissim vivamus morbi" FileName="Auctor congue adipiscing" Id="90" Title="Vestibulum ante aptent mus arcu" />
                         <Model:Book Abstract="Eget facilisi nulla cursus faucibus" FullPathAndFileName="Elementum vestibulum dictum" FileName="Aliquam aliquet" Id="29" Title="Parturient eleifend" />
-                        <Model:Book Abstract="Libero ligula non" FullPathAndFileName="Blandit commodo adipiscing conubia" FileName="Cubilia parturient elit" Id="27" Title="Vestibulum lectus" />
+                        <Model:Book Abstract="Libero ligula non" FullPathAndFileName="AllFilteredBookslandit commodo adipiscing conubia" FileName="Cubilia parturient elit" Id="27" Title="Vestibulum lectus" />
                         <Model:Book Abstract="Facilisis fermentum augue sed" FullPathAndFileName="Dolor erat sem habitant" FileName="Fames felis" Id="75" Title="Proin per enim dapibus" />
                         <Model:Book Abstract="Litora luctus habitasse" FullPathAndFileName="Hendrerit eros magnis sit" FileName="Mattis ipsum justo egestas himenaeos" Id="42" Title="Fringilla vestibulum" />
                         <Model:Book Abstract="Mauris mollis inceptos" FullPathAndFileName="Vel montes" FileName="Nibh lacus" Id="92" Title="Vestibulum euismod" />

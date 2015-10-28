@@ -136,7 +136,7 @@ namespace Bookie.Views
         private void AppBarButton_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             gview.Visibility = Visibility.Visible;
-         //   BooksCollectionViewSource.Source = viewmodel.B;
+         //   BooksCollectionViewSource.Source = viewmodel.AllBooks;
            // BooksCollectionViewSource.IsSourceGrouped = false;
             lview.Visibility = Visibility.Collapsed;
         }
@@ -169,7 +169,7 @@ namespace Bookie.Views
         private void Grid_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var t = (Book)(e.OriginalSource as Image).DataContext;
-            viewmodel.SelectedBook = viewmodel.Books.FirstOrDefault(x => x.Id == t.Id);
+            viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
 
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
@@ -186,7 +186,7 @@ namespace Bookie.Views
         private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             var t = (Book)(e.OriginalSource as Image).DataContext;
-            viewmodel.SelectedBook = viewmodel.Books.FirstOrDefault(x => x.Id == t.Id);
+            viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
 
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
@@ -206,7 +206,7 @@ namespace Bookie.Views
         private void Grid_DoubleTapped_1(object sender, DoubleTappedRoutedEventArgs e)
         {
             var t = (Book)(e.OriginalSource as TextBlock).DataContext;
-            viewmodel.SelectedBook = viewmodel.Books.FirstOrDefault(x => x.Id == t.Id);
+            viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
             FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
         }
     }

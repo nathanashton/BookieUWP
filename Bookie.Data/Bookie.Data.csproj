@@ -107,23 +107,25 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookDal.cs" />
-    <Compile Include="BookieContext.cs" />
-    <Compile Include="BookMarkDal.cs" />
-    <Compile Include="CoverDal.cs" />
-    <Compile Include="Migrations\20151023085939_Initial.cs" />
-    <Compile Include="Migrations\20151023085939_Initial.Designer.cs">
-      <DependentUpon>20151023085939_Initial.cs</DependentUpon>
+    <Compile Include="BookRepository.cs" />
+    <Compile Include="Context.cs" />
+    <Compile Include="Migrations\20151028040040_Initial.cs" />
+    <Compile Include="Migrations\20151028040040_Initial.designer.cs">
+      <DependentUpon>20151028040040_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\BookieContextModelSnapshot.cs" />
+    <Compile Include="Migrations\ContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SourceDal.cs" />
+    <Compile Include="SourceRepository.cs" />
     <Content Include="Properties\Bookie.Data.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bookie.Common\Bookie.Common.csproj">
       <Project>{bf2c2c78-db60-4a1a-976f-ea931b38d0ea}</Project>
       <Name>Bookie.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Bookie.Domain\Bookie.Domain.csproj">
+      <Project>{5e94ee36-fafb-487b-a438-3db7874518c3}</Project>
+      <Name>Bookie.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

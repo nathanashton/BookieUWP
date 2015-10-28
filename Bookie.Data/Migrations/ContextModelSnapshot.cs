@@ -7,11 +7,10 @@ using Bookie.Data;
 
 namespace Bookie.Data.Migrations
 {
-    [DbContext(typeof(BookieContext))]
-    [Migration("20151023085529_Initial")]
-    partial class Initial
+    [DbContext(typeof(Context))]
+    partial class ContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Annotation("ProductVersion", "7.0.0-beta8-15964");
