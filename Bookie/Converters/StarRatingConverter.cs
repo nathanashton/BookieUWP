@@ -37,7 +37,27 @@
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
-            throw new NotImplementedException();
+            if (value.ToString() == "\uE1CE")
+            {
+                return 1;
+            }
+            if (value.ToString() == "\uE1CE" + "\uE1CE")
+            {
+                return 2;
+            }
+            if (value.ToString() == "\uE1CE" + "\uE1CE" + "\uE1CE")
+            {
+                return 3;
+            }
+            if (value.ToString() == "\uE1CE" + "\uE1CE" + "\uE1CE" + "\uE1CE")
+            {
+                return 4;
+            }
+            if (value.ToString() == "\uE1CE" + "\uE1CE" + "\uE1CE" + "\uE1CE" + "\uE1CE")
+            {
+                return 5;
+            }
+            return 0;
         }
     }
 }

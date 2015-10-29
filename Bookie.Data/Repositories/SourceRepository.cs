@@ -1,19 +1,19 @@
-﻿using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using Microsoft.Data.Entity;
 
-namespace Bookie.Data
+namespace Bookie.Data.Repositories
 {
     public class SourceRepository : ISourceRepository
     {
-
         public ICollection<Source> Find(Func<Source, bool> where)
         {
             using (var ctx = new Context())
             {
-                return ctx.Sources.Where(where).ToList();
+                return ctx.Sources.Include(t=>t.Books).Where(where).ToList();
             }
         }
 
@@ -31,7 +31,7 @@ namespace Bookie.Data
         {
             using (var ctx = new Context())
             {
-                return ctx.Sources.ToList();
+                return ctx.Sources.Include(r=> r.Books).ToList();
             }
         }
     }

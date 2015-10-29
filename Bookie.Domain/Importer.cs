@@ -19,13 +19,11 @@ namespace Bookie.Domain
 
         // private CoverDal covers = new CoverDal();
         private BookService _bookService;
+
         private SourceService _sourceService;
         private ISourceRepository _sourcerepo;
 
-
         private readonly ProgressWindowEventArgs _progressArgs = new ProgressWindowEventArgs();
-
-
 
         public Importer(IBookRepository bookRepository, ISourceRepository sourceRepository)
         {
@@ -74,7 +72,6 @@ namespace Bookie.Domain
             foreach (var storageFolder in storageFolders)
             {
                 var source = _sourceService.GetByUrl(storageFolder.Path);
-
 
                 var storageFiles = storageFolder.GetFilesAsync().GetAwaiter().GetResult();
                 for (var i = 0; i < storageFiles.Count; i++)

@@ -2,6 +2,7 @@
 using Bookie.Common.Model;
 using Bookie.Data;
 using Bookie.Domain;
+using Bookie.Domain.Services;
 using Bookie.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Bookie.Domain.Services;
+using Bookie.Data.Repositories;
 using static System.String;
 
 namespace Bookie.ViewModels
@@ -54,6 +55,17 @@ namespace Bookie.ViewModels
                 return new RelayCommand((object args) =>
                 {
                     UpdateBooksFromSources();
+                });
+            }
+        }
+
+        public RelayCommand EditCommand
+        {
+            get
+            {
+                return new RelayCommand((object args) =>
+                {
+                    EditBook();
                 });
             }
         }
@@ -128,6 +140,13 @@ namespace Bookie.ViewModels
             AllBooks = new List<Book>();
             Grouped();
             RefreshBooks();
+            Ratings = new List<int>();
+            Ratings.Add(0);
+            Ratings.Add(1);
+            Ratings.Add(2);
+            Ratings.Add(3);
+            Ratings.Add(4);
+            Ratings.Add(5);
         }
 
         private string _filterCount;
@@ -149,6 +168,17 @@ namespace Bookie.ViewModels
             importer.UpdateBooksFromSources();
             RefreshBooks();
         }
+
+        private List<int> _ratings;
+
+        public List<int> Ratings
+        {
+            get { return _ratings; }
+            set { _ratings = value;
+                NotifyPropertyChanged("Ratings");
+            }
+        }
+
 
         private void RefreshBooks()
         {
@@ -180,6 +210,11 @@ namespace Bookie.ViewModels
             CountResults(groups);
 
             return groups;
+        }
+
+        private void EditBook()
+        {
+            
         }
 
         private void CountResults(List<GroupInfoList<Book>> group)
@@ -229,6 +264,7 @@ namespace Bookie.ViewModels
             NotifyPropertyChanged("CollectionView");
         }
 
+        
         public void NotGrouped()
         {
             CollectionView.IsSourceGrouped = false;
@@ -253,6 +289,69 @@ namespace Bookie.ViewModels
         {
             _importProgress.Hide();
             RefreshBooks();
+        }
+
+        public void BookChanged(object sender, BookEventArgs e)
+        {
+            if (e.Book == null)
+            {
+                return;
+            }
+            switch (e.State)
+            {
+                case (BookEventArgs.BookState.Added):
+                    var bookExistsAdded =
+                        AllBooks.Any(
+                            b =>
+                                b.Id
+                                == e.Book.Id);
+                    if (!bookExistsAdded)
+                    {
+                        AllBooks.Add(e.Book);
+                    }
+                    NotifyPropertyChanged("FilterCount");
+                    break;
+
+                case (BookEventArgs.BookState.Removed):
+                    var bookExistsRemoved =
+                        AllBooks.Any(
+                            b =>
+                                b.Id
+                                == e.Book.Id);
+                    if (bookExistsRemoved)
+                    {
+                        AllBooks.Remove(e.Book);
+                    }
+                    NotifyPropertyChanged("FilterCount");
+                    break;
+
+                case (BookEventArgs.BookState.Updated): //Remove book from list and re-add it
+                    var bookExistsUpdated =
+                        AllBooks.FirstOrDefault(
+                            b =>
+                                b.FullPathAndFileName
+                                == e.Book.FullPathAndFileName);
+                    if (bookExistsUpdated != null)
+                    {
+                        var index = AllBooks.IndexOf(bookExistsUpdated);
+                        AllBooks.Remove(bookExistsUpdated);
+                        AllBooks.Insert(index, e.Book);
+                    }
+                    else
+                    {
+                        AllBooks.Add(e.Book);
+                    }
+                    NotifyPropertyChanged("FilterCount");
+                    break;
+            }
+            FilteredBooks = new ObservableCollection<Book>(AllBooks);
+            GroupedBooks = GetGroupsByLetter();
+            CountResults(GroupedBooks);
+        }
+
+        public  void UpdateBook(Book book)
+        {
+            _bookService.Update(book);
         }
 
         public Brush FilterColor => IsNullOrEmpty(FilterQuery) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Yellow);

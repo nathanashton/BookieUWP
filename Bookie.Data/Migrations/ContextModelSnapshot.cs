@@ -24,15 +24,19 @@ namespace Bookie.Data.Migrations
 
                     b.Property<DateTime?>("DatePublished");
 
+                    b.Property<bool>("Favourite");
+
                     b.Property<string>("FileName");
 
                     b.Property<string>("FullPathAndFileName");
+
+                    b.Property<string>("Isbn");
 
                     b.Property<int?>("Pages");
 
                     b.Property<int>("Rating");
 
-                    b.Property<int?>("SourceId");
+                    b.Property<int>("SourceId");
 
                     b.Property<string>("Title");
 

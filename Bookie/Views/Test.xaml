@@ -5,15 +5,53 @@
     xmlns:local="using:Bookie"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:Bookie.Converters"
     mc:Ignorable="d">
     <Page.Resources>
-      
+        <converters:DateConverter x:Key="DateConverter" />
+
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ContentDialog Background="#2b2b2b" x:Name="popup" PrimaryButtonText="ok" IsPrimaryButtonEnabled="True">
+        <ContentDialog  x:Name="EditPopup" PrimaryButtonText="ok" SecondaryButtonText="cancel" IsPrimaryButtonEnabled="True" IsSecondaryButtonEnabled="True" >
+            <Grid Margin="0,20,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
 
-            <ToggleButton x:Name="toggleButton" Content="ToggleButton" Height="23" Margin="-19,0,0,0" VerticalAlignment="Stretch" Width="67" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="0" Text="Title"/>
+                <TextBox Margin="5" Grid.Column="1" Grid.Row="0" Text="{Binding SelectedBook.Title, Mode=TwoWay}" />
+
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="1" Text="Rating"/>
+                <TextBox Margin="5" Width="50" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1" Text="{Binding SelectedBook.Rating, Mode=TwoWay}" />
+
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="2" Text="No Date"/>
+                <CheckBox Margin="5" Grid.Column="1" Grid.Row="2" IsChecked="True"/>
+
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="3" Text="Published"/>
+                <DatePicker Margin="5" Grid.Column="1" Grid.Row="3" Date="{Binding SelectedBook.DatePublished, Mode=TwoWay, Converter={StaticResource DateConverter}}" />
+
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="4" Text="Pages"/>
+                <TextBox Margin="5" Grid.Column="1" Grid.Row="4" Text="{Binding SelectedBook.Pages, Mode=TwoWay}" />
+
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="5" Text="Abstract"/>
+                <TextBox Margin="5" Grid.Column="1" Grid.Row="5" TextWrapping="Wrap" Height="100" Text="{Binding SelectedBook.Abstract, Mode=TwoWay}" />
+                
+            </Grid>
+            
+            
+            
+
         </ContentDialog>
     </Grid>
 </Page>

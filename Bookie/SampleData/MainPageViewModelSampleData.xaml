@@ -501,5 +501,4 @@ Abstracts are protected under copyright law just as any other form of written sp
             </Model:Book.Source>
         </Model:Book>
     </ViewModels:MainPageViewModel.SelectedBook>
-
 </ViewModels:MainPageViewModel>

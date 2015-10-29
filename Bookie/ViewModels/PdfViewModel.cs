@@ -2,12 +2,16 @@
 using Bookie.Mvvm;
 using PdfViewModel;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
+using Bookie.Data.Repositories;
+using Bookie.Domain.Services;
 
 namespace Bookie.ViewModels
 {
@@ -17,6 +21,14 @@ namespace Bookie.ViewModels
         private StorageFile _loadedFile;
         private PdfDocViewModel _p;
         private PdfDocument _pdfDocument;
+        private BookMarkService _bookMarkService;
+
+
+        public PdfViewModel()
+        {
+            _bookMarkService = new BookMarkService(new BookMarkRepository());
+        }
+
 
         public StorageFile PdfFile
         {
@@ -42,17 +54,6 @@ namespace Bookie.ViewModels
 
         private RelayCommand _notesVisibility;
 
-        private void NotesToggle()
-        {
-            if (Notes == Visibility.Visible)
-            {
-                Notes = Visibility.Collapsed;
-            }
-            else
-            {
-                Notes = Visibility.Visible;
-            }
-        }
 
         private RelayCommand _previousCommand;
         private RelayCommand _nextCommand;
@@ -76,40 +77,49 @@ namespace Bookie.ViewModels
         private void BookMarkPage(object parameter)
         {
             var page = V[Convert.ToInt32(parameter)] as PdfPageViewModel;
+
+
             if (page.BookMark)
             {
                 page.BookMark = false;
-            } else
+                //If bookmark exists, delete it and update
+                var existingBookMark = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == page.PageNumber);
+                if (existingBookMark != null)
+                {
+                    _bookMarkService.Remove(existingBookMark);
+                }
+            }
+            else
             {
                 page.BookMark = true;
+                //if bookmark doesnt exists, add it and update.
+                var existingBookMark = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == page.PageNumber);
+                if (existingBookMark == null)
+                {
+
+                    var bookmark = new BookMark
+                    {
+                        Book = SelectedBook,
+                        PageNumber = Convert.ToInt32(page.PageNumber)
+                    };
+                    SelectedBook.BookMarks.Add(bookmark);
+                    _bookMarkService.Add(bookmark);
+               
+                }
             }
-
-            var b = new BookMark();
-            b.Book = SelectedBook;
-            b.PageNumber = Convert.ToInt32(page.PageNumber);
-
-           // var repo = new Repository.BookMarkRepository();
-
-            ////If false and bookmark exists then delete it
-            //if (!page.BookMark)
-            //{
-            //    var exists = repo.Exists(b);
-            //    if (exists)
-            //    {
-            //        repo.Remove(b);
-            //    }
-            //}
-
-            ////if true and bookmark doesnt exists, add it.
-            //if (page.BookMark)
-            //{
-            //    var exists = repo.Exists(b);
-            //    if (!exists)
-            //    {
-            //        SelectedBook.BookMarks.Add(repo.Add(b));
-            //    }
-            //}
+            UpdateBookmarks();
         }
+
+        private void UpdateBookmarks()
+        {
+            SelectedBook.BookMarks = _bookMarkService.GetAllForBook(SelectedBook);
+            foreach (var bookmark in ShellViewModel.SelectedBook.BookMarks)
+            {
+                var page = V.GetPage(Convert.ToUInt32(bookmark.PageNumber)) as PdfPageViewModel;
+                page.BookMark = true;
+            }
+        }
+
 
         public Book SelectedBook
         {
@@ -189,14 +199,7 @@ namespace Bookie.ViewModels
             try
             {
                 V = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource);
-
-
-                foreach (var bookmark in ShellViewModel.SelectedBook.BookMarks)
-                {
-                    var page = V.GetPage(Convert.ToUInt32(bookmark.PageNumber)) as PdfPageViewModel;
-                    page.BookMark = true;
-                }
-
+                UpdateBookmarks();
             }
             catch (Exception)
             {

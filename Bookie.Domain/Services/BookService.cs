@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
 
 namespace Bookie.Domain.Services
 {
@@ -38,6 +38,11 @@ namespace Bookie.Domain.Services
         public Book Add(Book book)
         {
             return _repository.Add(book);
+        }
+
+        public void Update(Book book)
+        {
+            _repository.Update(book);
         }
     }
 }

@@ -5,15 +5,15 @@
 
 namespace PdfViewModel
 {
-    // ImageSourceSIS class
-    ref class ImageSourceSIS sealed : public ImageSourceBase
-    {
-    public:
-        ImageSourceSIS(_In_ Windows::Foundation::Size pageViewSize, _In_ Windows::Data::Pdf::PdfPage^ page, _In_ PdfViewContext^ viewContext)
-            : ImageSourceBase(pageViewSize, page, viewContext)
-        { }
+	// ImageSourceSIS class
+	ref class ImageSourceSIS sealed : public ImageSourceBase
+	{
+	public:
+		ImageSourceSIS(_In_ Windows::Foundation::Size pageViewSize, _In_ Windows::Data::Pdf::PdfPage^ page, _In_ PdfViewContext^ viewContext)
+			: ImageSourceBase(pageViewSize, page, viewContext)
+		{ }
 
-        void CreateSurface() override;
-        void RenderPage() override;
-    };
+		void CreateSurface() override;
+		void RenderPage() override;
+	};
 }

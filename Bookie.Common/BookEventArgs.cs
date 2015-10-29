@@ -1,7 +1,7 @@
 ﻿namespace Bookie.Common
 {
-    using System;
     using Model;
+    using System;
 
     public class BookEventArgs : EventArgs
     {

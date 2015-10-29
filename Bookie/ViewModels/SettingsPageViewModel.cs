@@ -1,11 +1,12 @@
 ﻿using Bookie.Common.Model;
+using Bookie.Data;
+using Bookie.Domain.Services;
 using Bookie.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.Storage.AccessCache;
-using Bookie.Data;
-using Bookie.Domain.Services;
+using Bookie.Data.Repositories;
 
 namespace Bookie.ViewModels
 {
@@ -73,7 +74,7 @@ namespace Bookie.ViewModels
                 Path = folder.Path,
                 Token = StorageApplicationPermissions.FutureAccessList.Add(folder)
             };
-            new SourceService(new SourceRepository()).Add(source);  
+            new SourceService(new SourceRepository()).Add(source);
             GetAllSources();
         }
 

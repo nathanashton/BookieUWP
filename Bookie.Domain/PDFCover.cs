@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Windows.Data.Pdf;
-using Windows.Storage;
-using Bookie.Common;
+﻿using Bookie.Common;
 using Bookie.Common.Model;
 using Bookie.Domain.Interfaces;
 using Bookie.Domain.Services;
+using System;
+using System.Threading.Tasks;
+using Windows.Data.Pdf;
+using Windows.Storage;
 
 namespace Bookie.Domain
 {

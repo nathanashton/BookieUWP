@@ -13,7 +13,11 @@
 
         <converters:NullVisibilityConverter x:Key="NullVisConverter" />
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
-        
+        <converters:NullableValueConverter x:Key="NullableValueConverter" />
+        <converters:DateConverter x:Key="DateConverter" />
+        <converters:NullBoolConverter x:Key="NullBoolConverter" />
+
+
     </Page.Resources>
 
     <Grid Background="#2b2b2b">
@@ -118,30 +122,27 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
                                         <TextBlock Grid.Row="0" FontSize="14" VerticalAlignment="Center" Text="{Binding Title}" FontWeight="Bold" TextWrapping="Wrap" />
-
 
                                         <TextBlock Margin="0,8,0,8" Grid.Row="1"  Text="{Binding Abstract}" FontSize="12" TextWrapping="WrapWholeWords" />
 
                                         <StackPanel VerticalAlignment="Center" Orientation="Vertical" Grid.Row="2">
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12"   Text="Pages" FontWeight="Bold" />
-                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Pages}"/>
+                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Pages}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12" Text="Year" FontWeight="Bold" />
-                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding DatePublished}"/>
+                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding DatePublishedString}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12" Text="ISBN" FontWeight="Bold" />
 
-                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Isbn}"/>
+                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Isbn}" />
                                             </StackPanel>
-
-                                
-
 
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12" VerticalAlignment="Center"  Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
@@ -153,7 +154,10 @@
                                                 <TextBlock FontSize="12" VerticalAlignment="Center" Text="Wiley FilteredBooks" />
                                             </StackPanel>
                                         </StackPanel>
-
+                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                            <Button Content="Edit" FontSize="12" Margin="5" Tapped="Button_Tapped"/>                                        
+                                        </StackPanel>
+                                        
                                     </Grid>
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
@@ -172,7 +176,7 @@
                       Width="160" Height="18" FontSize="13"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
 
-                                    <TextBlock Text="May 2015" Foreground="#BCBCB6"
+                                    <TextBlock Text="{Binding DatePublishedString}" Foreground="#BCBCB6"
                       Height="18" Width="100" FontSize="12"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" Opacity="0.5" />
                                 </StackPanel>
@@ -204,6 +208,53 @@
                     <ProgressBar IsIndeterminate="False" Value="30"  VerticalAlignment="Center" Width="300" Height="20" />
                 </StackPanel>
             </ContentDialog>
+
+            <ContentDialog x:Name="EditPopup" PrimaryButtonText="ok" SecondaryButtonText="cancel" IsPrimaryButtonEnabled="True" IsSecondaryButtonEnabled="True" PrimaryButtonClick="EditPopup_PrimaryButtonClick">
+                <Grid Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="0" Text="Title"/>
+                    <TextBox Margin="5" Grid.Column="1" Grid.Row="0" Text="{Binding SelectedBook.Title, Mode=TwoWay}" />
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="1" Text="Rating"/>
+                    <!--<TextBox Margin="5" Grid.Column="1" Grid.Row="1" Text="{Binding SelectedBook.Rating, Mode=TwoWay}" />-->
+                    <ComboBox Margin="5" Grid.Column="1" ItemsSource="{Binding Ratings}" Grid.Row="1" SelectedItem="{Binding SelectedBook.Rating, Mode=TwoWay}"/>
+
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="2" Text="Favourite"/>
+                    <CheckBox Margin="5" Grid.Column="1" Grid.Row="2" IsChecked="{Binding SelectedBook.Favourite}"/>
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="3" Text="Has Date"/>
+                    <CheckBox x:Name="cbox" Margin="5" Grid.Column="1" Grid.Row="3" IsChecked="{Binding SelectedBook.DatePublished, Converter={StaticResource NullBoolConverter}}"/>
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="4" Text="Published"/>
+                    <DatePicker IsEnabled="{Binding ElementName=cbox, Path=IsChecked}" Margin="5" Grid.Column="1" Grid.Row="4" Date="{Binding SelectedBook.DatePublished, Mode=TwoWay, Converter={StaticResource DateConverter}}" />
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="5" Text="Pages"/>
+                    <TextBox Margin="5" Grid.Column="1" Grid.Row="5" Text="{Binding SelectedBook.Pages, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" />
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="6" Text="ISBN"/>
+                    <TextBox Margin="5" Grid.Column="1" Grid.Row="6" Text="{Binding SelectedBook.Isbn, Mode=TwoWay}" />
+
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="7" Text="Abstract"/>
+                    <TextBox Margin="5" Grid.Column="1" Grid.Row="7" TextWrapping="Wrap" Height="100" Text="{Binding SelectedBook.Abstract, Mode=TwoWay}" />
+
+                </Grid>
+            </ContentDialog>
         </Grid>
 
         <CommandBar Grid.Column="0"  Grid.Row="0"  Background="Black" Foreground="White">
@@ -229,13 +280,11 @@
                                 <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="0" Grid.Column="0" Text="Query" Foreground="White" />
                                 <TextBox  Margin="5" Grid.Row="0" Grid.Column="1"  Text="{Binding FilterQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-
                                 <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="1" Grid.Column="0" Text="Group" Foreground="White" />
                                 <ComboBox Margin="5" Grid.Row="1" Grid.Column="1">
                                     <ComboBoxItem IsSelected="True" Content="Title" Tapped="ComboBoxItem_Tapped" />
-                                    <ComboBoxItem Content="None" Tapped="ComboBoxItem_Tapped_1"/>
+                                    <ComboBoxItem Content="None" Tapped="ComboBoxItem_Tapped_1" />
                                 </ComboBox>
-
 
                                 <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="2" Grid.Column="0" Text="Sort" Foreground="White" />
                                 <ComboBox IsEnabled="False" Margin="5" Grid.Row="2" Grid.Column="1">
@@ -244,9 +293,6 @@
                                     <ComboBoxItem Content="Date Published" />
                                 </ComboBox>
 
-                                
-                                
-                                
                                 <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="3" Grid.Column="0" Text="Filter" Foreground="White" />
 
                                 <StackPanel  Margin="5" Grid.Column="1" Grid.Row="3" Orientation="Horizontal">

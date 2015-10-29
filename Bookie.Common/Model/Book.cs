@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -16,6 +14,8 @@ namespace Bookie.Common.Model
         public DateTime? DatePublished { get; set; }
         public int? Pages { get; set; }
         public int Rating { get; set; }
+        public string Isbn { get; set; }
+        public bool Favourite { get; set; }
 
         public string FullPathAndFileName { get; set; }
         public string FileName { get; set; }
@@ -23,6 +23,23 @@ namespace Bookie.Common.Model
         public virtual ICollection<BookMark> BookMarks { get; set; }
         public virtual Cover Cover { get; set; }
         public virtual Source Source { get; set; }
+        public int SourceId { get; set; }
+
+
+        [NotMapped]
+        public string DatePublishedString
+        {
+            get
+            {
+                if (DatePublished != null)
+                {
+                    var s = (DateTime)DatePublished;
+                    var format = "d MMMM yyyy";
+                    return s.ToString(format);
+                }
+                return null;
+            }
+        }
 
         [NotMapped]
         public ImageSource Image
@@ -37,7 +54,6 @@ namespace Bookie.Common.Model
                 {
                     return new BitmapImage(new Uri("ms-appdata:///local/Covers/nocover.png"));
                 }
-
             }
         }
 

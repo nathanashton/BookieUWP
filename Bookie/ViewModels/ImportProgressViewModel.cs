@@ -64,8 +64,6 @@ namespace Bookie.ViewModels
         private void Cancel()
         {
             ProgressService.Cancel();
-
         }
-
     }
 }

@@ -101,7 +101,11 @@
     </Compile>
     <Compile Include="BindableInkCanvas.cs" />
     <Compile Include="BookmarkToggle.cs" />
+    <Compile Include="Converters\BoolImageConverter.cs" />
+    <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\MouseToScrollBarVisibility.cs" />
+    <Compile Include="Converters\NullableValueConverter.cs" />
+    <Compile Include="Converters\NullBoolConverter.cs" />
     <Compile Include="Converters\NullVisibilityConverter.cs" />
     <Compile Include="Converters\StarRatingConverter.cs" />
     <Compile Include="GroupInfoList.cs" />
@@ -215,9 +219,7 @@
       <Name>PdfViewModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Bookie.Common.Model
+﻿namespace Bookie.Common.Model
 {
     public class Cover
     {

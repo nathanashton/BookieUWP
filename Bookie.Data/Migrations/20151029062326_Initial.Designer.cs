@@ -8,7 +8,7 @@ using Bookie.Data;
 namespace Bookie.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20151028040040_Initial")]
+    [Migration("20151029062326_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,15 +25,19 @@ namespace Bookie.Data.Migrations
 
                     b.Property<DateTime?>("DatePublished");
 
+                    b.Property<bool>("Favourite");
+
                     b.Property<string>("FileName");
 
                     b.Property<string>("FullPathAndFileName");
+
+                    b.Property<string>("Isbn");
 
                     b.Property<int?>("Pages");
 
                     b.Property<int>("Rating");
 
-                    b.Property<int?>("SourceId");
+                    b.Property<int>("SourceId");
 
                     b.Property<string>("Title");
 

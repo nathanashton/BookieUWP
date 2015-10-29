@@ -28,6 +28,5 @@
   <Library Name="Bookie.Domain">
 
   	<!-- add directives for your library here -->
-
   </Library>
 </Directives>
