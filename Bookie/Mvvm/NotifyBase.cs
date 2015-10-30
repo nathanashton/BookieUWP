@@ -19,5 +19,20 @@ namespace Bookie.Mvvm
                         () => { PropertyChanged(this, new PropertyChangedEventArgs(info)); });
             }
         }
+
+
+
+        private static System.ComponentModel.PropertyChangedEventHandler staticpropChanged;
+        static protected void OnStaticPropertyChanged(string pname)
+        {
+            System.ComponentModel.PropertyChangedEventArgs e = new System.ComponentModel.PropertyChangedEventArgs(pname);
+            System.ComponentModel.PropertyChangedEventHandler h = staticpropChanged;
+            if (h != null)
+                h(null, e);
+
+        }
+
+
+
     }
 }

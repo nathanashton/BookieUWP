@@ -15,6 +15,7 @@
     <Page.Resources>
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
         <converters:BoolImageConverter x:Key="BoolImageConverter" />
+        <converters:PageNumberConverter x:Key="PageNumberConverter" />
 
     </Page.Resources>
 
@@ -23,29 +24,59 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
 
-        <Grid Grid.Row="0" Grid.Column="0">
+        
+        
+        <Grid Grid.Row="0" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <CommandBar Grid.Row="0" Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Height="50" Background="Black">
                 <CommandBar.PrimaryCommands>
                     <AppBarButton  Icon="ZoomIn" Tapped="AppBarButton_Tapped" />
                     <AppBarButton  Icon="ZoomOut" Tapped="AppBarButton_Tapped_1" />
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
-            <Grid Visibility="{Binding Progress}" Background="#B7B7B7" Canvas.ZIndex="99" Grid.Row="1" >
+            <Grid Visibility="{Binding Progress}" Background="#B7B7B7" Canvas.ZIndex="99" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
                 <ProgressRing  Foreground="#2b2b2b" Width="70" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="70" IsActive="True" />
             </Grid>
 
-            <ScrollViewer Grid.Row="1"  HorizontalAlignment="Stretch"  x:Name='ScrollViewer'
+            <Grid Grid.Row="1" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="0,5,0,5"  HorizontalAlignment="Center" FontWeight="Bold" Text="BookMarks" FontSize="14" Grid.Row="0"/>
+                <ListView Grid.Row="1" HorizontalAlignment="Center" ItemsSource="{Binding SelectedBook.BookMarks}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png"/>
+                                <TextBlock Text="Page " />
+                                <TextBlock Text="{Binding PageNumber}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="FontSize" Value="12" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Stretch"  x:Name='ScrollViewer'
                         TabNavigation='Local'
                         IsVerticalScrollChainingEnabled='False'
                         IsHorizontalScrollChainingEnabled='False'
@@ -80,14 +111,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid HorizontalAlignment="Center">
+                            <Grid HorizontalAlignment="Center" Tapped="Grid_Tapped">
                                 <Button Margin="10" Width="60" Height="160" Background="{Binding BookMark, Converter={StaticResource BoolImageConverter}}" Command="{Binding DataContext.BookMarkCommand, ElementName=lv}" CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right" Canvas.ZIndex="1000" VerticalAlignment="Top" Content="">
                                 </Button>
                                 <Border Margin="20" BorderBrush="Black" BorderThickness="1"  Height="{Binding Height}" Width="{Binding Width}">
                                     <Image Source="{Binding ImageSourceVsisBackground}" HorizontalAlignment="Center" Height="{Binding Height}" Width="{Binding Width}"></Image>
                                 </Border>
                                 <Border Margin="20" BorderBrush="Black" BorderThickness="1"  Height="{Binding Height}" Width="{Binding Width}">
-
                                     <Image  Source="{Binding ImageSourceVsisForeground}" HorizontalAlignment="Center" Height="{Binding Height}" Width="{Binding Width}"></Image>
                                 </Border>
                             </Grid>
@@ -95,13 +125,20 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Grid Grid.Row="2" Height="40" Background="Black">
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="Black">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding SelectedBook.Title}" FontSize="16" HorizontalAlignment="Left" Margin="20,0,0,0" />
-                <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="0,0,20,0" Foreground="#C8C80E" Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}" FontFamily="Segoe MDL2 Assets" />
+                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding SelectedBook.Title}"  FontSize="16" HorizontalAlignment="Left" Margin="20,0,0,0" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="0,0,20,0" Foreground="#C8C80E" Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}" FontFamily="Segoe MDL2 Assets" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"  FontSize="16" HorizontalAlignment="Left" Margin="0,0,20,0" />
+
+                </StackPanel>
+            
+                
             </Grid>
         </Grid>
     </Grid>

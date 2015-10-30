@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.Storage.AccessCache;
 using Bookie.Data.Repositories;
+using Bookie.Domain;
 
 namespace Bookie.ViewModels
 {
@@ -90,6 +91,24 @@ namespace Bookie.ViewModels
         {
             List<Source> all = new SourceService(new SourceRepository()).GetAll();
             Sources = new ObservableCollection<Source>(all);
+        }
+
+        private void UpdateBooksFromSources()
+        {
+            var importer = new Importer(new BookRepository(), new SourceRepository());
+
+            importer.UpdateBooksFromSources();
+        }
+
+        public RelayCommand UpdateCommand
+        {
+            get
+            {
+                return new RelayCommand((object args) =>
+                {
+                    UpdateBooksFromSources();
+                });
+            }
         }
     }
 }

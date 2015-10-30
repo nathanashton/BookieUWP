@@ -1,8 +1,9 @@
 ﻿using Bookie.Common.Model;
+using Bookie.Data.Repositories;
+using Bookie.Domain.Services;
 using Bookie.Mvvm;
 using PdfViewModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.Data.Pdf;
 using Windows.Foundation;
@@ -10,8 +11,6 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
-using Bookie.Data.Repositories;
-using Bookie.Domain.Services;
 
 namespace Bookie.ViewModels
 {
@@ -21,14 +20,24 @@ namespace Bookie.ViewModels
         private StorageFile _loadedFile;
         private PdfDocViewModel _p;
         private PdfDocument _pdfDocument;
-        private BookMarkService _bookMarkService;
+        private readonly BookMarkService _bookMarkService;
 
+        private int _currentPage;
+
+        public int CurrentPage
+        {
+            get { return _currentPage; }
+            set
+            {
+                _currentPage = value;
+                NotifyPropertyChanged("CurrentPage");
+            }
+        }
 
         public PdfViewModel()
         {
             _bookMarkService = new BookMarkService(new BookMarkRepository());
         }
-
 
         public StorageFile PdfFile
         {
@@ -52,22 +61,7 @@ namespace Bookie.ViewModels
             }
         }
 
-        private RelayCommand _notesVisibility;
-
-
-        private RelayCommand _previousCommand;
-        private RelayCommand _nextCommand;
-
-        public RelayCommand BookMarkCommand
-        {
-            get
-            {
-                return new RelayCommand((object args) =>
-                {
-                    BookMarkPage(args);
-                });
-            }
-        }
+        public RelayCommand BookMarkCommand => new RelayCommand(BookMarkPage);
 
         public bool CanE(object parameter)
         {
@@ -78,7 +72,6 @@ namespace Bookie.ViewModels
         {
             var page = V[Convert.ToInt32(parameter)] as PdfPageViewModel;
 
-
             if (page.BookMark)
             {
                 page.BookMark = false;
@@ -87,6 +80,9 @@ namespace Bookie.ViewModels
                 if (existingBookMark != null)
                 {
                     _bookMarkService.Remove(existingBookMark);
+                    SelectedBook.BookMarks.Remove(existingBookMark);
+                    NotifyPropertyChanged("SelectedBook");
+
                 }
             }
             else
@@ -96,15 +92,15 @@ namespace Bookie.ViewModels
                 var existingBookMark = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == page.PageNumber);
                 if (existingBookMark == null)
                 {
-
                     var bookmark = new BookMark
                     {
                         Book = SelectedBook,
                         PageNumber = Convert.ToInt32(page.PageNumber)
                     };
                     SelectedBook.BookMarks.Add(bookmark);
+                   
+                    NotifyPropertyChanged("SelectedBook");
                     _bookMarkService.Add(bookmark);
-               
                 }
             }
             UpdateBookmarks();
@@ -120,17 +116,7 @@ namespace Bookie.ViewModels
             }
         }
 
-
-        public Book SelectedBook
-        {
-            get { return ShellViewModel.SelectedBook; }
-        }
-
-        private void Next()
-        { }
-
-        private void Previous()
-        { }
+        public Book SelectedBook => ShellViewModel.SelectedBook;
 
         private string _start;
         private string _finish;
@@ -200,6 +186,7 @@ namespace Bookie.ViewModels
             {
                 V = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource);
                 UpdateBookmarks();
+                CurrentPage = 1;
             }
             catch (Exception)
             {
@@ -215,6 +202,7 @@ namespace Bookie.ViewModels
 
         public async void LoadDefaultFile()
         {
+            if (ShellViewModel.SelectedBook == null) return;
             var storageFolder = await
             StorageApplicationPermissions.FutureAccessList.GetFolderAsync(ShellViewModel.SelectedBook.Source.Token);
             var file = await storageFolder.GetFileAsync(ShellViewModel.SelectedBook.FileName);

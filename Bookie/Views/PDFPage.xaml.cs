@@ -3,6 +3,9 @@
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Bookie.Common.Model;
+using PdfViewModel;
+using System.Linq;
 
 namespace Bookie.Views
 {
@@ -21,6 +24,7 @@ namespace Bookie.Views
 
         private void EventHandlerViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
+            
             if (!e.IsIntermediate)
             {
                 var scrollViewer = sender as ScrollViewer;
@@ -55,6 +59,14 @@ namespace Bookie.Views
             var factor = Convert.ToSingle(ScrollViewer.ZoomFactor - 0.4);
 
             ScrollViewer.ChangeView(ScrollViewer.HorizontalOffset, ScrollViewer.VerticalOffset, factor);
+        }
+
+        private void Grid_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            var s = sender as Grid;
+            var page = (PdfPageViewModel) s.DataContext;
+            _viewmodel.CurrentPage = Convert.ToInt32(page.PageNumber);
+
         }
     }
 }

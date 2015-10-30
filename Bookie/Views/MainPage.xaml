@@ -177,7 +177,7 @@
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
 
                                     <TextBlock Text="{Binding DatePublishedString}" Foreground="#BCBCB6"
-                      Height="18" Width="100" FontSize="12"
+                      Height="18" Width="150" FontSize="12"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" Opacity="0.5" />
                                 </StackPanel>
                             </Grid>
@@ -259,7 +259,6 @@
 
         <CommandBar Grid.Column="0"  Grid.Row="0"  Background="Black" Foreground="White">
             <CommandBar.PrimaryCommands>
-                <AppBarButton Foreground="White" Icon="Refresh" Label="Update" Command="{Binding UpdateCommand}" />
                 <AppBarButton Foreground="{Binding FilterColor}" Label="Filter" Icon="Filter">
                     <AppBarButton.Flyout>
                         <Flyout>

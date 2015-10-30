@@ -48,16 +48,7 @@ namespace Bookie.ViewModels
             }
         }
 
-        public RelayCommand UpdateCommand
-        {
-            get
-            {
-                return new RelayCommand((object args) =>
-                {
-                    UpdateBooksFromSources();
-                });
-            }
-        }
+
 
         public RelayCommand EditCommand
         {
@@ -161,13 +152,7 @@ namespace Bookie.ViewModels
             }
         }
 
-        private void UpdateBooksFromSources()
-        {
-            var importer = new Importer(new BookRepository(), new SourceRepository());
 
-            importer.UpdateBooksFromSources();
-            RefreshBooks();
-        }
 
         private List<int> _ratings;
 

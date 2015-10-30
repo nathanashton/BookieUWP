@@ -21,6 +21,8 @@
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
+                <AppBarButton Foreground="White" Icon="Refresh" Label="Update" Command="{Binding UpdateCommand}" />
+
                 <AppBarButton Icon="Add" Label="Import" Command="{Binding AddCommand}" />
                 <AppBarButton Label="Remove" Icon="Remove" Command="{Binding RemoveCommand}" />
             </CommandBar.PrimaryCommands>

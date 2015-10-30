@@ -88,7 +88,8 @@ namespace Bookie.Domain
                         Title = storageFiles[i].DisplayName,
                         Source = source,
                         FileName = Path.GetFileName(storageFiles[i].Path),
-                        FullPathAndFileName = storageFiles[i].Path
+                        FullPathAndFileName = storageFiles[i].Path,
+                        Rating = 0
                     };
 
                     var existingBook = _bookService.Find(b => b.FullPathAndFileName == book.FullPathAndFileName);

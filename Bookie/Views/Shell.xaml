@@ -13,7 +13,7 @@
     <Grid>
         <SplitView x:Name="MySplitView"
                    IsPaneOpen="False"
-                   CompactPaneLength="40"
+                   CompactPaneLength="60"
                    OpenPaneLength="150"
                    PaneBackground="Green"
                    DisplayMode="CompactInline">
@@ -27,7 +27,7 @@
                       Background="Black">
                     <ListView ItemsSource="{Binding Menu}"
                               SelectionChanged="Menu_SelectionChanged"
-                              Margin="0 48 0 0"
+                              Margin="0 68 0 0"
                               VerticalAlignment="Top">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -36,10 +36,11 @@
                                               Glyph="{Binding Glyph}"
                                               VerticalAlignment="Center"
                                               HorizontalAlignment="Center"
+                                              Margin="10,0,0,0" 
                                               Foreground="White"
                                               ToolTipService.ToolTip="{Binding Text}" />
                                     <TextBlock Text="{Binding Text}"
-                                               Margin="8 0 0 0"
+                                               Margin="28 0 0 0"
                                                Foreground="White" />
                                 </StackPanel>
                             </DataTemplate>
@@ -83,7 +84,7 @@
                 Content="&#xE700;"
                 Width="40"
                 Height="40"
-
+Margin="10,0,0,0"
                 Background="Transparent"
                 Foreground="White"
                 VerticalAlignment="Top"

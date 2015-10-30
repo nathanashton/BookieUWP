@@ -5,5 +5,10 @@
         public int Id { get; set; }
         public int PageNumber { get; set; }
         public virtual Book Book { get; set; }
+
+        public override string ToString()
+        {
+            return "Page " + PageNumber;
+        }
     }
 }
