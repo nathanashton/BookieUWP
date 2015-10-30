@@ -15,6 +15,7 @@ namespace PdfViewModel
 	public:
 		PdfDocViewModel(_In_ Windows::Data::Pdf::PdfDocument^ pdfDocument, _In_ Windows::Foundation::Size pageSize, _In_ SurfaceType surfaceType);
 
+
 #pragma region IBindableObservableVector
 
 		virtual event Windows::UI::Xaml::Interop::BindableVectorChangedEventHandler^ VectorChanged

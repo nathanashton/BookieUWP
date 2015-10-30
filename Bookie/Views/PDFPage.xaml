@@ -16,8 +16,8 @@
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
         <converters:BoolImageConverter x:Key="BoolImageConverter" />
         <converters:PageNumberConverter x:Key="PageNumberConverter" />
-
     </Page.Resources>
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -28,18 +28,15 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-
-        
-        
-        <Grid Grid.Row="0" Grid.Column="1">
+        <Grid Grid.Row="0" Grid.Column="1" Background="#454444">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Height="50" Background="Black">
                 <CommandBar.PrimaryCommands>
@@ -48,21 +45,21 @@
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
-            <Grid Visibility="{Binding Progress}" Background="#B7B7B7" Canvas.ZIndex="99" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
+            <Grid Visibility="{Binding Progress}" Background="#B7B7B7" Canvas.ZIndex="99" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <ProgressRing  Foreground="#2b2b2b" Width="70" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="70" IsActive="True" />
             </Grid>
 
-            <Grid Grid.Row="1" Grid.Column="0">
+            <Grid Background="Black" Grid.Row="1" Width="120" Visibility="{Binding BookMarksVisibility}" Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock Margin="0,5,0,5"  HorizontalAlignment="Center" FontWeight="Bold" Text="BookMarks" FontSize="14" Grid.Row="0"/>
-                <ListView Grid.Row="1" HorizontalAlignment="Center" ItemsSource="{Binding SelectedBook.BookMarks}">
+                <TextBlock Margin="0,5,0,5"  HorizontalAlignment="Center" FontWeight="Bold" Text="BookMarks" FontSize="14" Grid.Row="0" />
+                <ListView  Grid.Row="1" HorizontalAlignment="Center"  ItemsSource="{Binding SelectedBook.BookMarks}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png"/>
+                                <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png" />
                                 <TextBlock Text="Page " />
                                 <TextBlock Text="{Binding PageNumber}" />
                             </StackPanel>
@@ -91,9 +88,9 @@
                         ZoomMode='Enabled'
                         MinZoomFactor="0.3"
                         MaxZoomFactor="4"
-                        ViewChanged="EventHandlerViewChanged" Background="#B7B7B7">
+                        ViewChanged="EventHandlerViewChanged" Background="Transparent">
 
-                <ItemsControl Name="lv" HorizontalAlignment="Center" Background="Green" ItemsSource="{Binding V}" Margin="20">
+                <ItemsControl  Name="lv" HorizontalAlignment="Center" ItemsSource="{Binding V}" Margin="20">
                     <ControlTemplate x:Name='zoomedInViewControlTemplate'>
 
                         <ItemsPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -127,18 +124,27 @@
             </ScrollViewer>
             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="Black">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding SelectedBook.Title}"  FontSize="16" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                <Button FontFamily="Segoe MDL2 Assets"
+                Content="&#xE90C;"
+                Width="40"
+                Height="40"
+                FontSize="24"
+Margin="10,0,0,0"
+                Background="Transparent"
+                Foreground="White"
+                VerticalAlignment="Top"
+                BorderThickness="0" Command="{Binding ToggleBookMarksCommand}" Grid.Column="0" />
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding SelectedBook.Title}"  FontSize="16" HorizontalAlignment="Right" Margin="0,0,20,0" />
                     <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="0,0,20,0" Foreground="#C8C80E" Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}" FontFamily="Segoe MDL2 Assets" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"  FontSize="16" HorizontalAlignment="Left" Margin="0,0,20,0" />
-
                 </StackPanel>
-            
-                
             </Grid>
         </Grid>
     </Grid>

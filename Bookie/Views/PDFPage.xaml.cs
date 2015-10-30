@@ -22,6 +22,8 @@ namespace Bookie.Views
             var p = this.ActualWidth;
         }
 
+      
+
         private void EventHandlerViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             
@@ -66,7 +68,13 @@ namespace Bookie.Views
             var s = sender as Grid;
             var page = (PdfPageViewModel) s.DataContext;
             _viewmodel.CurrentPage = Convert.ToInt32(page.PageNumber);
-
         }
+
+        private void StackPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+           // lv.ScrollIntoView(_viewmodel.SelectedPage);
+        }
+
+
     }
 }

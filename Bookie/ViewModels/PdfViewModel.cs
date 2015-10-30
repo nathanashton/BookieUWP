@@ -4,6 +4,7 @@ using Bookie.Domain.Services;
 using Bookie.Mvvm;
 using PdfViewModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.Data.Pdf;
 using Windows.Foundation;
@@ -62,11 +63,19 @@ namespace Bookie.ViewModels
         }
 
         public RelayCommand BookMarkCommand => new RelayCommand(BookMarkPage);
+        public RelayCommand ToggleBookMarksCommand => new RelayCommand(ToggleBookMarks);
+
 
         public bool CanE(object parameter)
         {
             return true;
         }
+
+        private void ToggleBookMarks(object parameter)
+        {
+            BookMarksVisibility = BookMarksVisibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
 
         private void BookMarkPage(object parameter)
         {
@@ -106,6 +115,18 @@ namespace Bookie.ViewModels
             UpdateBookmarks();
         }
 
+
+        private Visibility _bookMarksVisibility;
+
+        public Visibility BookMarksVisibility
+        {
+            get { return _bookMarksVisibility; }
+            set { _bookMarksVisibility = value;
+                NotifyPropertyChanged("BookMarksVisibility");
+            }
+        }
+
+
         private void UpdateBookmarks()
         {
             SelectedBook.BookMarks = _bookMarkService.GetAllForBook(SelectedBook);
@@ -114,6 +135,9 @@ namespace Bookie.ViewModels
                 var page = V.GetPage(Convert.ToUInt32(bookmark.PageNumber)) as PdfPageViewModel;
                 page.BookMark = true;
             }
+
+            SelectedBook.BookMarks = SelectedBook.BookMarks.OrderBy(x => x.PageNumber).ToList();
+
         }
 
         public Book SelectedBook => ShellViewModel.SelectedBook;
@@ -187,6 +211,7 @@ namespace Bookie.ViewModels
                 V = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource);
                 UpdateBookmarks();
                 CurrentPage = 1;
+                NotifyPropertyChanged("SelectedBook");
             }
             catch (Exception)
             {

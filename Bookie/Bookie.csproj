@@ -148,6 +148,7 @@
     <None Include="uwp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\bgtile.jpg" />
     <Content Include="Assets\bookmark.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Properties\Default.rd.xml" />

@@ -31,6 +31,9 @@ namespace PdfViewModel
 		}
 	}
 
+	
+
+
 #pragma region IBindableObservableVector
 
 	Windows::Foundation::EventRegistrationToken PdfDocViewModel::VectorChanged::add(_In_ BindableVectorChangedEventHandler^ e)
@@ -111,6 +114,8 @@ namespace PdfViewModel
 	{
 		return storage->GetAt(index - 1);
 	}
+
+
 
 	void PdfDocViewModel::RemoveAtEnd()
 	{

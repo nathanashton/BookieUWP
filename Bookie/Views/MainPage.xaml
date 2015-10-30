@@ -109,7 +109,7 @@
                 </ListView.GroupStyle>
             </ListView>
 
-            <GridView  SelectedItem="{Binding SelectedBook, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource BooksCollectionViewSource}}"  x:Name="gview">
+            <GridView Margin="10" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource BooksCollectionViewSource}}"  x:Name="gview">
 
                 <GridView.ItemTemplate>
                     <DataTemplate>
