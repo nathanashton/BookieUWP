@@ -17,7 +17,6 @@ namespace PdfViewModel
 	{
 	public:
 		PdfPageViewModel(_In_ Windows::Data::Pdf::PdfDocument^ document, _In_ unsigned int index);
-
 		property unsigned int PageIndex { unsigned int get(); void set(_In_ unsigned int); };
 		property unsigned int PageNumber { unsigned int get(); };
 		property bool BookMark {bool get(); void set(_In_ bool); };

@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 
 namespace Bookie.ViewModels
@@ -77,6 +78,7 @@ namespace Bookie.ViewModels
         }
 
 
+
         private void BookMarkPage(object parameter)
         {
             var page = V[Convert.ToInt32(parameter)] as PdfPageViewModel;
@@ -91,7 +93,6 @@ namespace Bookie.ViewModels
                     _bookMarkService.Remove(existingBookMark);
                     SelectedBook.BookMarks.Remove(existingBookMark);
                     NotifyPropertyChanged("SelectedBook");
-
                 }
             }
             else
@@ -212,6 +213,7 @@ namespace Bookie.ViewModels
                 UpdateBookmarks();
                 CurrentPage = 1;
                 NotifyPropertyChanged("SelectedBook");
+                BookMarksVisibility = Visibility.Collapsed;
             }
             catch (Exception)
             {

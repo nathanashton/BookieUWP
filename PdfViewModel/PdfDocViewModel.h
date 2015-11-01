@@ -50,6 +50,7 @@ namespace PdfViewModel
 		{
 			unsigned int get();
 		}
+		
 
 #pragma endregion
 

@@ -13,6 +13,12 @@ namespace Bookie.Views
     {
         private ViewModels.PdfViewModel _viewmodel;
 
+        public ViewModels.PdfViewModel ViewModel
+        {
+            get { return _viewmodel; }
+        }
+
+
         private int _currentPage;
 
         public PdfPage()

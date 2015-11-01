@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Height="50" Background="Black">
+            <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50" Background="Black">
                 <CommandBar.PrimaryCommands>
                     <AppBarButton  Icon="ZoomIn" Tapped="AppBarButton_Tapped" />
                     <AppBarButton  Icon="ZoomOut" Tapped="AppBarButton_Tapped_1" />
@@ -73,7 +73,7 @@
                 </ListView>
             </Grid>
 
-            <ScrollViewer Grid.Row="1"  Grid.Column="1" HorizontalAlignment="Stretch"  x:Name='ScrollViewer'
+            <ScrollViewer Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  x:Name='ScrollViewer'
                         TabNavigation='Local'
                         IsVerticalScrollChainingEnabled='False'
                         IsHorizontalScrollChainingEnabled='False'
@@ -109,6 +109,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center" Tapped="Grid_Tapped">
+                                
                                 <Button Margin="10" Width="60" Height="160" Background="{Binding BookMark, Converter={StaticResource BoolImageConverter}}" Command="{Binding DataContext.BookMarkCommand, ElementName=lv}" CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right" Canvas.ZIndex="1000" VerticalAlignment="Top" Content="">
                                 </Button>
                                 <Border Margin="20" BorderBrush="Black" BorderThickness="1"  Height="{Binding Height}" Width="{Binding Width}">
@@ -125,7 +126,6 @@
             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="Black">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
-
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
