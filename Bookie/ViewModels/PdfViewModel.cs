@@ -13,6 +13,7 @@ using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
+using Bookie.Domain;
 
 namespace Bookie.ViewModels
 {
@@ -234,6 +235,10 @@ namespace Bookie.ViewModels
             StorageApplicationPermissions.FutureAccessList.GetFolderAsync(ShellViewModel.SelectedBook.Source.Token);
             var file = await storageFolder.GetFileAsync(ShellViewModel.SelectedBook.FileName);
             _loadedFile = file ?? null;
+
+
+
+
             LoadPdf(_loadedFile);
         }
 

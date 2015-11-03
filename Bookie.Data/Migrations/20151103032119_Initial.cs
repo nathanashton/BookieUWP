@@ -28,13 +28,16 @@ namespace Bookie.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Abstract = table.Column<string>(nullable: true),
+                    Author = table.Column<string>(nullable: true),
                     DatePublished = table.Column<DateTime>(nullable: true),
                     Favourite = table.Column<bool>(nullable: false),
                     FileName = table.Column<string>(nullable: true),
                     FullPathAndFileName = table.Column<string>(nullable: true),
                     Isbn = table.Column<string>(nullable: true),
                     Pages = table.Column<int>(nullable: true),
+                    Publisher = table.Column<string>(nullable: true),
                     Rating = table.Column<int>(nullable: false),
+                    Scraped = table.Column<bool>(nullable: false),
                     SourceId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: true)
                 },

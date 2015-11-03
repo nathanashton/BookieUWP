@@ -5,6 +5,7 @@ using Bookie.Domain.Services;
 using System;
 using System.ComponentModel;
 using System.IO;
+using Bookie.Domain.Scraper;
 
 namespace Bookie.Domain
 {
@@ -92,9 +93,53 @@ namespace Bookie.Domain
                         Rating = 0
                     };
 
+
+                 
+
+
                     var existingBook = _bookService.Find(b => b.FullPathAndFileName == book.FullPathAndFileName);
                     if (existingBook.Count == 0) // Add Book
                     {
+                        //Scrape for Isbn
+
+                        PdfParser p = new PdfParser();
+                        var s = p.Extract(storageFiles[i], 1, 10).Result;
+                        var isbn = PdfIsbnParser.FindIsbn(s);
+                        if (!String.IsNullOrEmpty(isbn))
+                        {
+                            book.Isbn = isbn;
+                            //var scraper = new GoogleScraper();
+                            //var results = scraper.SearchBooks(book.Isbn).Result;
+                            //if (results != null && results[0].Book != null)
+                            //{
+                            //    var f = results[0].Book;
+                            //    book.Title = f.Title;
+                            //    book.Abstract = f.Abstract;
+                            //    book.Pages = f.Pages;
+                            //    book.DatePublished = f.DatePublished;
+                            //    book.Scraped = true;
+                            //    book.Author = f.Author;
+                            //    book.Publisher = f.Publisher;
+                            //}
+                            var scraper = new Scraper.Scraper();
+                            var results = scraper.Scrape(book.Isbn).Result;
+                            if (results.items != null && results.items.Count > 0)
+                            {
+                                book.Title = results.items[0].volumeInfo.title;
+                                book.Abstract = results.items[0].volumeInfo.description;
+                                book.Pages = results.items[0].volumeInfo.pageCount;
+                            }
+
+
+
+
+                        }
+
+
+                
+
+
+
                         var cover = new Cover();
                         var coverPath = pdfCover.GenerateCoverImage(book, 0, _sourcerepo).Result;
                         cover.FileName = Path.GetFileName(coverPath);

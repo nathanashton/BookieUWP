@@ -16,6 +16,7 @@
         <converters:NullableValueConverter x:Key="NullableValueConverter" />
         <converters:DateConverter x:Key="DateConverter" />
         <converters:NullBoolConverter x:Key="NullBoolConverter" />
+        <converters:ScrapedBorderBrushConverter x:Key="ScrapedBorderBrushConverter" />
 
 
     </Page.Resources>
@@ -146,12 +147,12 @@
 
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12" VerticalAlignment="Center"  Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="12" VerticalAlignment="Center"  Text="John Smith" />
+                                                <TextBlock FontSize="12" VerticalAlignment="Center"  Text="{Binding Author}" />
                                             </StackPanel>
 
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock FontSize="12" VerticalAlignment="Center" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="12" VerticalAlignment="Center" Text="Wiley FilteredBooks" />
+                                                <TextBlock FontSize="12" VerticalAlignment="Center" Text="{Binding Publisher}" />
                                             </StackPanel>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Row="3">
@@ -162,8 +163,10 @@
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
                             <Grid Margin="10" Height="320" Width="170">
-                                <Border Width="170" Height="232" VerticalAlignment="Top" BorderBrush="White" BorderThickness="1">
+                                <Border Width="170" Height="232" VerticalAlignment="Top" BorderBrush="{Binding Scraped, Converter={StaticResource ScrapedBorderBrushConverter}}" BorderThickness="2">
+                                    <Border BorderBrush="Black" BorderThickness="2">
                                     <Image Source="{Binding Image}"  Stretch="Fill" />
+                                    </Border>
                                 </Border>
                                 <StackPanel Orientation="Vertical"
                     Height="90" VerticalAlignment="Bottom">
@@ -172,7 +175,7 @@
                                     </StackPanel>
 
                                     <TextBlock Foreground="White" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="18" Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                    <TextBlock Foreground="#BCBCB6" Text="Wiley Publishing"
+                                    <TextBlock Foreground="#BCBCB6" Text="{Binding Publisher}"
                       Width="160" Height="18" FontSize="13"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
 

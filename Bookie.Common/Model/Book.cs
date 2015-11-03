@@ -17,6 +17,9 @@ namespace Bookie.Common.Model
         public string Isbn { get; set; }
         public bool Favourite { get; set; }
      //   public int? CurrentPage { get; set; }
+        public bool Scraped { get; set; }
+        public string Publisher { get; set; }
+        public string Author { get; set; }
 
         public string FullPathAndFileName { get; set; }
         public string FileName { get; set; }

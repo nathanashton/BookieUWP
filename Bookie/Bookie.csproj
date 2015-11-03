@@ -108,6 +108,7 @@
     <Compile Include="Converters\NullBoolConverter.cs" />
     <Compile Include="Converters\NullVisibilityConverter.cs" />
     <Compile Include="Converters\PageNumberConverter.cs" />
+    <Compile Include="Converters\ScrapedBorderBrushConverter.cs" />
     <Compile Include="Converters\StarRatingConverter.cs" />
     <Compile Include="GroupInfoList.cs" />
     <Compile Include="ImportProgress.xaml.cs">

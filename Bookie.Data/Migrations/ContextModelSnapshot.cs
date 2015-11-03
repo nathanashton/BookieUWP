@@ -22,6 +22,8 @@ namespace Bookie.Data.Migrations
 
                     b.Property<string>("Abstract");
 
+                    b.Property<string>("Author");
+
                     b.Property<DateTime?>("DatePublished");
 
                     b.Property<bool>("Favourite");
@@ -34,7 +36,11 @@ namespace Bookie.Data.Migrations
 
                     b.Property<int?>("Pages");
 
+                    b.Property<string>("Publisher");
+
                     b.Property<int>("Rating");
+
+                    b.Property<bool>("Scraped");
 
                     b.Property<int>("SourceId");
 
