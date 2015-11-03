@@ -40,6 +40,15 @@ public class VolumeInfo
     public string previewLink { get; set; }
     public string infoLink { get; set; }
     public string canonicalVolumeLink { get; set; }
+
+    public string authorsstring
+    {
+        get
+        {
+            return string.Join(",", authors.ToArray());
+        }
+    }
+
 }
 
 public class SaleInfo

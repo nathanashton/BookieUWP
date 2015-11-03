@@ -128,6 +128,13 @@ namespace Bookie.Domain
                                 book.Title = results.items[0].volumeInfo.title;
                                 book.Abstract = results.items[0].volumeInfo.description;
                                 book.Pages = results.items[0].volumeInfo.pageCount;
+                                book.Scraped = true;
+
+                                if (results.items[0].volumeInfo.authors != null)
+                                {
+                                    book.Author = string.Join(",", results.items[0].volumeInfo.authors.ToArray());
+                                }
+                                book.Publisher = results.items[0].volumeInfo.publisher;
                             }
 
 

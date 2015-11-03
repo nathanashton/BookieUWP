@@ -302,7 +302,7 @@
                                     <CheckBox IsEnabled="False" Content="Reading" Foreground="White" />
                                 </StackPanel>
                                 <StackPanel Margin="5" Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
-                                    <CheckBox IsEnabled="False" Content="Bookmarks" Foreground="White" />
+                                    <CheckBox IsEnabled="True" Content="Scraped" Foreground="White" />
                                 </StackPanel>
                             </Grid>
                         </Flyout>
