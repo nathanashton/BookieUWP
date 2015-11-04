@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Bookie.Common.Model;
 using PdfViewModel;
 using System.Linq;
+using Bookie.Common;
 using Syncfusion.Pdf;
 using Syncfusion.Pdf.Interactive;
 using Syncfusion.Windows.PdfViewer;
@@ -46,31 +47,31 @@ namespace Bookie.Views
 
         private void AddBookMark(PdfLoadedBookmark bookmark)
         {
-            if (bookmark.Count == 0)
-            {
-                listView.Items.Add(bookmark.Title);
-                bookmarksDictionary.Add(bookmark.Title, bookmark);
-            }
-            else
-            {
-                listView.Items.Add(bookmark.Title);
-                bookmarksDictionary.Add(bookmark.Title, bookmark);
-                // loop to retieve thw child elemts of the bookmark
-                foreach (PdfLoadedBookmark value in bookmark)
-                {
-                    if (value.Count == 0)
-                    {
-                        //BookMark child items added with Parent Name
-                        listView.Items.Add(bookmark.Title + " : " + value.Title);
-                        bookmarksDictionary.Add(bookmark.Title + " : " + value.Title, value);
-                    }
-                    else
-                    {
-                        // Calls this method recursively to add all the bookmarks child
-                        AddBookMark(value);
-                    }
-                }
-            }
+            //if (bookmark.Count == 0)
+            //{
+            //    listView.Items.Add(bookmark.Title);
+            //    bookmarksDictionary.Add(bookmark.Title, bookmark);
+            //}
+            //else
+            //{
+            //    listView.Items.Add(bookmark.Title);
+            //    bookmarksDictionary.Add(bookmark.Title, bookmark);
+            //    // loop to retieve thw child elemts of the bookmark
+            //    foreach (PdfLoadedBookmark value in bookmark)
+            //    {
+            //        if (value.Count == 0)
+            //        {
+            //            //BookMark child items added with Parent Name
+            //            listView.Items.Add(bookmark.Title + " : " + value.Title);
+            //            bookmarksDictionary.Add(bookmark.Title + " : " + value.Title, value);
+            //        }
+            //        else
+            //        {
+            //            // Calls this method recursively to add all the bookmarks child
+            //            AddBookMark(value);
+            //        }
+            //    }
+            //}
         }
 
 
@@ -176,6 +177,12 @@ namespace Bookie.Views
             pdfViewer1.GotoPage((e.ClickedItem as BookMark).PageNumber
  );
 
+        }
+
+        private void TextBlock_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            var p = (BookMarkBase)(sender as TextBlock).DataContext;
+            pdfViewer1.GotoPage(p.PageNumber);
         }
     }
 }

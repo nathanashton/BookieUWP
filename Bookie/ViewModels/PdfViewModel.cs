@@ -5,23 +5,52 @@ using Bookie.Mvvm;
 using PdfViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
+using Bookie.Common;
 using Bookie.Domain;
+using Syncfusion.Pdf;
+using Syncfusion.Pdf.Interactive;
 using Syncfusion.Pdf.Parsing;
 using Syncfusion.Windows.PdfViewer;
+using PdfDocument = Windows.Data.Pdf.PdfDocument;
 
 namespace Bookie.ViewModels
 {
     public class PdfViewModel : NotifyBase
     {
+
+        private ObservableCollection<BookMarkBase> _bookmarks;
+
+        public ObservableCollection<BookMarkBase> BookMarks
+        {
+            get { return _bookmarks; }
+            set { _bookmarks = value;
+                NotifyPropertyChanged("BookMarks");
+            }
+        }
+
+        private CollectionViewSource _bookmarksCollection;
+
+        public CollectionViewSource BookMarksCollection
+        {
+            get { return _bookmarksCollection; }
+            set
+            {
+                _bookmarksCollection = value;
+                NotifyPropertyChanged("BookMarksCollection");
+            }
+        }
+
+
         private SfPdfViewerControl _pdfControl;
 
         public SfPdfViewerControl pdfControl
@@ -141,7 +170,81 @@ namespace Bookie.ViewModels
             if (LoadingFinished != null)
             {
                 LoadingFinished(this, null);
+
             }
+            BookMarks = new ObservableCollection<BookMarkBase>();
+
+
+            foreach (PdfLoadedBookmark bookmark in doc.Bookmarks)
+            {
+                var bmark1 = new BookMarkBase();
+                bmark1.Title = bookmark.Title;
+                var page = bookmark.Destination.Page;
+                int pageIndex = 0;
+                foreach (PdfPageBase pageBase in doc.Pages)
+                {
+                    if (page == pageBase)
+                    {
+                        bmark1.PageNumber = pageIndex + 1;
+                    }
+                    pageIndex++;
+                }
+
+                if (bookmark.Count > 0)
+                {
+                    bmark1.BookMarks = new ObservableCollection<BookMarkBase>();
+                    foreach (PdfLoadedBookmark bookmark2 in bookmark)
+                    {
+                        var bmark2 = new BookMarkBase();
+                        bmark2.Title = bookmark2.Title;
+                        var page2 = bookmark2.Destination.Page;
+                        int pageIndex2 = 0;
+                        foreach (PdfPageBase pageBase in doc.Pages)
+                        {
+                            if (page2 == pageBase)
+                            {
+                                bmark2.PageNumber = pageIndex2 + 1;
+                            }
+                            pageIndex2++;
+                        }
+                        if (bookmark2.Count > 0)
+                        {
+                            bmark2.BookMarks = new ObservableCollection<BookMarkBase>();
+                            foreach (PdfLoadedBookmark bookmark3 in bookmark2)
+                            {
+                                var bmark3 = new BookMarkBase();
+                                bmark3.Title = bookmark3.Title;
+                                var page3 = bookmark3.Destination.Page;
+                                int pageIndex3 = 0;
+                                foreach (PdfPageBase pageBase in doc.Pages)
+                                {
+                                    if (page3 == pageBase)
+                                    {
+                                        bmark3.PageNumber = pageIndex3 + 1;
+                                    }
+                                    pageIndex3++;
+                                }
+                                bmark2.BookMarks.Add(bmark3);
+                            }
+                        }
+                        bmark1.BookMarks.Add(bmark2);
+                    }
+                }
+
+                BookMarks.Add(bmark1);
+            }
+
+            
+
+
+
+
+
+
+            BookMarksCollection = new CollectionViewSource();
+         //   BookMarksCollection.IsSourceGrouped = true;
+         //   BookMarksCollection.ItemsPath = new PropertyPath("Title");
+            BookMarksCollection.Source = BookMarks;
         }
 
         public event EventHandler LoadingFinished;

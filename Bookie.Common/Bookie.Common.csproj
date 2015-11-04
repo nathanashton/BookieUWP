@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="BookEventArgs.cs" />
     <Compile Include="BookieMessageEventArgs.cs" />
+    <Compile Include="BookMarkHeirarchy.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="ImageHelper.cs" />
     <Compile Include="Interfaces\IBookieData.cs" />
