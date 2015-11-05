@@ -164,6 +164,16 @@ namespace Bookie.ViewModels
             }
         }
 
+        private bool _pageHasBookMark;
+
+        public bool PageHasBookMark
+        {
+            get { return _pageHasBookMark; }
+            set { _pageHasBookMark = value;
+                NotifyPropertyChanged("PageHasBookMark");
+            }
+        }
+
 
         private void RefreshBooks()
         {

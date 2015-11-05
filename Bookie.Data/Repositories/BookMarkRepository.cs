@@ -49,9 +49,12 @@ namespace Bookie.Data.Repositories
         {
             using (var ctx = new Context())
             {
-                ctx.Bookmarks.Attach(bookmark);
-                ctx.Bookmarks.Remove(bookmark);
-                ctx.SaveChanges();
+
+                    ctx.Bookmarks.Attach(bookmark);
+                    ctx.Bookmarks.Remove(bookmark);
+                    ctx.SaveChanges();
+
+
             }
         }
     }

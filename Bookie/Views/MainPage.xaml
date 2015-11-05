@@ -8,7 +8,7 @@
 
     mc:Ignorable="d" Tapped="Page_Tapped" SizeChanged="Page_SizeChanged" d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
     <Page.Resources>
-        <CollectionViewSource x:Name="BooksCollectionViewSource" IsSourceGrouped="True" Source="{Binding GroupedBooks}" />
+        <CollectionViewSource x:Name="BooksCollectionViewSource" IsSourceGrouped="False" Source="{Binding FilteredBooks}" />
         <CollectionViewSource x:Name="BooksCollectionViewSourceNotgrouped" IsSourceGrouped="False" Source="{Binding Books}" />
 
         <converters:NullVisibilityConverter x:Key="NullVisConverter" />
@@ -163,10 +163,8 @@
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
                             <Grid Margin="10" Height="320" Width="170">
-                                <Border Width="170" Height="232" VerticalAlignment="Top" BorderBrush="{Binding Scraped, Converter={StaticResource ScrapedBorderBrushConverter}}" BorderThickness="2">
-                                    <Border BorderBrush="Black" BorderThickness="2">
+                                  <Border Width="170" Height="232" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
                                     <Image Source="{Binding Image}"  Stretch="Fill" />
-                                    </Border>
                                 </Border>
                                 <StackPanel Orientation="Vertical"
                     Height="90" VerticalAlignment="Bottom">

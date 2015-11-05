@@ -4,45 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:inking="using:Windows.UI.Input.Inking"
-    xmlns:bookie="using:Bookie"
-    xmlns:interop="using:Windows.UI.Xaml.Interop"
-    xmlns:pdfViewModel="using:PdfViewModel"
-    xmlns:viewModels="using:Bookie.ViewModels"
     xmlns:cc="using:Syncfusion.Windows.PdfViewer"
     xmlns:converters="using:Bookie.Converters"
-    xmlns:primitives="using:Syncfusion.UI.Xaml.Primitives"
-    xmlns:local="using:Bookie.Common"
-    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d" Loaded="Page_Loaded">
     <Page.Resources>
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
-        <converters:BoolImageConverter x:Key="BoolImageConverter" />
-        <converters:PageNumberConverter x:Key="PageNumberConverter" />
-
-        <DataTemplate x:Key="level4">
-            <TextBlock Text="{Binding Title}" />
-        </DataTemplate>
-
-        <primitives:HierarchicalDataTemplate x:Key="level3" ItemsSource="{Binding BookMarks}" ItemTemplate="{StaticResource level4}">
-            <DataTemplate>
-                <TextBlock Text="{Binding Title}" RightTapped="TextBlock_RightTapped" />
-            </DataTemplate>
-        </primitives:HierarchicalDataTemplate>
-
-        <primitives:HierarchicalDataTemplate x:Key="level2" ItemsSource="{Binding BookMarks}" ItemTemplate="{StaticResource level3}">
-            <DataTemplate>
-                <TextBlock Text="{Binding Title}"  RightTapped="TextBlock_RightTapped"/>
-            </DataTemplate>
-        </primitives:HierarchicalDataTemplate>
-
-        <primitives:HierarchicalDataTemplate x:Key="level1" ItemsSource="{Binding BookMarks}" ItemTemplate="{StaticResource level2}">
-            <DataTemplate>
-                <TextBlock Text="{Binding Title}" RightTapped="TextBlock_RightTapped" />
-            </DataTemplate>
-        </primitives:HierarchicalDataTemplate>
+        <Flyout x:Key="myFlyout" Placement="Top">
+            <TextBlock Name="flyoutText"/>
+        </Flyout>
     </Page.Resources>
 
+
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -51,6 +24,10 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
+        <Grid Visibility="{Binding BookMarkVisibility}" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Canvas.ZIndex="1000" Margin="0,60,30,0" Width="50" Height="120">
+            <Image Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png" />
+        </Grid>
 
         <Grid Grid.Row="0" Grid.Column="1" Background="#454444">
             <Grid.RowDefinitions>
@@ -62,43 +39,41 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50" Background="Black">
-                <CommandBar.PrimaryCommands>
-                    <AppBarButton  Icon="Bookmarks">
-                        <AppBarButton.Flyout>
-                            <Flyout>
-                                <Grid Width="400" Height="500">
-                                    <Navigation:SfTabControl>
-                                        <Navigation:SfTabItem IsSelected="True" FontSize="18" FontWeight="Bold" Header="PDF">
+            <CommandBar Name="cbar" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50" Background="Black" Template="{StaticResource CommandBarControlTemplate1}" FlyoutBase.AttachedFlyout="{StaticResource myFlyout}">
+                <AppBarButton  Icon="Bookmarks">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <Grid  Height="500">
+                                <Navigation:SfTabControl>
+                                    <Navigation:SfTabItem IsSelected="True" FontSize="18" FontWeight="Bold" Header="PDF">
+                                        <ListView x:Name="listView" IsItemClickEnabled="True" ItemClick="listView_ItemClick"/>
 
-                                            <Navigation:SfTreeNavigator BorderThickness="0" Background="Transparent" Foreground="White" NavigationMode="Extended" ItemTemplate="{StaticResource level1}" ItemsSource="{Binding BookMarks}" />
-                                        </Navigation:SfTabItem>
+                                    </Navigation:SfTabItem>
 
-                                        <Navigation:SfTabItem FontSize="18"  FontWeight="Bold"  Header="User">
-                                            <ListView ItemsSource="{Binding SelectedBook.BookMarks}" IsItemClickEnabled="True" ItemClick="ListView_ItemClick_1">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png" />
-                                                            <TextBlock Text="{Binding}" />
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-                                        </Navigation:SfTabItem>
-                                    </Navigation:SfTabControl>
-                                </Grid>
-                            </Flyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
-                    <AppBarButton  Icon="Accept" Command="{Binding FitWidthCommand}" />
-                    <AppBarButton  Icon="Accept" Command="{Binding SinglePageCommand}" />
-                    <AppBarButton  Icon="Accept" Command="{Binding NormalCommand}" />
-                    <AppBarButton  Icon="ZoomIn" Command="{Binding pdfControl.IncreaseZoomCommand}" />
-                    <AppBarButton  Icon="ZoomOut" Command="{Binding pdfControl.DecreaseZoomCommand}" />
-                    <AppBarSeparator></AppBarSeparator>
-                    <AppBarButton Icon="Add" Tapped="AppBarButton_Tapped_3" />
-                </CommandBar.PrimaryCommands>
+                                    <Navigation:SfTabItem  FontSize="18"  FontWeight="Bold"  Header="User">
+                                        <ListView Width="150" ItemsSource="{Binding SelectedBook.BookMarks}" IsItemClickEnabled="True" ItemClick="ListView_ItemClick_1">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png" />
+                                                        <TextBlock Text="{Binding}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </Navigation:SfTabItem>
+                                </Navigation:SfTabControl>
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Icon="{Binding BookMarkIcon}" Tapped="AppBarButton_Tapped_3" />
+                <AppBarSeparator/>
+                <AppBarButton Content="Width" Command="{Binding FitWidthCommand}" />
+                <AppBarButton Content="Page" Command="{Binding SinglePageCommand}" />
+                <AppBarButton Content="Normal" Command="{Binding NormalCommand}" />
+                <AppBarButton Icon="ZoomIn" Command="{Binding pdfControl.IncreaseZoomCommand}" />
+                <AppBarButton Icon="ZoomOut" Command="{Binding pdfControl.DecreaseZoomCommand}" />
             </CommandBar>
 
             <cc:SfPdfViewerControl ShowPageNumber="True"  PageChanged="pdfViewer1_PageChanged" Grid.Row="1" Grid.Column="1" Name="pdfViewer1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></cc:SfPdfViewerControl>

@@ -2,26 +2,18 @@
 using Bookie.Data.Repositories;
 using Bookie.Domain.Services;
 using Bookie.Mvvm;
-using PdfViewModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.Storage.Streams;
-using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Bookie.Common;
-using Bookie.Domain;
-using Syncfusion.Pdf;
-using Syncfusion.Pdf.Interactive;
 using Syncfusion.Pdf.Parsing;
 using Syncfusion.Windows.PdfViewer;
-using PdfDocument = Windows.Data.Pdf.PdfDocument;
+using System.Linq;
+using Windows.UI.Xaml.Controls;
 
 namespace Bookie.ViewModels
 {
@@ -29,6 +21,21 @@ namespace Bookie.ViewModels
     {
 
         private ObservableCollection<BookMarkBase> _bookmarks;
+        private CollectionViewSource _bookmarksCollection;
+        private SfPdfViewerControl _pdfControl;
+        private StorageFile _pdfFile;
+        private StorageFile _loadedFile;
+        private readonly BookMarkService _bookMarkService;
+        private Visibility _bookMarkVisibility;
+        private Stream _pdfStream;
+        private int _currentPageNumber;
+        public int CurrentPageNumber
+        {
+            get { return _currentPageNumber; }
+            set { _currentPageNumber = value;
+                NotifyPropertyChanged("CurrentPageNumber");
+            }
+        }
 
         public ObservableCollection<BookMarkBase> BookMarks
         {
@@ -38,7 +45,6 @@ namespace Bookie.ViewModels
             }
         }
 
-        private CollectionViewSource _bookmarksCollection;
 
         public CollectionViewSource BookMarksCollection
         {
@@ -51,7 +57,6 @@ namespace Bookie.ViewModels
         }
 
 
-        private SfPdfViewerControl _pdfControl;
 
         public SfPdfViewerControl pdfControl
         {
@@ -63,13 +68,17 @@ namespace Bookie.ViewModels
 
        public  PdfLoadedDocument doc { get; set; }
 
-        private StorageFile _pdfFile;
-        private StorageFile _loadedFile;
-        private PdfDocViewModel _p;
-        private PdfDocument _pdfDocument;
-        private readonly BookMarkService _bookMarkService;
 
-    
+
+        public Visibility BookMarkVisibility
+        {
+            get { return _bookMarkVisibility; }
+            set
+            {
+                _bookMarkVisibility = value;
+                NotifyPropertyChanged("BookMarkVisibility");
+            }
+        }
 
 
         public StorageFile PdfFile
@@ -82,21 +91,48 @@ namespace Bookie.ViewModels
             }
         }
 
+
+
+
+
         public RelayCommand FitWidthCommand => new RelayCommand(FitWidth);
         public RelayCommand SinglePageCommand => new RelayCommand(SinglePage);
         public RelayCommand NormalCommand => new RelayCommand(Normal);
 
+
+        public event EventHandler LoadingFinished;
+
+
+
         public PdfViewModel()
         {
             _bookMarkService = new BookMarkService(new BookMarkRepository());
-
         }
 
 
+        private IconElement _bookmarkIcon;
 
-        public bool CanE(object parameter)
+        public IconElement BookMarkIcon
         {
-            return true;
+            get { return _bookmarkIcon; }
+            set { _bookmarkIcon = value;
+                NotifyPropertyChanged("BookMarkIcon");
+            }
+        }
+
+        public void CheckPageForBookMark(int pageNumber)
+        {
+            var exists = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == pageNumber);
+            if (exists == null)
+            {
+                BookMarkIcon = new SymbolIcon(Symbol.Add);
+                BookMarkVisibility = Visibility.Collapsed;
+            }
+            else
+            {
+                BookMarkIcon = new SymbolIcon(Symbol.Remove);
+                BookMarkVisibility = Visibility.Visible;
+            }
         }
 
 
@@ -118,35 +154,59 @@ namespace Bookie.ViewModels
 
     
 
-        public void BookMarkPage(BookMark bookmark)
+        private void AddBookMarkToPage(int pageNumber)
         {
-            bookmark.Book = SelectedBook;
- 
-                    
-                    SelectedBook.BookMarks.Add(bookmark);
-
-                    NotifyPropertyChanged("SelectedBook");
-                    _bookMarkService.Add(bookmark);
-
+            var bookmark = new BookMark
+            {
+                Book = SelectedBook,
+                PageNumber = pageNumber
+            };
+            var exists = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == pageNumber);
+            if (exists != null) return;
+            SelectedBook.BookMarks.Add(bookmark);
+            _bookMarkService.Add(bookmark);
             SelectedBook.BookMarks = _bookMarkService.GetAllForBook(SelectedBook);
 
+            NotifyPropertyChanged("SelectedBook");
         }
 
-
-
-
-        private Visibility _bookMarksVisibility;
-
-        public Visibility BookMarksVisibility
+        private void RemoveBookMarkFromPage(int pageNumber)
         {
-            get { return _bookMarksVisibility; }
-            set { _bookMarksVisibility = value;
-                NotifyPropertyChanged("BookMarksVisibility");
-            }
+            var exists = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == pageNumber);
+            if (exists == null) return;
+            _bookMarkService.Remove(exists);
+            SelectedBook.BookMarks.Remove(exists);
+            SelectedBook.BookMarks = _bookMarkService.GetAllForBook(SelectedBook);
+
+            NotifyPropertyChanged("SelectedBook");
         }
 
 
-    
+        public bool ToggleBookMark()
+        {
+            bool added;
+            var pageHasBookMark = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == CurrentPageNumber);
+            if (pageHasBookMark == null)
+            {
+                AddBookMarkToPage(CurrentPageNumber);
+                added = true;
+            }
+            else
+            {
+                RemoveBookMarkFromPage(CurrentPageNumber);
+                added = false;
+            }
+            CheckPageForBookMark(CurrentPageNumber);
+            UpdateBookMarks();
+            return added;
+        }
+
+
+
+
+
+
+
 
         public Book SelectedBook => ShellViewModel.SelectedBook;
 
@@ -158,7 +218,7 @@ namespace Bookie.ViewModels
         {
             if (pdfFile != null)
             {
-                var stream = await pdfFile.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                var stream = await pdfFile.OpenAsync(FileAccessMode.Read);
                 Stream fileStream = stream.AsStreamForRead();
 
                 byte[] buffer = new byte[fileStream.Length];
@@ -167,87 +227,26 @@ namespace Bookie.ViewModels
                 pdfControl.LoadDocument(doc);
 
             }
-            if (LoadingFinished != null)
-            {
-                LoadingFinished(this, null);
-
-            }
             BookMarks = new ObservableCollection<BookMarkBase>();
 
 
-            foreach (PdfLoadedBookmark bookmark in doc.Bookmarks)
-            {
-                var bmark1 = new BookMarkBase();
-                bmark1.Title = bookmark.Title;
-                var page = bookmark.Destination.Page;
-                int pageIndex = 0;
-                foreach (PdfPageBase pageBase in doc.Pages)
-                {
-                    if (page == pageBase)
-                    {
-                        bmark1.PageNumber = pageIndex + 1;
-                    }
-                    pageIndex++;
-                }
-
-                if (bookmark.Count > 0)
-                {
-                    bmark1.BookMarks = new ObservableCollection<BookMarkBase>();
-                    foreach (PdfLoadedBookmark bookmark2 in bookmark)
-                    {
-                        var bmark2 = new BookMarkBase();
-                        bmark2.Title = bookmark2.Title;
-                        var page2 = bookmark2.Destination.Page;
-                        int pageIndex2 = 0;
-                        foreach (PdfPageBase pageBase in doc.Pages)
-                        {
-                            if (page2 == pageBase)
-                            {
-                                bmark2.PageNumber = pageIndex2 + 1;
-                            }
-                            pageIndex2++;
-                        }
-                        if (bookmark2.Count > 0)
-                        {
-                            bmark2.BookMarks = new ObservableCollection<BookMarkBase>();
-                            foreach (PdfLoadedBookmark bookmark3 in bookmark2)
-                            {
-                                var bmark3 = new BookMarkBase();
-                                bmark3.Title = bookmark3.Title;
-                                var page3 = bookmark3.Destination.Page;
-                                int pageIndex3 = 0;
-                                foreach (PdfPageBase pageBase in doc.Pages)
-                                {
-                                    if (page3 == pageBase)
-                                    {
-                                        bmark3.PageNumber = pageIndex3 + 1;
-                                    }
-                                    pageIndex3++;
-                                }
-                                bmark2.BookMarks.Add(bmark3);
-                            }
-                        }
-                        bmark1.BookMarks.Add(bmark2);
-                    }
-                }
-
-                BookMarks.Add(bmark1);
-            }
-
-            
-
-
-
-
-
-
             BookMarksCollection = new CollectionViewSource();
-         //   BookMarksCollection.IsSourceGrouped = true;
-         //   BookMarksCollection.ItemsPath = new PropertyPath("Title");
             BookMarksCollection.Source = BookMarks;
+
+            LoadingFinished?.Invoke(this, null);
+            CheckPageForBookMark(1);
+            CurrentPageNumber = 1;
+            UpdateBookMarks();
         }
 
-        public event EventHandler LoadingFinished;
+
+        private void UpdateBookMarks()
+        {
+            SelectedBook.BookMarks = _bookMarkService.GetAllForBook(SelectedBook);
+            SelectedBook.BookMarks = SelectedBook.BookMarks.OrderBy(x => x.PageNumber).ToList();
+            NotifyPropertyChanged("SelectedBook");
+        }
+
 
 
         public async void LoadDefaultFile()
@@ -261,7 +260,6 @@ namespace Bookie.ViewModels
             LoadPdf(_loadedFile);
         }
 
-        private Stream _pdfStream;
 
         public Stream PdfStream
         {
