@@ -29,6 +29,7 @@ namespace Bookie.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Abstract = table.Column<string>(nullable: true),
                     Author = table.Column<string>(nullable: true),
+                    CurrentPage = table.Column<int>(nullable: true),
                     DatePublished = table.Column<DateTime>(nullable: true),
                     Favourite = table.Column<bool>(nullable: false),
                     FileName = table.Column<string>(nullable: true),

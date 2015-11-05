@@ -8,6 +8,7 @@ using System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Navigation;
 
 namespace Bookie.Views
 {
@@ -17,12 +18,27 @@ namespace Bookie.Views
 
         private ViewModels.PdfViewModel _viewmodel;
         private DispatcherTimer timer;
+
         public PdfPage()
         {
             InitializeComponent();
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(2);
             timer.Tick += Timer_Tick;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (_viewmodel.CurrentPageNumber != 1 && _viewmodel.CurrentPageNumber != pdfViewer1.PageCount)
+            {
+                _viewmodel.SelectedBook.CurrentPage = _viewmodel.CurrentPageNumber;
+                _viewmodel.UpdateBook();
+            }
+            else
+            {
+                _viewmodel.SelectedBook.CurrentPage = null;
+                _viewmodel.UpdateBook();
+            }
         }
 
         private void AddBookMark(PdfLoadedBookmark bookmark)
@@ -68,7 +84,7 @@ namespace Bookie.Views
 
         private void GetBookmarks()
         {
-            var bookmarks = _viewmodel.doc.Bookmarks;
+            var bookmarks = _viewmodel.Doc.Bookmarks;
             if (bookmarks != null && bookmarks.Count > 0)
             {
                 _bookmarksDictionary = new Dictionary<string, PdfLoadedBookmark>();
@@ -86,7 +102,7 @@ namespace Bookie.Views
         {
             _viewmodel = DataContext as ViewModels.PdfViewModel;
             if (_viewmodel == null) return;
-            _viewmodel.pdfControl = pdfViewer1;
+            _viewmodel.PdfControl = pdfViewer1;
             _viewmodel.LoadingFinished += _viewmodel_LoadingFinished;
             _viewmodel.LoadDefaultFile();
             SetPageNumber(1);
@@ -116,7 +132,7 @@ namespace Bookie.Views
             if (bookmark.Destination == null) return;
             var page = bookmark.Destination.Page;
             var pageIndex = 0;
-            foreach (PdfPageBase pageBase in _viewmodel.doc.Pages)
+            foreach (PdfPageBase pageBase in _viewmodel.Doc.Pages)
             {
                 if (pageBase == page)
                 {

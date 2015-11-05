@@ -24,6 +24,8 @@ namespace Bookie.Data.Migrations
 
                     b.Property<string>("Author");
 
+                    b.Property<int?>("CurrentPage");
+
                     b.Property<DateTime?>("DatePublished");
 
                     b.Property<bool>("Favourite");

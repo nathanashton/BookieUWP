@@ -16,7 +16,7 @@ namespace Bookie.Common.Model
         public int Rating { get; set; }
         public string Isbn { get; set; }
         public bool Favourite { get; set; }
-     //   public int? CurrentPage { get; set; }
+        public int? CurrentPage { get; set; }
         public bool Scraped { get; set; }
         public string Publisher { get; set; }
         public string Author { get; set; }
