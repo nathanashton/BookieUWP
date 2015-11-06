@@ -44,6 +44,8 @@ namespace Bookie.Data.Migrations
 
                     b.Property<bool>("Scraped");
 
+                    b.Property<bool>("Shelf");
+
                     b.Property<int>("SourceId");
 
                     b.Property<string>("Title");

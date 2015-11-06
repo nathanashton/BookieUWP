@@ -28,7 +28,7 @@ namespace Bookie.Common.Model
         public virtual Cover Cover { get; set; }
         public virtual Source Source { get; set; }
         public int SourceId { get; set; }
-
+        public bool Shelf { get; set; }
 
         [NotMapped]
         public string DatePublishedString

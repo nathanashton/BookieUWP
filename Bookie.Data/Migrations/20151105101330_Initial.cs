@@ -39,6 +39,7 @@ namespace Bookie.Data.Migrations
                     Publisher = table.Column<string>(nullable: true),
                     Rating = table.Column<int>(nullable: false),
                     Scraped = table.Column<bool>(nullable: false),
+                    Shelf = table.Column<bool>(nullable: false),
                     SourceId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: true)
                 },

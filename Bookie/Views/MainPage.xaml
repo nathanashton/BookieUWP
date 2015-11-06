@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:Bookie.Converters"
+    Background="#2b2b2b"
 
     mc:Ignorable="d" Tapped="Page_Tapped" SizeChanged="Page_SizeChanged" d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
     <Page.Resources>
@@ -28,174 +29,127 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="1" Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <ListView  Margin="30" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource BooksCollectionViewSource}}" SelectionMode="Single" x:Name="lview" Visibility="Collapsed" HorizontalAlignment="Stretch">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="5" DoubleTapped="Grid_DoubleTapped_1">
-                            <FlyoutBase.AttachedFlyout>
-                                <Flyout>
-                                    <Grid Width="300">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
 
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="30" />
+                <GridView Margin="0,10,0,0"  Background="#2b2b2b" Canvas.ZIndex="600"  Grid.Row="0" CanDragItems="True" DragItemsStarting="gview_DragItemsStarting" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" AllowDrop="True" ItemsSource="{Binding FilteredBooks}" Drop="gview_Drop" DropCompleted="gview_DropCompleted" DragEnter="gview_DragEnter" DragLeave="gview_DragLeave" x:Name="gview">
+                  
 
-                                            <RowDefinition Height="60" />
-                                        </Grid.RowDefinitions>
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
 
-                                        <TextBlock Grid.Row="0" FontSize="14" VerticalAlignment="Center" Text="{Binding Title}" FontWeight="Bold" TextWrapping="Wrap" />
+                            <Grid Margin="10" DoubleTapped="Grid_DoubleTapped">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout>
+                                        <Grid Width="300">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
 
-                                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="2">
-                                            <TextBlock FontSize="14"  Height="30" Text="Pages" FontWeight="Bold" />
-                                            <TextBlock FontSize="14" Height="30" Text="Year" FontWeight="Bold" />
-                                            <TextBlock FontSize="14" Height="30" Text="ISBN" FontWeight="Bold" />
-                                        </StackPanel>
+                                            <TextBlock Grid.Row="0" FontSize="14" VerticalAlignment="Center" Text="{Binding Title}" FontWeight="Bold" TextWrapping="Wrap" />
 
-                                        <TextBlock Margin="0,8,0,8" Grid.Row="1"  Text="{Binding Abstract}" FontSize="12" TextWrapping="WrapWholeWords" />
+                                            <TextBlock Margin="0,8,0,8" Grid.Row="1"  Text="{Binding Abstract}" FontSize="12" TextWrapping="WrapWholeWords" />
 
-                                        <StackPanel VerticalAlignment="Center" Orientation="Vertical" Grid.Row="3">
+                                            <StackPanel VerticalAlignment="Center" Orientation="Vertical" Grid.Row="2">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontSize="12"   Text="Pages" FontWeight="Bold" />
+                                                    <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Pages}" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontSize="12" Text="Year" FontWeight="Bold" />
+                                                    <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding DatePublishedString}" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontSize="12" Text="ISBN" FontWeight="Bold" />
 
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="John Smith" />
+                                                    <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Isbn}" />
+                                                </StackPanel>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontSize="12" VerticalAlignment="Center"  Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
+                                                    <TextBlock FontSize="12" VerticalAlignment="Center"  Text="{Binding Author}" />
+                                                </StackPanel>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontSize="12" VerticalAlignment="Center" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
+                                                    <TextBlock FontSize="12" VerticalAlignment="Center" Text="{Binding Publisher}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                                <Button Content="Edit" FontSize="12" Margin="5" Tapped="Button_Tapped"/>
                                             </StackPanel>
 
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="14" VerticalAlignment="Center" Height="30" Text="Wiey FilteredBooks" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </Grid>
-                                </Flyout>
-                            </FlyoutBase.AttachedFlyout>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Row="0" Grid.Column="0" Height="50" Width="40"  BorderBrush="White" BorderThickness="0.5">
-
-                                <Image  Source="{Binding Image}"  Stretch="Fill" />
-                            </Border>
-                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Grid.Row="0" Grid.Column="1">
-
-                                <TextBlock  VerticalAlignment="Center" Text="{Binding Title}" />
-                                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#C8C80E" Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" FontFamily="Segoe MDL2 Assets" />
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock Text='{Binding Key}' Foreground="White" Margin="5" FontSize="30" FontFamily="Segoe UI Light" />
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                        <GroupStyle.Panel>
-                            <ItemsPanelTemplate>
-                                <VariableSizedWrapGrid MaximumRowsOrColumns="2" Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </GroupStyle.Panel>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-            </ListView>
-
-            <GridView Margin="10" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" ItemsSource="{Binding FilteredBooks}"  x:Name="gview">
-
-                <GridView.ItemTemplate>
-                    <DataTemplate>
-
-                        <Grid Margin="10" DoubleTapped="Grid_DoubleTapped">
-                            <FlyoutBase.AttachedFlyout>
-                                <Flyout>
-                                    <Grid Width="300">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <TextBlock Grid.Row="0" FontSize="14" VerticalAlignment="Center" Text="{Binding Title}" FontWeight="Bold" TextWrapping="Wrap" />
-
-                                        <TextBlock Margin="0,8,0,8" Grid.Row="1"  Text="{Binding Abstract}" FontSize="12" TextWrapping="WrapWholeWords" />
-
-                                        <StackPanel VerticalAlignment="Center" Orientation="Vertical" Grid.Row="2">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="12"   Text="Pages" FontWeight="Bold" />
-                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Pages}" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="12" Text="Year" FontWeight="Bold" />
-                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding DatePublishedString}" />
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="12" Text="ISBN" FontWeight="Bold" />
-
-                                                <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Isbn}" />
-                                            </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="12" VerticalAlignment="Center"  Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="12" VerticalAlignment="Center"  Text="{Binding Author}" />
-                                            </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock FontSize="12" VerticalAlignment="Center" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
-                                                <TextBlock FontSize="12" VerticalAlignment="Center" Text="{Binding Publisher}" />
-                                            </StackPanel>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                            <Button Content="Edit" FontSize="12" Margin="5" Tapped="Button_Tapped"/>                                        
-                                        </StackPanel>
-                                        
-                                    </Grid>
-                                </Flyout>
-                            </FlyoutBase.AttachedFlyout>
-                            <Grid Margin="10" Height="320" Width="170">
-                                  <Border Width="170" Height="232" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
-                                    <Image Source="{Binding Image}"  Stretch="Fill" />
-                                </Border>
-                                <StackPanel Orientation="Vertical"
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                                <Grid Margin="10" Height="320" Width="170">
+                                    <Border Width="170" Height="232" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
+                                        <Image Source="{Binding Image}"  Stretch="Fill" />
+                                    </Border>
+                                    <StackPanel Orientation="Vertical"
                     Height="90" VerticalAlignment="Bottom">
-                                    <StackPanel Margin="0,10,5,0" Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="#C8C80E"  FontFamily="Segoe MDL2 Assets" />
-                                    </StackPanel>
+                                        <StackPanel Margin="0,10,5,0" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="#C8C80E"  FontFamily="Segoe MDL2 Assets" />
+                                        </StackPanel>
 
-                                    <TextBlock Foreground="White" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="18" Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                    <TextBlock Foreground="#BCBCB6" Text="{Binding Publisher}"
+                                        <TextBlock Foreground="White" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="18" Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+                                        <TextBlock Foreground="#BCBCB6" Text="{Binding Publisher}"
                       Width="160" Height="18" FontSize="13"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
 
-                                    <TextBlock Text="{Binding DatePublishedString}" Foreground="#BCBCB6"
+                                        <TextBlock Text="{Binding DatePublishedString}" Foreground="#BCBCB6"
                       Height="18" Width="150" FontSize="12"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" Opacity="0.5" />
-                                </StackPanel>
+                                    </StackPanel>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-
-                <GridView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+                
+                
+                
+                
+                
+                <ScrollViewer Margin="0,10,0,0" Height="205" Visibility="{Binding ShelfVisibility}" Grid.Row="1" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled">
+                    <GridView SelectionMode="None" Canvas.ZIndex="500" Name="ggview" AllowDrop="True" DragEnter="ggview_DragEnter_1" DragLeave="ggview_DragLeave" CanDragItems="True" DragItemsStarting="GridView_DragItemsStarting" DropCompleted="ggview_DropCompleted" Background="#202020" Drop="ggview_Drop"  ItemsSource="{Binding ShelfBooks}" >
+                        <GridView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text='{Binding Key}' Foreground="White" Margin="5" FontSize="30" FontFamily="Segoe UI Light" />
+                                <Grid Margin="5" Tapped="Grid_Tapped">
+                                    <Grid Margin="10" Height="165" Width="110" >
+                                        <Border Width="110" Height="142" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
+                                            <Image Source="{Binding Image}"  Stretch="Fill" />
+                                        </Border>
+                                        <StackPanel Orientation="Vertical"
+                    VerticalAlignment="Bottom">
+
+                                            <TextBlock Foreground="White" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="12" Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
                             </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                        <GroupStyle.Panel>
+                        </GridView.ItemTemplate>
+                        <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <VariableSizedWrapGrid MaximumRowsOrColumns="2" Orientation="Horizontal" />
+                                <WrapGrid Orientation="Vertical" MaximumRowsOrColumns="1"/>
                             </ItemsPanelTemplate>
-                        </GroupStyle.Panel>
-                    </GroupStyle>
-                </GridView.GroupStyle>
-            </GridView>
+                        </GridView.ItemsPanel>
+                    </GridView>
+                </ScrollViewer>
+            </Grid>
 
             <ContentDialog Background="Gray" Width="400" Height="200" x:Name="ProgressPopup" PrimaryButtonText="cancel" IsPrimaryButtonEnabled="True">
 
@@ -291,13 +245,18 @@
                                 </StackPanel>
                                 <StackPanel Margin="5" Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
                                     <CheckBox Content="Scraped" IsChecked="{Binding FilterScraped, Mode=TwoWay}" Foreground="White" />
+                                    <CheckBox Content="Filter Description" IsChecked="{Binding FilterDescription, Mode=TwoWay}" Foreground="White" />
                                 </StackPanel>
+                                <StackPanel Margin="5" Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                                    <CheckBox Content="Has BookMarks" IsChecked="{Binding FilterBookmarks, Mode=TwoWay}" Foreground="White" />
+                                </StackPanel>
+
+
                             </Grid>
                         </Flyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Foreground="White" Label="Grid" Icon="ViewAll" Tapped="AppBarButton_Tapped_1" />
-                <AppBarButton Foreground="White"  Label="List View" Icon="List" Tapped="AppBarButton_Tapped_3" />
+                <AppBarButton Foreground="White"  Label="Shelf View" Icon="DockBottom" Tapped="AppBarButton_Tapped_3" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
 
