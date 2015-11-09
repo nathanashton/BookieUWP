@@ -3,9 +3,12 @@ using Bookie.Common.Model;
 using Bookie.Domain.Interfaces;
 using Bookie.Domain.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using Bookie.Domain.Scraper;
+using System.Xml.Serialization;
+using Windows.Storage;
+using static System.String;
 
 namespace Bookie.Domain
 {
@@ -68,13 +71,17 @@ namespace Bookie.Domain
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            List<string> filter = new List<string>();
+            filter.Add(".pdf");
+
             var storageFolders = _sourceService.GetAllAsStorageFolders().Result;
 
             foreach (var storageFolder in storageFolders)
             {
                 var source = _sourceService.GetByUrl(storageFolder.Path);
-
-                var storageFiles = storageFolder.GetFilesAsync().GetAwaiter().GetResult();
+                var options = new Windows.Storage.Search.QueryOptions(Windows.Storage.Search.CommonFileQuery.OrderByName, filter);
+                var ss = storageFolder.CreateItemQueryWithOptions(options);
+                var storageFiles = ss.GetItemsAsync().GetAwaiter().GetResult();
                 for (var i = 0; i < storageFiles.Count; i++)
                 {
                     var progress = Utils.CalculatePercentage(i, 0, storageFiles.Count);
@@ -86,66 +93,54 @@ namespace Bookie.Domain
 
                     var book = new Book
                     {
-                        Title = storageFiles[i].DisplayName,
+                        Title = Path.GetFileNameWithoutExtension(storageFiles[i].Name),
                         Source = source,
                         FileName = Path.GetFileName(storageFiles[i].Path),
                         FullPathAndFileName = storageFiles[i].Path,
                         Rating = 0
                     };
 
-
-                 
-
-
                     var existingBook = _bookService.Find(b => b.FullPathAndFileName == book.FullPathAndFileName);
                     if (existingBook.Count == 0) // Add Book
                     {
-                        //Scrape for Isbn
-
-                        PdfParser p = new PdfParser();
-                        var s = p.Extract(storageFiles[i], 1, 10).Result;
-                        var isbn = PdfIsbnParser.FindIsbn(s);
-                        if (!String.IsNullOrEmpty(isbn))
+                        //If there is an XML for pdf then uses its data, otherwise find ISBN and scrape
+                        var xml =
+                        _sourceService.GetStorageFolderFromSource(source)
+                            .GetAwaiter()
+                            .GetResult()
+                            .TryGetItemAsync(book.Title + ".xml")
+                            .GetAwaiter()
+                            .GetResult();
+                        if (xml != null)
                         {
-                            book.Isbn = isbn;
-                            //var scraper = new GoogleScraper();
-                            //var results = scraper.SearchBooks(book.Isbn).Result;
-                            //if (results != null && results[0].Book != null)
-                            //{
-                            //    var f = results[0].Book;
-                            //    book.Title = f.Title;
-                            //    book.Abstract = f.Abstract;
-                            //    book.Pages = f.Pages;
-                            //    book.DatePublished = f.DatePublished;
-                            //    book.Scraped = true;
-                            //    book.Author = f.Author;
-                            //    book.Publisher = f.Publisher;
-                            //}
-                            var scraper = new Scraper.Scraper();
-                            var results = scraper.Scrape(book.Isbn).Result;
-                            if (results.items != null && results.items.Count > 0)
-                            {
-                                book.Title = results.items[0].volumeInfo.title;
-                                book.Abstract = results.items[0].volumeInfo.description;
-                                book.Pages = results.items[0].volumeInfo.pageCount;
-                                book.Scraped = true;
-
-                                if (results.items[0].volumeInfo.authors != null)
-                                {
-                                    book.Author = string.Join(",", results.items[0].volumeInfo.authors.ToArray());
-                                }
-                                book.Publisher = results.items[0].volumeInfo.publisher;
-                            }
-
-
-
-
+                            book = XmlToBook(xml as StorageFile, book);
                         }
+                        else
+                        {
+                            //Scrape for Isbn
+                            PdfParser p = new PdfParser();
+                            var s = p.Extract((storageFiles[i] as StorageFile), 1, 10).Result;
+                            var isbn = PdfIsbnParser.FindIsbn(s);
+                            if (!IsNullOrEmpty(isbn))
+                            {
+                                book.Isbn = isbn;
+                                var scraper = new Scraper.Scraper();
+                                var results = scraper.Scrape(book.Isbn).Result;
+                                if (results.items != null && results.items.Count > 0)
+                                {
+                                    book.Title = results.items[0].volumeInfo.title;
+                                    book.Abstract = results.items[0].volumeInfo.description;
+                                    book.Pages = results.items[0].volumeInfo.pageCount;
+                                    book.Scraped = true;
 
-
-                
-
-
+                                    if (results.items[0].volumeInfo.authors != null)
+                                    {
+                                        book.Author = Join(",", results.items[0].volumeInfo.authors.ToArray());
+                                    }
+                                    book.Publisher = results.items[0].volumeInfo.publisher;
+                                }
+                            }
+                        }
 
                         var cover = new Cover();
                         var coverPath = pdfCover.GenerateCoverImage(book, 0, _sourcerepo).Result;
@@ -153,11 +148,6 @@ namespace Bookie.Domain
 
                         book.Cover = cover;
                         book = _bookService.Add(book);
-
-                        //if (book != null)
-                        //{
-                        //    sources.AddBookToSource(book);
-                        //}
                         Worker.ReportProgress(progress, book);
                     }
                     else
@@ -166,6 +156,23 @@ namespace Bookie.Domain
                     }
                 }
             }
+        }
+
+        private Book XmlToBook(StorageFile xml, Book book)
+        {
+            var file = StorageFile.GetFileFromPathAsync(xml.Path).GetAwaiter().GetResult();
+            var stream = file.OpenStreamForReadAsync().GetAwaiter().GetResult();
+            var serializer = new XmlSerializer(typeof(Book));
+            Book outBook;
+            using (var reader = new StreamReader(stream))
+            {
+                outBook = (Book)serializer.Deserialize(reader);
+            }
+            outBook.Source = book.Source;
+            outBook.FileName = book.FileName;
+            outBook.FullPathAndFileName = book.FullPathAndFileName;
+            outBook.Scraped = true;
+            return outBook;
         }
 
         public void OnBookChanged(Book book, BookEventArgs.BookState bookState, int? progress)

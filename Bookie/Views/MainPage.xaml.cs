@@ -22,7 +22,11 @@ namespace Bookie.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
         private MainPageViewModel viewmodel;
+        private Brush _shelfBrushColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+        private Brush _gridBrushColor = new SolidColorBrush(Color.FromArgb(255, 43, 43, 43));
+
 
         public MainPage()
         {
@@ -30,7 +34,7 @@ namespace Bookie.Views
 
             Loaded += MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
-            gview.Visibility = Visibility.Visible;
+            booksGridView.Visibility = Visibility.Visible;
             MessagingService.Register(this, MessagingService_messages);
         }
 
@@ -56,18 +60,6 @@ namespace Bookie.Views
             DetermineVisualState();
         }
 
-        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-        }
-
-        private void HamburgerButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-        }
-
-        private void MenuButton1_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            //   _viewModel.AddFolder();
-        }
 
         private void DetermineVisualState()
         {
@@ -137,14 +129,14 @@ namespace Bookie.Views
 
         private void AppBarButton_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            gview.Visibility = Visibility.Visible;
+            booksGridView.Visibility = Visibility.Visible;
             //   BooksCollectionViewSource.Source = viewmodel.AllBooks;
             // BooksCollectionViewSource.IsSourceGrouped = false;
         }
 
         private void AppBarButton_Tapped_2(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            gview.Visibility = Visibility.Collapsed;
+            booksGridView.Visibility = Visibility.Collapsed;
 
         }
 
@@ -205,12 +197,12 @@ namespace Bookie.Views
 
         private void ComboBoxItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            gview.ItemsSource = BooksCollectionViewSource.View;
+            booksGridView.ItemsSource = BooksCollectionViewSource.View;
         }
 
         private void ComboBoxItem_Tapped_1(object sender, TappedRoutedEventArgs e)
         {
-            gview.ItemsSource = BooksCollectionViewSourceNotgrouped.View;
+            booksGridView.ItemsSource = BooksCollectionViewSourceNotgrouped.View;
         }
 
         private void Grid_DoubleTapped_1(object sender, DoubleTappedRoutedEventArgs e)
@@ -280,6 +272,8 @@ namespace Bookie.Views
 
         private void ggview_DragEnter_1(object sender, DragEventArgs e)
         {
+            viewmodel.BooksScroll = ScrollMode.Disabled;
+
             // Drag over shelf
             object sourceItem;
             object s;
@@ -291,7 +285,7 @@ namespace Bookie.Views
             // If it is being dragged back onto the shelf, do nothing an return
             if (sender == s)
             {
-                ggview.Background = _shelBrushColor;
+                viewmodel.ShelfBrush= _shelfBrushColor;
                 e.Handled = true;
                 return;
             }
@@ -301,19 +295,22 @@ namespace Bookie.Views
             if (existsInShelf != null)
             {
                 // Item already exists on shelf
-                ggview.Background = new SolidColorBrush(Colors.DarkRed);
+                viewmodel.ShelfBrush = new SolidColorBrush(Colors.Red);
                 e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.None;
                 return;
             }
             // Doesnt exist on shelf so add, and show green highlight
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
-            ggview.Background = new SolidColorBrush(Colors.DarkGreen);
+            viewmodel.ShelfBrush = new SolidColorBrush(Colors.DarkOliveGreen);
+
         }
 
 
 
         private void gview_DragEnter(object sender, DragEventArgs e)
         {
+            viewmodel.BooksScroll = ScrollMode.Disabled;
+
             //Drag from shelf back to main
             object sourceItem;
             object s;
@@ -324,29 +321,31 @@ namespace Bookie.Views
             // If it is being dragged back onto the shelf, do nothing an return
             if (sender == s)
             {
-                ggview.Background = _shelBrushColor;
+                viewmodel.ShelfBrush = _shelfBrushColor;
+                viewmodel.GridBrush = _gridBrushColor;
                 e.Handled = true;
                 return;
             }
 
             e.Data.Properties.TryGetValue("item", out sourceItem);
-  
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
-            
-            gview.Background = new SolidColorBrush(Colors.DarkOliveGreen);
+            viewmodel.GridBrush = new SolidColorBrush(Colors.DarkOliveGreen);
         }
 
-        private Brush _shelBrushColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
 
 
         private void gview_DragLeave(object sender, DragEventArgs e)
         {
-            gview.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
+            viewmodel.BooksScroll = ScrollMode.Enabled;
+            viewmodel.GridBrush = _gridBrushColor;
+
         }
 
         private void ggview_DragLeave(object sender, DragEventArgs e)
         {
-            ggview.Background = _shelBrushColor;
+            viewmodel.BooksScroll = ScrollMode.Enabled;
+            viewmodel.ShelfBrush = _shelfBrushColor;
+
         }
 
 
@@ -359,6 +358,10 @@ namespace Bookie.Views
 
         private void gview_Drop(object sender, DragEventArgs e)
         {
+            viewmodel.BooksScroll = ScrollMode.Enabled;
+
+
+
             object gridSource;
             e.Data.Properties.TryGetValue("gridSource", out gridSource);
 
@@ -370,15 +373,21 @@ namespace Bookie.Views
             if (sourceItem == null)
                 return;
 
-            ggview.Background = _shelBrushColor;
-            gview.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
+            viewmodel.ShelfBrush = _shelfBrushColor;
+            viewmodel.GridBrush = _gridBrushColor;
 
 
             //Remove it from shelf
             var book = (Book) sourceItem;
             viewmodel.ShelfBooks.Remove(book);
             book.Shelf = false;
-            viewmodel.UpdateBook(book);
+
+
+            var a = new BookEventArgs();
+            a.Book = book;
+            a.State = BookEventArgs.BookState.Updated;
+            viewmodel.BookChanged(this, a);
+            //      viewmodel.UpdateBook(book);
         }
 
 
@@ -386,6 +395,8 @@ namespace Bookie.Views
 
         private void ggview_Drop(object sender, DragEventArgs e)
         {
+            viewmodel.BooksScroll = ScrollMode.Enabled;
+
             object gridSource;
             e.Data.Properties.TryGetValue("gridSource", out gridSource);
 
@@ -397,40 +408,41 @@ namespace Bookie.Views
             if (sourceItem == null)
                 return;
 
-            ggview.Background = _shelBrushColor;
-            gview.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
+            viewmodel.ShelfBrush = _shelfBrushColor;
+            viewmodel.GridBrush = _gridBrushColor;
 
             var book = (Book)sourceItem;
             viewmodel.ShelfBooks.Add(book);
             book.Shelf = true;
-            viewmodel.UpdateBook(book);
+            var a = new BookEventArgs();
+            a.Book = book;
+            a.State = BookEventArgs.BookState.Updated;
+            viewmodel.BookChanged(this, a);
+
+            //     viewmodel.UpdateBook(book);
         }
 
         private void gview_DropCompleted(UIElement sender, DropCompletedEventArgs args)
         {
-            gview.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
-            ggview.Background = _shelBrushColor;
-
-
+            viewmodel.BooksScroll = ScrollMode.Enabled;
+            viewmodel.ShelfBrush = _shelfBrushColor;
+            viewmodel.GridBrush = _gridBrushColor;
         }
 
         private void ggview_DropCompleted(UIElement sender, DropCompletedEventArgs args)
         {
-            ggview.Background = _shelBrushColor;
-            gview.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
+            viewmodel.BooksScroll = ScrollMode.Enabled;
+           viewmodel.ShelfBrush = _shelfBrushColor;
+            viewmodel.GridBrush = _gridBrushColor;
 
         }
 
-        private void ggview_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-        }
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var book = (Book)(sender as Grid).DataContext;
             viewmodel.SelectedBook = book;
-            gview.ScrollIntoView(viewmodel.SelectedBook);
+            booksGridView.ScrollIntoView(viewmodel.SelectedBook);
         }
     }
 }

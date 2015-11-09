@@ -52,7 +52,12 @@ namespace Bookie.Views
             {
                 if (listView.Items == null) return;
                 listView.Items.Add(bookmark.Title);
-                _bookmarksDictionary.Add(bookmark.Title, bookmark);
+                if (!_bookmarksDictionary.ContainsKey(bookmark.Title))
+                {
+                    _bookmarksDictionary.Add(bookmark.Title, bookmark);
+
+                }
+
                 foreach (PdfLoadedBookmark value in bookmark)
                 {
                     if (value.Count == 0)

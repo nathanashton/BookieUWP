@@ -7,6 +7,6 @@ namespace Bookie.Common.Model
         public int Id { get; set; }
         public string Token { get; set; }
         public string Path { get; set; }
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual List<Book> Books { get; set; }
     }
 }

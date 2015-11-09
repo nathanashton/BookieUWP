@@ -35,8 +35,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-
-                <GridView Margin="0,10,0,0"  Background="#2b2b2b" Canvas.ZIndex="600"  Grid.Row="0" CanDragItems="True" DragItemsStarting="gview_DragItemsStarting" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" AllowDrop="True" ItemsSource="{Binding FilteredBooks}" Drop="gview_Drop" DropCompleted="gview_DropCompleted" DragEnter="gview_DragEnter" DragLeave="gview_DragLeave" x:Name="gview">
+                <Border Grid.Row="0" Margin="10,10,10,0" BorderBrush="{Binding GridBrush}" BorderThickness="2">
+                    
+                          <GridView  ScrollViewer.VerticalScrollMode="{Binding BooksScroll}"   Background="#2b2b2b" Canvas.ZIndex="600"   CanDragItems="True" DragItemsStarting="gview_DragItemsStarting" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" AllowDrop="True" ItemsSource="{Binding FilteredBooks}" Drop="gview_Drop" DropCompleted="gview_DropCompleted" DragEnter="gview_DragEnter" DragLeave="gview_DragLeave" x:Name="booksGridView">
                   
 
                     <GridView.ItemTemplate>
@@ -118,13 +119,13 @@
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                 </GridView>
-                
-                
-                
-                
-                
-                <ScrollViewer Margin="0,10,0,0" Height="205" Visibility="{Binding ShelfVisibility}" Grid.Row="1" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled">
-                    <GridView SelectionMode="None" Canvas.ZIndex="500" Name="ggview" AllowDrop="True" DragEnter="ggview_DragEnter_1" DragLeave="ggview_DragLeave" CanDragItems="True" DragItemsStarting="GridView_DragItemsStarting" DropCompleted="ggview_DropCompleted" Background="#202020" Drop="ggview_Drop"  ItemsSource="{Binding ShelfBooks}" >
+                       </Border>
+
+
+
+                        <Border Margin="10" Height="205" Visibility="{Binding ShelfVisibility}" Grid.Row="1" BorderThickness="2" BorderBrush="{Binding ShelfBrush}">
+                <ScrollViewer  VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled">
+                    <GridView SelectionMode="None" Canvas.ZIndex="500" Name="shelfGridView" AllowDrop="True" DragEnter="ggview_DragEnter_1" DragLeave="ggview_DragLeave" CanDragItems="True" DragItemsStarting="GridView_DragItemsStarting" DropCompleted="ggview_DropCompleted" Background="#202020" Drop="ggview_Drop"  ItemsSource="{Binding ShelfBooks}" >
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="5" Tapped="Grid_Tapped">
@@ -149,6 +150,7 @@
                         </GridView.ItemsPanel>
                     </GridView>
                 </ScrollViewer>
+                </Border>
             </Grid>
 
             <ContentDialog Background="Gray" Width="400" Height="200" x:Name="ProgressPopup" PrimaryButtonText="cancel" IsPrimaryButtonEnabled="True">

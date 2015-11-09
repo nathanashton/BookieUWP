@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Bookie.Common;
 using Bookie.Common.Model;
@@ -68,7 +69,7 @@ namespace Bookie.ViewModels
         {
             ProgressService.RegisterSubscriber(this);
             AllBooks = new List<Book>();
-            RefreshBooks();
+            RefreshBooksFromDb();
             Ratings = new List<int>();
             Ratings.Add(0);
             Ratings.Add(1);
@@ -76,9 +77,30 @@ namespace Bookie.ViewModels
             Ratings.Add(3);
             Ratings.Add(4);
             Ratings.Add(5);
+            BooksScroll = ScrollMode.Enabled;
         }
 
+        private Brush _shelfBrush;
 
+        public Brush ShelfBrush
+        {
+            get { return _shelfBrush; }
+            set { _shelfBrush = value;
+                NotifyPropertyChanged("ShelfBrush");
+            }
+        }
+
+        private Brush _gridBrush;
+
+        public Brush GridBrush
+        {
+            get { return _gridBrush; }
+            set
+            {
+                _gridBrush = value;
+                NotifyPropertyChanged("GridBrush");
+            }
+        }
 
 
         public RelayCommand OpenBookCommand
@@ -246,7 +268,7 @@ namespace Bookie.ViewModels
         public void _progress_ProgressCompleted(object sender, EventArgs e)
         {
             _importProgress.Hide();
-            RefreshBooks();
+            RefreshBooksFromDb();
         }
 
         private void OpenBook()
@@ -282,7 +304,7 @@ namespace Bookie.ViewModels
             }
             if (FilterDescription)
             {
-                var result = f.Where(x => x.Abstract != null && x.Abstract.ToLower().Contains(FilterQuery.ToLower()));
+                var result = f.Where(x => x.Abstract != null && !String.IsNullOrEmpty(FilterQuery) && x.Abstract.ToLower().Contains(FilterQuery.ToLower()));
                 f = new ObservableCollection<Book>(result);
             }
             if (FilterBookmarks)
@@ -297,8 +319,18 @@ namespace Bookie.ViewModels
 
         }
 
+        private ScrollMode _booksScroll;
 
-        private void RefreshBooks()
+        public ScrollMode BooksScroll
+        {
+            get { return _booksScroll; }
+            set { _booksScroll = value;
+                NotifyPropertyChanged("BooksScroll");
+            }
+        }  
+
+
+        private void RefreshBooksFromDb()
         {
             AllBooks = _bookService.GetAll();
             FilteredBooks = new ObservableCollection<Book>(AllBooks);
@@ -382,7 +414,7 @@ namespace Bookie.ViewModels
         public void UpdateBook(Book book)
         {
             _bookService.Update(book);
-            RefreshBooks();
+            RefreshBooksFromDb();
         }
     }
 }
