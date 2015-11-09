@@ -304,7 +304,7 @@ namespace Bookie.ViewModels
             }
             if (FilterDescription)
             {
-                var result = f.Where(x => x.Abstract != null && !String.IsNullOrEmpty(FilterQuery) && x.Abstract.ToLower().Contains(FilterQuery.ToLower()));
+                var result = f.Where(x => x.Abstract != null && !IsNullOrEmpty(FilterQuery) && x.Abstract.ToLower().Contains(FilterQuery.ToLower()));
                 f = new ObservableCollection<Book>(result);
             }
             if (FilterBookmarks)
@@ -328,7 +328,6 @@ namespace Bookie.ViewModels
                 NotifyPropertyChanged("BooksScroll");
             }
         }  
-
 
         private void RefreshBooksFromDb()
         {
@@ -414,7 +413,7 @@ namespace Bookie.ViewModels
         public void UpdateBook(Book book)
         {
             _bookService.Update(book);
-            RefreshBooksFromDb();
+         //   RefreshBooksFromDb();
         }
     }
 }

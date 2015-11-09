@@ -387,7 +387,7 @@ namespace Bookie.Views
             a.Book = book;
             a.State = BookEventArgs.BookState.Updated;
             viewmodel.BookChanged(this, a);
-            //      viewmodel.UpdateBook(book);
+            viewmodel.UpdateBook(book);
         }
 
 
@@ -418,8 +418,7 @@ namespace Bookie.Views
             a.Book = book;
             a.State = BookEventArgs.BookState.Updated;
             viewmodel.BookChanged(this, a);
-
-            //     viewmodel.UpdateBook(book);
+            viewmodel.UpdateBook(book);
         }
 
         private void gview_DropCompleted(UIElement sender, DropCompletedEventArgs args)
