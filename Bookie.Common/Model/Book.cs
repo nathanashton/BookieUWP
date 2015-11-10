@@ -42,6 +42,20 @@ namespace Bookie.Common.Model
         public bool Shelf { get; set; }
 
         [NotMapped]
+        public double? CurrentPagePercentage
+        {
+            get
+            {
+                if (CurrentPage != null && Pages != null)
+                {
+                    var percentage = ((double)CurrentPage / (double)Pages) * 100;
+                    return percentage;
+                }
+                return null;
+            }
+        }
+
+        [NotMapped]
         public string DatePublishedString
         {
             get

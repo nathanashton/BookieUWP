@@ -15,6 +15,8 @@
         <converters:NullableValueConverter x:Key="NullableValueConverter" />
         <converters:DateConverter x:Key="DateConverter" />
         <converters:NullBoolConverter x:Key="NullBoolConverter" />
+        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
+        <converters:ZeroVisibilityConverter x:Key="ZeroVisibilityConverter"/>
     </Page.Resources>
 
     <Grid Background="#2b2b2b">
@@ -90,25 +92,33 @@
                                         </Grid>
                                     </Flyout>
                                 </FlyoutBase.AttachedFlyout>
-                                <Grid Margin="10" Height="320" Width="170">
-                                    <Border Width="170" Height="232" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
+                                <Grid Margin="5" Height="260" Width="135">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                    
+                                    <Border Grid.Row="0" Width="130" Height="175" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
                                         <Image Source="{Binding Image}"  Stretch="Fill" />
                                     </Border>
-                                    <StackPanel Orientation="Vertical"
-                    Height="90" VerticalAlignment="Bottom">
-                                        <StackPanel Margin="0,10,5,0" Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="#C8C80E"  FontFamily="Segoe MDL2 Assets" />
-                                        </StackPanel>
+                                    
+                                    
+                                    <StackPanel Margin="0,5,0,0" Grid.Row="1" Orientation="Vertical" Width="130"  VerticalAlignment="Stretch">
+                                         
+                                 
 
-                                        <TextBlock Foreground="White" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="18" Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                        <TextBlock Foreground="#BCBCB6" Text="{Binding Publisher}"
-                      Width="160" Height="18" FontSize="13"
-                       TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
+                                        <TextBlock Foreground="White" TextTrimming="CharacterEllipsis" FontSize="16" Text="{Binding Title}" FontWeight="Bold"/>
+                                            <ProgressBar Margin="0,3,0,0"  Visibility="{Binding CurrentPagePercentage, Converter={StaticResource NullVisibilityConverter}}" Value="{Binding CurrentPagePercentage}" Height="5" HorizontalAlignment="Stretch"/>
+
+                                            <TextBlock Margin="0,3,0,3" Visibility="{Binding Rating, Converter={StaticResource ZeroVisibilityConverter}}"  FontSize="10" Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="#C8C80E"  FontFamily="Segoe MDL2 Assets" />
+                                            <TextBlock Foreground="#BCBCB6" Text="{Binding Publisher}" Width="130" Height="18" FontSize="13" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
 
                                         <TextBlock Text="{Binding DatePublishedString}" Foreground="#BCBCB6"
-                      Height="18" Width="150" FontSize="12"
+                      Height="23" Width="130" FontSize="12"
                        TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" Opacity="0.5" />
-                                    </StackPanel>
+                                           
+                                        </StackPanel>
                                 </Grid>
                             </Grid>
                         </DataTemplate>

@@ -5,8 +5,9 @@ using Bookie.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
-using System.Xml.Serialization;
+using System.Xml;
 using Windows.Storage;
 using static System.String;
 
@@ -117,29 +118,7 @@ namespace Bookie.Domain
                         }
                         else
                         {
-                            //Scrape for Isbn
-                            PdfParser p = new PdfParser();
-                            var s = p.Extract((storageFiles[i] as StorageFile), 1, 10).Result;
-                            var isbn = PdfIsbnParser.FindIsbn(s);
-                            if (!IsNullOrEmpty(isbn))
-                            {
-                                book.Isbn = isbn;
-                                var scraper = new Scraper.Scraper();
-                                var results = scraper.Scrape(book.Isbn).Result;
-                                if (results.items != null && results.items.Count > 0)
-                                {
-                                    book.Title = results.items[0].volumeInfo.title;
-                                    book.Abstract = results.items[0].volumeInfo.description;
-                                    book.Pages = results.items[0].volumeInfo.pageCount;
-                                    book.Scraped = true;
-
-                                    if (results.items[0].volumeInfo.authors != null)
-                                    {
-                                        book.Author = Join(",", results.items[0].volumeInfo.authors.ToArray());
-                                    }
-                                    book.Publisher = results.items[0].volumeInfo.publisher;
-                                }
-                            }
+                            book = UseIsbn(storageFiles[i] as StorageFile, book);
                         }
 
                         var cover = new Cover();
@@ -158,20 +137,114 @@ namespace Bookie.Domain
             }
         }
 
+        private Book UseIsbn(StorageFile storageFile, Book book)
+        {
+            var outBook = new Book
+            {
+                Title = Path.GetFileNameWithoutExtension(storageFile.Name),
+                Source = book.Source,
+                FileName = book.FileName,
+                FullPathAndFileName = book.FullPathAndFileName
+            };
+            var parser = new PdfParser();
+            var s = parser.Extract(storageFile, 1, 10).Result;
+            var isbn = PdfIsbnParser.FindIsbn(s);
+            if (IsNullOrEmpty(isbn)) return outBook;
+            outBook.Isbn = isbn;
+            var scraper = new Scraper.Scraper();
+            var results = scraper.Scrape(outBook.Isbn).Result;
+            if (results.items == null || results.items.Count <= 0) return outBook;
+            outBook.Title = results.items[0].volumeInfo.title;
+            outBook.Abstract = results.items[0].volumeInfo.description;
+            outBook.Pages = results.items[0].volumeInfo.pageCount;
+            outBook.Scraped = true;
+            if (results.items[0].volumeInfo.authors != null)
+            {
+                outBook.Author = Join(",", results.items[0].volumeInfo.authors.ToArray());
+            }
+            outBook.Publisher = results.items[0].volumeInfo.publisher;
+            return outBook;
+        }
+
+
         private Book XmlToBook(StorageFile xml, Book book)
         {
             var file = StorageFile.GetFileFromPathAsync(xml.Path).GetAwaiter().GetResult();
             var stream = file.OpenStreamForReadAsync().GetAwaiter().GetResult();
-            var serializer = new XmlSerializer(typeof(Book));
-            Book outBook;
-            using (var reader = new StreamReader(stream))
+
+            var outBook = new Book();
+            using (var reader = XmlReader.Create(stream))
             {
-                outBook = (Book)serializer.Deserialize(reader);
+                while (reader.Read())
+                {
+                    if (reader.IsStartElement())
+                    {
+                        var s = reader.Name;
+                        switch (reader.Name)
+                        {
+                            case "Title":
+                                outBook.Title = reader.ReadElementContentAsString();
+                                break;
+
+                            case "Description":
+                                outBook.Abstract = reader.ReadElementContentAsString();
+                                break;
+
+                            case "Year":
+                                DateTime datePublished;
+                                var successDate = DateTime.TryParseExact(reader.ReadElementContentAsString(), "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out datePublished);
+                                if (successDate)
+                                {
+                                    outBook.DatePublished = datePublished;
+                                }
+                                break;
+
+                            case "Pages":
+                                int pages;
+                                var successPages = int.TryParse(reader.ReadElementContentAsString(), out pages);
+                                if (successPages)
+                                {
+                                    outBook.Pages = pages;
+                                }
+                                break;
+
+                            case "Isbn":
+                                outBook.Isbn = reader.ReadElementContentAsString();
+                                break;
+
+                            case "Publisher":
+                                var publisherReader = reader.ReadSubtree();
+                                publisherReader.Read();
+                                while (publisherReader.Read())
+                                {
+                                    if (reader.Name == "Name")
+                                    {
+                                        outBook.Publisher += reader.ReadElementContentAsString();
+                                    }
+                                }
+                                break;
+
+                            case "Author":
+                                var authorReader = reader.ReadSubtree();
+                                authorReader.Read();
+                                while (authorReader.Read())
+                                {
+                                    if (reader.Name == "Name")
+                                    {
+                                        outBook.Author += reader.ReadElementContentAsString() + ",";
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
             }
+
             outBook.Source = book.Source;
             outBook.FileName = book.FileName;
             outBook.FullPathAndFileName = book.FullPathAndFileName;
             outBook.Scraped = true;
+            stream.Dispose();
             return outBook;
         }
 

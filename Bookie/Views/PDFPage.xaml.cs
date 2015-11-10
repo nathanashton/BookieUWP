@@ -111,6 +111,11 @@ namespace Bookie.Views
             _viewmodel.LoadingFinished += _viewmodel_LoadingFinished;
             _viewmodel.LoadDefaultFile();
             SetPageNumber(1);
+            if (_viewmodel.SelectedBook.CurrentPage != 0)
+            {
+                pdfViewer1.GotoPage((int)_viewmodel.SelectedBook.CurrentPage);
+            }
+
         }
 
         private void SetPageNumber(int pageNumber)

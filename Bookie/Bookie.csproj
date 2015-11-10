@@ -110,6 +110,7 @@
     <Compile Include="Converters\PageNumberConverter.cs" />
     <Compile Include="Converters\ScrapedBorderBrushConverter.cs" />
     <Compile Include="Converters\StarRatingConverter.cs" />
+    <Compile Include="Converters\ZeroVisibilityConverter.cs" />
     <Compile Include="GroupInfoList.cs" />
     <Compile Include="ImportProgress.xaml.cs">
       <DependentUpon>ImportProgress.xaml</DependentUpon>
