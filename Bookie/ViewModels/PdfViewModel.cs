@@ -142,9 +142,9 @@ namespace Bookie.ViewModels
 
         public event EventHandler LoadingFinished;
 
-        public void CheckPageForBookMark(int pageNumber)
+        public  void CheckPageForBookMark(int pageNumber)
         {
-            var exists = SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == pageNumber);
+            var exists =  SelectedBook.BookMarks.FirstOrDefault(x => x.PageNumber == pageNumber);
             if (exists == null)
             {
                 BookMarkIcon = new SymbolIcon(Symbol.Add);
@@ -230,9 +230,9 @@ namespace Bookie.ViewModels
                 var fileStream = stream.AsStreamForRead();
 
                 var buffer = new byte[fileStream.Length];
-                fileStream.Read(buffer, 0, buffer.Length);
+                await fileStream.ReadAsync(buffer, 0, buffer.Length);
                 Doc = new PdfLoadedDocument(buffer);
-                PdfControl.LoadDocument(Doc);
+                await PdfControl.LoadDocumentAsync(Doc);
             }
             BookMarks = new ObservableCollection<BookMarkBase>();
 
@@ -257,7 +257,7 @@ namespace Bookie.ViewModels
 
         public async void LoadDefaultFile()
         {
-            if (ShellViewModel.SelectedBook == null) return;
+        if (ShellViewModel.SelectedBook == null) return;
             var storageFolder = await
                 StorageApplicationPermissions.FutureAccessList.GetFolderAsync(ShellViewModel.SelectedBook.Source.Token);
             var file = await storageFolder.GetFileAsync(ShellViewModel.SelectedBook.FileName);

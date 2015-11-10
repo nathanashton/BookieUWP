@@ -2,6 +2,7 @@
   "dependencies": {
     "EntityFramework.Commands": "7.0.0-beta8",
     "EntityFramework.SQLite": "7.0.0-beta8",
+    "MetroLog": "0.9.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
   },
   "frameworks": {

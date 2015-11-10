@@ -4,6 +4,7 @@ using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bookie.Data.Repositories
 {
@@ -17,44 +18,42 @@ namespace Bookie.Data.Repositories
             }
         }
 
-        public BookMark Add(BookMark book)
+        public async Task<BookMark> Add(BookMark book)
         {
             using (var ctx = new Context())
             {
                 var added = ctx.Bookmarks.Add(book);
-                ctx.SaveChanges();
+                await ctx.SaveChangesAsync();
                 return added.Entity;
             }
         }
 
-        public ICollection<BookMark> GetAll()
+        public async Task<List<BookMark>> GetAll()
         {
             using (var ctx = new Context())
             {
-                return ctx.Bookmarks.Include(b => b.Book).ToList();
+                return await ctx.Bookmarks.Include(b => b.Book).ToListAsync();
             }
         }
 
-        public void Update(BookMark book)
+        public async void Update(BookMark book)
         {
             using (var ctx = new Context())
             {
                 ctx.Bookmarks.Attach(book);
                 ctx.Bookmarks.Update(book);
-                ctx.SaveChanges();
+                await ctx.SaveChangesAsync();
             }
         }
 
-        public void Remove(BookMark bookmark)
+        public async void Remove(BookMark bookmark)
         {
             using (var ctx = new Context())
             {
 
                     ctx.Bookmarks.Attach(bookmark);
                     ctx.Bookmarks.Remove(bookmark);
-                    ctx.SaveChanges();
-
-
+                    await ctx.SaveChangesAsync();
             }
         }
     }

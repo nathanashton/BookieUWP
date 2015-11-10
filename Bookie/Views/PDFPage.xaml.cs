@@ -4,6 +4,7 @@ using Syncfusion.Pdf;
 using Syncfusion.Pdf.Interactive;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -99,9 +100,10 @@ namespace Bookie.Views
                 {
                     AddBookMark(bookmark);
                 }
+
         }
 
-       
+
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -111,11 +113,10 @@ namespace Bookie.Views
             _viewmodel.LoadingFinished += _viewmodel_LoadingFinished;
             _viewmodel.LoadDefaultFile();
             SetPageNumber(1);
-            if (_viewmodel.SelectedBook.CurrentPage != 0)
+            if (_viewmodel.SelectedBook.CurrentPage != 0 && _viewmodel.SelectedBook.CurrentPage != null)
             {
                 pdfViewer1.GotoPage((int)_viewmodel.SelectedBook.CurrentPage);
             }
-
         }
 
         private void SetPageNumber(int pageNumber)
@@ -130,6 +131,7 @@ namespace Bookie.Views
 
         private void pdfViewer1_PageChanged(object sender, Syncfusion.Windows.PdfViewer.PageChangedEventArgs e)
         {
+
             SetPageNumber(e.NewPageNumber);
             _viewmodel.CurrentPageNumber = e.NewPageNumber;
             _viewmodel.CheckPageForBookMark(e.NewPageNumber);

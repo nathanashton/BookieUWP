@@ -329,9 +329,9 @@ namespace Bookie.ViewModels
             }
         }  
 
-        private void RefreshBooksFromDb()
+        private async void RefreshBooksFromDb()
         {
-            AllBooks = _bookService.GetAll();
+            AllBooks = await _bookService.GetAll();
             FilteredBooks = new ObservableCollection<Book>(AllBooks);
             UpdateShelfBooks();
             FilterCount = "Found " + FilteredBooks.Count;

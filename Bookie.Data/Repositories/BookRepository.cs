@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Bookie.Common.Model;
 using Bookie.Domain.Interfaces;
 using Microsoft.Data.Entity;
@@ -9,7 +10,7 @@ namespace Bookie.Data.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        public ICollection<Book> Find(Func<Book, bool> where)
+        public  ICollection<Book> Find(Func<Book, bool> where)
         {
             using (var ctx = new Context())
             {
@@ -17,31 +18,31 @@ namespace Bookie.Data.Repositories
             }
         }
 
-        public Book Add(Book book)
+        public async Task<Book> Add(Book book)
         {
             using (var ctx = new Context())
             {
                 var added = ctx.Books.Add(book);
-                ctx.SaveChanges();
+                await ctx.SaveChangesAsync();
                 return added.Entity;
             }
         }
 
-        public ICollection<Book> GetAll()
+        public async Task<List<Book>> GetAll()
         {
             using (var ctx = new Context())
             {
-                return ctx.Books.Include(r => r.Cover).Include(x => x.BookMarks).Include(t => t.Source).ToList();
+                return await ctx.Books.Include(r => r.Cover).Include(x => x.BookMarks).Include(t => t.Source).ToListAsync();
             }
         }
 
-        public void Update(Book book)
+        public async void Update(Book book)
         {
             using (var ctx = new Context())
             {
                 ctx.Books.Attach(book);
                 ctx.Entry(book).State = EntityState.Modified;
-                ctx.SaveChanges();
+                await ctx.SaveChangesAsync();
             }
         }
     }

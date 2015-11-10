@@ -92,14 +92,14 @@
                                         </Grid>
                                     </Flyout>
                                 </FlyoutBase.AttachedFlyout>
-                                <Grid Margin="5" Height="260" Width="135">
+                                <Grid Margin="5" Height="270" Width="135">
 
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
                                     
-                                    <Border Grid.Row="0" Width="130" Height="175" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
+                                    <Border Grid.Row="0" Width="130" Height="185" VerticalAlignment="Top"  BorderBrush="White" BorderThickness="1">
                                         <Image Source="{Binding Image}"  Stretch="Fill" />
                                     </Border>
                                     

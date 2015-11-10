@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Serialization;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using static System.String;
@@ -12,16 +11,12 @@ namespace Bookie.Common.Model
     {
         public int Id { get; set; }
 
-        [XmlElement("Title")]
         public string Title { get; set; }
 
-        [XmlElement("Description")]
         public string Abstract { get; set; }
 
-        [XmlElement("Year")]
         public DateTime? DatePublished { get; set; }
 
-        [XmlElement("Pages")]
         public int? Pages { get; set; }
 
         public int Rating { get; set; }

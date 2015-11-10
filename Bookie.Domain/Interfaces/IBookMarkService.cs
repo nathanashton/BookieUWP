@@ -1,6 +1,7 @@
 ﻿using Bookie.Common.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Bookie.Domain.Interfaces
 {
@@ -10,9 +11,9 @@ namespace Bookie.Domain.Interfaces
 
         BookMark GetById(int id);
 
-        List<BookMark> GetAll();
+        Task<List<BookMark>> GetAll();
 
-        List<BookMark> GetAllForBook(Book book);
+       List<BookMark> GetAllForBook(Book book);
 
         BookMark Add(BookMark book);
 

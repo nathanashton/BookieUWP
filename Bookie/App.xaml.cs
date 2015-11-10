@@ -4,9 +4,12 @@ using Microsoft.Data.Entity;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using MetroLog;
+using MetroLog.Targets;
 
 namespace Bookie
 {
@@ -18,9 +21,29 @@ namespace Bookie
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// 
+        /// 
+
         /// </summary>
+
+        private ILogger Log;
+
         public App()
         {
+
+
+            var configuration = new LoggingConfiguration();
+            configuration.AddTarget(LogLevel.Trace, LogLevel.Fatal, new FileStreamingTarget());
+            configuration.IsEnabled = true;
+
+            LogManagerFactory.DefaultConfiguration = configuration;
+            Log = LogManagerFactory.DefaultLogManager.GetLogger<App>();
+
+            UnhandledException += App_UnhandledException;
+            GlobalCrashHandler.Configure();
+
+
+
             Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
                 Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
@@ -31,6 +54,25 @@ namespace Bookie
                 db.Database.Migrate();
             }
             var covers = Globals.GetCoversFolder();
+
+
+    }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var t = Log.IsFatalEnabled;
+            var l = Log;
+            try
+            {
+                Log.Fatal("Unexpected error: " + e.Exception);
+
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+
         }
 
         /// <summary>
@@ -61,6 +103,14 @@ namespace Bookie
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
+                }
+                //  Display an extended splash screen if app was not previously running.
+                if (e.PreviousExecutionState != ApplicationExecutionState.Running)
+                {
+                    bool loadState = (e.PreviousExecutionState == ApplicationExecutionState.Terminated);
+                    ExtendedSplash extendedSplash = new ExtendedSplash(e.SplashScreen, loadState);
+                    rootFrame.Content = extendedSplash;
+                    Window.Current.Content = rootFrame;
                 }
 
                 // Place the frame in the current Window

@@ -3,6 +3,7 @@ using Bookie.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bookie.Domain.Services
 {
@@ -25,19 +26,19 @@ namespace Bookie.Domain.Services
             return _repository.Find(x=> x.Id == id).FirstOrDefault();
         }
 
-        public List<BookMark> GetAll()
+        public async Task<List<BookMark>> GetAll()
         {
-            return _repository.GetAll().ToList();
+            return await _repository.GetAll();
         }
 
         public List<BookMark> GetAllForBook(Book book)
         {
-            return _repository.Find(x => x.Book.Id == book.Id).ToList();
+            return  _repository.Find(x => x.Book.Id == book.Id).ToList();
         }
 
         public BookMark Add(BookMark book)
         {
-            return _repository.Add(book);
+            return _repository.Add(book).Result;
         }
 
         public void Update(BookMark book)

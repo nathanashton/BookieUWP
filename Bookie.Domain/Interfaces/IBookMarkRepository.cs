@@ -1,6 +1,7 @@
 ﻿using Bookie.Common.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Bookie.Domain.Interfaces
 {
@@ -8,9 +9,9 @@ namespace Bookie.Domain.Interfaces
     {
         ICollection<BookMark> Find(Func<BookMark, bool> where);
 
-        BookMark Add(BookMark book);
+        Task<BookMark> Add(BookMark book);
 
-        ICollection<BookMark> GetAll();
+        Task<List<BookMark>> GetAll();
 
         void Update(BookMark book);
 

@@ -7,14 +7,23 @@
     <Application.Resources>
 
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
 
+
+            <ResourceDictionary.MergedDictionaries>
                 <!--
                     Styles that define common aspects of the platform look and feel
                     Required by Visual Studio project and item templates
                  -->
                 <ResourceDictionary Source="common/StandardStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+                
+                
+                
+                </ResourceDictionary.MergedDictionaries>
+            
+            
+            
+            
+            
             <Style x:Key="EllipsisButton" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
