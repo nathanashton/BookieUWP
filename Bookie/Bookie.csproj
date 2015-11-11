@@ -225,13 +225,14 @@
       <Project>{5e94ee36-fafb-487b-a438-3db7874518c3}</Project>
       <Name>Bookie.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PdfViewModel\PdfViewModel.vcxproj">
+      <Project>{03ebab56-27d7-4273-972d-635ff5500fe4}</Project>
+      <Name>PdfViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Syncfusion.Pdf.UWP">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.Pdf.UWP.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfPdfViewer.UWP">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.SfPdfViewer.UWP.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.SfShared.UWP">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.SfShared.UWP.dll</HintPath>

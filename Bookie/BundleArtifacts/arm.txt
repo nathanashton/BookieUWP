@@ -1,0 +1,2 @@
+MainPackage=C:\Users\natha\Documents\Visual Studio 2015\Projects\Bookie-UWP\Bookie\bin\ARM\Debug\Bookie_1.0.0.0_ARM_Debug.appx
+ResourcePack=C:\Users\natha\Documents\Visual Studio 2015\Projects\Bookie-UWP\Bookie\bin\ARM\Debug\Bookie_1.0.0.0_scale-100.appx

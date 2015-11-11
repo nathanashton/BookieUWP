@@ -1,0 +1,1 @@
+MainPackage=C:\Users\natha\Documents\Visual Studio 2015\Projects\Bookie-UWP\Bookie\bin\x86\Debug\Bookie_1.0.0.0_x86_Debug.appx

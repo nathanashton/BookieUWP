@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookie.Data", "Bookie.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookie.Domain", "Bookie.Domain\Bookie.Domain.csproj", "{5E94EE36-FAFB-487B-A438-3DB7874518C3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PdfViewModel", "PdfViewModel\PdfViewModel.vcxproj", "{03EBAB56-27D7-4273-972D-635FF5500FE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,20 @@ Global
 		{5E94EE36-FAFB-487B-A438-3DB7874518C3}.Release|x64.Build.0 = Release|x64
 		{5E94EE36-FAFB-487B-A438-3DB7874518C3}.Release|x86.ActiveCfg = Release|x86
 		{5E94EE36-FAFB-487B-A438-3DB7874518C3}.Release|x86.Build.0 = Release|x86
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|ARM.ActiveCfg = Debug|ARM
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|ARM.Build.0 = Debug|ARM
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|x64.ActiveCfg = Debug|x64
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|x64.Build.0 = Debug|x64
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|x86.ActiveCfg = Debug|Win32
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Debug|x86.Build.0 = Debug|Win32
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|Any CPU.ActiveCfg = Release|Win32
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|ARM.ActiveCfg = Release|ARM
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|ARM.Build.0 = Release|ARM
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|x64.ActiveCfg = Release|x64
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|x64.Build.0 = Release|x64
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|x86.ActiveCfg = Release|Win32
+		{03EBAB56-27D7-4273-972D-635FF5500FE4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
