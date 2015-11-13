@@ -5,6 +5,7 @@ using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -67,7 +68,7 @@ namespace Bookie
                 Log.Fatal("Unexpected error: " + e.Exception);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 
             }
@@ -82,6 +83,11 @@ namespace Bookie
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.BackgroundColor = Colors.Black;
+            titleBar.ButtonBackgroundColor = Colors.Black;
+            titleBar.ButtonForegroundColor = Colors.White;
+            titleBar.ForegroundColor = Colors.White;
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {

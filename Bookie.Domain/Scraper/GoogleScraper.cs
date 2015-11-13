@@ -33,7 +33,7 @@ namespace Bookie.Domain.Scraper
 
             if (DateTime.Now.Subtract(lastTimeIWasCalled).Seconds < 1)
             {
-                Task.Delay(TimeSpan.FromSeconds(1));
+                await Task.Delay(TimeSpan.FromSeconds(1));
             }
 
             lastTimeIWasCalled = DateTime.Now;

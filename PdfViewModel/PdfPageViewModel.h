@@ -52,6 +52,8 @@ namespace PdfViewModel
 
 	private:
 		bool isPropertyChangedObserved;
+
+	public:
 		event Windows::UI::Xaml::Data::PropertyChangedEventHandler^ privatePropertyChanged;
 
 #pragma endregion

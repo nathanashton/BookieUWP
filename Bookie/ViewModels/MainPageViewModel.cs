@@ -17,6 +17,7 @@ namespace Bookie.ViewModels
 {
     public class MainPageViewModel : NotifyBase, IProgressSubscriber
     {
+        private ObservableCollection<Letter> _letters;
         private readonly BookService _bookService = new BookService(new BookRepository());
         private List<Book> _allBooks;
 
@@ -36,6 +37,16 @@ namespace Bookie.ViewModels
         private bool _pageHasBookMark;
 
         private bool _filterDescription;
+
+        public ObservableCollection<Letter> Letters
+        {
+            get {return _letters;}
+            set { _letters = value;
+                NotifyPropertyChanged("Letters");
+            }
+            
+        }
+
 
         public bool FilterDescription
         {
@@ -64,9 +75,79 @@ namespace Bookie.ViewModels
         private List<int> _ratings;
         private Book _selectedBook;
 
+        private double _letterWidth;
+
+        public double LetterWidth
+        {
+            get { return _letterWidth; }
+            set { _letterWidth = value;
+                NotifyPropertyChanged("LetterWidth");
+                UpdateLetterWidths();
+            }
+        }
+
 
         public MainPageViewModel()
         {
+            Letters = new ObservableCollection<Letter>();
+            var zero = new Letter { Name = "0", LWidth = LetterWidth };
+
+            var a = new Letter {Name = "A", LWidth = LetterWidth};
+            var b = new Letter { Name = "B", LWidth = LetterWidth };
+            var c = new Letter { Name = "C", LWidth = LetterWidth };
+            var d = new Letter { Name = "D", LWidth = LetterWidth };
+            var e = new Letter { Name = "E", LWidth = LetterWidth };
+            var f = new Letter { Name = "F", LWidth = LetterWidth };
+            var g = new Letter { Name = "G", LWidth = LetterWidth };
+            var h = new Letter { Name = "H", LWidth = LetterWidth };
+            var i = new Letter { Name = "I", LWidth = LetterWidth };
+            var j = new Letter { Name = "J", LWidth = LetterWidth };
+            var k = new Letter { Name = "K", LWidth = LetterWidth };
+            var l = new Letter { Name = "L", LWidth = LetterWidth };
+            var m = new Letter { Name = "M", LWidth = LetterWidth };
+            var n = new Letter { Name = "N", LWidth = LetterWidth };
+            var o = new Letter { Name = "O", LWidth = LetterWidth };
+            var p = new Letter { Name = "P", LWidth = LetterWidth };
+            var q = new Letter { Name = "Q", LWidth = LetterWidth };
+            var r = new Letter { Name = "R", LWidth = LetterWidth };
+            var s = new Letter { Name = "S", LWidth = LetterWidth };
+            var t = new Letter { Name = "T", LWidth = LetterWidth };
+            var u = new Letter { Name = "U", LWidth = LetterWidth };
+            var v = new Letter { Name = "V", LWidth = LetterWidth };
+            var w = new Letter { Name = "W", LWidth = LetterWidth };
+            var x = new Letter { Name = "X", LWidth = LetterWidth };
+            var y = new Letter { Name = "Y", LWidth = LetterWidth };
+            var z = new Letter { Name = "Z", LWidth = LetterWidth };
+            Letters.Add(zero);
+            Letters.Add(a);
+            Letters.Add(b);
+            Letters.Add(c);
+            Letters.Add(d);
+            Letters.Add(e);
+            Letters.Add(f);
+            Letters.Add(g);
+            Letters.Add(h);
+            Letters.Add(i);
+            Letters.Add(j);
+            Letters.Add(k);
+            Letters.Add(l);
+            Letters.Add(m);
+            Letters.Add(n);
+            Letters.Add(o);
+            Letters.Add(p);
+            Letters.Add(q);
+            Letters.Add(r);
+            Letters.Add(s);
+            Letters.Add(t);
+            Letters.Add(u);
+            Letters.Add(v);
+            Letters.Add(w);
+            Letters.Add(x);
+            Letters.Add(y);
+            Letters.Add(z);
+
+
+
             ProgressService.RegisterSubscriber(this);
             AllBooks = new List<Book>();
             RefreshBooksFromDb();
@@ -78,6 +159,7 @@ namespace Bookie.ViewModels
             Ratings.Add(4);
             Ratings.Add(5);
             BooksScroll = ScrollMode.Enabled;
+           
         }
 
         private Brush _shelfBrush;
@@ -101,6 +183,16 @@ namespace Bookie.ViewModels
                 NotifyPropertyChanged("GridBrush");
             }
         }
+
+        public void UpdateLetterWidths()
+        {
+            foreach (var l in Letters)
+            {
+                l.LWidth = LetterWidth;
+            }
+
+        }
+
 
 
         public RelayCommand OpenBookCommand

@@ -7,14 +7,19 @@
 #pragma once
 #include "PdfViewContext.h"
 
+
 namespace PdfViewModel
 {
+
+	public delegate void MyEventHandler();
+
+
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class PdfDocViewModel sealed : Windows::UI::Xaml::Interop::IBindableObservableVector
 	{
-	public:
-		PdfDocViewModel(_In_ Windows::Data::Pdf::PdfDocument^ pdfDocument, _In_ Windows::Foundation::Size pageSize, _In_ SurfaceType surfaceType);
 
+	public:
+		PdfDocViewModel(_In_ Windows::Data::Pdf::PdfDocument^ pdfDocument, _In_ Windows::Foundation::Size pageSize, _In_ SurfaceType surfaceType, _In_ MyEventHandler^ cback);
 
 #pragma region IBindableObservableVector
 
@@ -66,10 +71,13 @@ namespace PdfViewModel
 	private:
 		Platform::Collections::Vector<Platform::Object^>^ storage;
 		bool isVectorChangedObserved;
-		event Windows::UI::Xaml::Interop::BindableVectorChangedEventHandler^ privateVectorChanged;
-		void StorageVectorChanged(_In_ Windows::Foundation::Collections::IObservableVector<Platform::Object^>^ sender, _In_ Windows::Foundation::Collections::IVectorChangedEventArgs^ e);
 		PdfViewContext^ pdfViewContext;
 		Windows::Data::Pdf::PdfDocument^ pdfDocument;
+
+	public:
+		event Windows::UI::Xaml::Interop::BindableVectorChangedEventHandler^ publicVectorChanged;
+		void StorageVectorChanged(_In_ Windows::Foundation::Collections::IObservableVector<Platform::Object^>^ sender, _In_ Windows::Foundation::Collections::IVectorChangedEventArgs^ e);
+		event MyEventHandler^ pdfLoaded;
 
 #pragma endregion
 	};

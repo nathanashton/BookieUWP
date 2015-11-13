@@ -4,21 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:inking="using:Windows.UI.Input.Inking"
-    xmlns:bookie="using:Bookie"
-    xmlns:interop="using:Windows.UI.Xaml.Interop"
-    xmlns:pdfViewModel="using:PdfViewModel"
-    xmlns:viewModels="using:Bookie.ViewModels"
     xmlns:converters="using:Bookie.Converters"
-    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d" Loaded="Page_Loaded">
     <Page.Resources>
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
         <converters:BoolImageConverter x:Key="BoolImageConverter" />
         <converters:PageNumberConverter x:Key="PageNumberConverter" />
+        <converters:PageNumberConverter2 x:Key="PageNumberConverter2" />
     </Page.Resources>
-
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -33,6 +26,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -40,79 +34,67 @@
             </Grid.ColumnDefinitions>
             <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50" Background="Black">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton  Icon="Bookmarks">
+                    <AppBarButton Icon="Bookmarks">
                         <AppBarButton.Flyout>
                             <Flyout>
-                                <Grid  Height="500">
-                            
+                                <Grid Height="500">
 
-                                            <ListView Width="150" ItemsSource="{Binding SelectedBook.BookMarks}" IsItemClickEnabled="True">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png" />
-                                                            <TextBlock Text="{Binding}" />
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
+
+                                    <ListView SelectionMode="Single" SelectionChanged="ListView_SelectionChanged"
+                                              Width="150" ItemsSource="{Binding SelectedBook.BookMarks}"
+                                              IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Tapped="StackPanel_Tapped">
+                                                    <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0"
+                                                           Source="ms-appx:///Assets/bookmark.png" />
+                                                    <TextBlock Text="{Binding}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
                                 </Grid>
                             </Flyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
-                    <AppBarButton  Icon="ZoomIn" Tapped="AppBarButton_Tapped" />
-                    <AppBarButton  Icon="ZoomOut" Tapped="AppBarButton_Tapped_1" />
+                    <AppBarButton Icon="Zoom">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <TextBox Margin="20" Width="50" Height="25" TextChanged="TextBox_TextChanged"/>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
-            <Grid Visibility="{Binding Progress}" Background="#B7B7B7" Canvas.ZIndex="99" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                <ProgressRing  Foreground="#2b2b2b" Width="70" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="70" IsActive="True" />
+            <Grid Visibility="{Binding Progress}" Background="Transparent" Canvas.ZIndex="99" Grid.Row="1"
+                  Grid.Column="0" Grid.ColumnSpan="2">
+                <ProgressRing Foreground="White" Width="40" VerticalAlignment="Stretch"
+                              VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="40"
+                              IsActive="True" />
             </Grid>
 
-            <Grid Background="Black" Grid.Row="1" Width="120" Visibility="{Binding BookMarksVisibility}" Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Margin="0,5,0,5"  HorizontalAlignment="Center" FontWeight="Bold" Text="BookMarks" FontSize="14" Grid.Row="0" />
-                <ListView  Grid.Row="1" HorizontalAlignment="Center"  ItemsSource="{Binding SelectedBook.BookMarks}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0" Source="ms-appx:///Assets/bookmark.png" />
-                                <TextBlock Text="Page " />
-                                <TextBlock Text="{Binding PageNumber}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="FontSize" Value="12" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-            </Grid>
 
-            <ScrollViewer Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  x:Name='ScrollViewer'
-                        TabNavigation='Local'
-                        IsVerticalScrollChainingEnabled='False'
-                        IsHorizontalScrollChainingEnabled='False'
-                        HorizontalScrollMode='Enabled'
-                        IsHorizontalRailEnabled='true'
-                        HorizontalScrollBarVisibility='Auto'
-                        HorizontalSnapPointsType='None'
-                        VerticalScrollMode='Enabled'
-                        IsVerticalRailEnabled='true'
-                        VerticalScrollBarVisibility='Auto'
-                        VerticalSnapPointsType='None'
-                        ZoomMode='Enabled'
-                        MinZoomFactor="0.3"
-                        MaxZoomFactor="4"
-                        ViewChanged="EventHandlerViewChanged" Background="Transparent">
+            <ScrollViewer Margin="5" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" x:Name='ScrollViewer'
+                          TabNavigation='Local'
+                          IsVerticalScrollChainingEnabled='False'
+                          IsHorizontalScrollChainingEnabled='False'
+                          HorizontalScrollMode='Enabled'
+                          IsHorizontalRailEnabled='true'
+                          HorizontalScrollBarVisibility='Auto'
+                          HorizontalSnapPointsType='None'
+                          VerticalScrollMode='Enabled'
+                          IsVerticalRailEnabled='true'
+                          VerticalScrollBarVisibility='Auto'
+                          VerticalSnapPointsType='None'
+                          ZoomMode='Enabled'
+                          MinZoomFactor="0.3"
+                          MaxZoomFactor="4"
+                          ViewChanged="EventHandlerViewChanged" ViewChanging="ScrollViewer_ViewChanging"
+                          Background="Transparent">
 
-                <ItemsControl  Name="lv" HorizontalAlignment="Center" ItemsSource="{Binding V}" Margin="20">
+                <ItemsControl Name="lv" HorizontalAlignment="Center" ItemsSource="{Binding PdfPages}" Margin="20">
                     <ControlTemplate x:Name='zoomedInViewControlTemplate'>
-
                         <ItemsPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                             <ItemsPresenter.Transitions>
                                 <TransitionCollection>
@@ -128,42 +110,59 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid HorizontalAlignment="Center" Tapped="Grid_Tapped">
-                                
-                                <Button Margin="10" Width="60" Height="160" Background="{Binding BookMark, Converter={StaticResource BoolImageConverter}}" Command="{Binding DataContext.BookMarkCommand, ElementName=lv}" CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right" Canvas.ZIndex="1000" VerticalAlignment="Top" Content="">
-                                </Button>
-                                <Border Margin="20" BorderBrush="Black" BorderThickness="1"  Height="{Binding Height}" Width="{Binding Width}">
-                                    <Image Source="{Binding ImageSourceVsisBackground}" HorizontalAlignment="Center" Height="{Binding Height}" Width="{Binding Width}"></Image>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid Canvas.ZIndex="2000" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                      Width="30" Height="30" Background="Black">
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               Text="{Binding PageNumber}" Foreground="White" />
+                                </Grid>
+                                <Button Margin="10" Width="60" Height="160"
+                                        Background="{Binding BookMark, Converter={StaticResource BoolImageConverter}}"
+                                        Command="{Binding DataContext.BookMarkCommand, ElementName=lv}"
+                                        CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right"
+                                        Canvas.ZIndex="1000" VerticalAlignment="Top" Content="" />
+                                <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
+                                        Width="{Binding Width}">
+                                    <Image Source="{Binding ImageSourceVsisBackground}" HorizontalAlignment="Center"
+                                           Height="{Binding Height}" Width="{Binding Width}" />
                                 </Border>
-                                <Border Margin="20" BorderBrush="Black" BorderThickness="1"  Height="{Binding Height}" Width="{Binding Width}">
-                                    <Image  Source="{Binding ImageSourceVsisForeground}" HorizontalAlignment="Center" Height="{Binding Height}" Width="{Binding Width}"></Image>
+                                <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
+                                        Width="{Binding Width}">
+                                    <Image Source="{Binding ImageSourceVsisForeground}" HorizontalAlignment="Center"
+                                           Height="{Binding Height}" Width="{Binding Width}" />
                                 </Border>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="Black">
+
+            <Grid Opacity="0.7" Grid.Row="2" Height="40" Background="#2b2b2b" Grid.Column="1">
+                <Slider Foreground="Black" IsThumbToolTipEnabled="False" Name="slider" Maximum="{Binding PageCount}"
+                        Minimum="{Binding SliderMinimum}" Value="{Binding CurrentPage, Mode=TwoWay}"
+                        ValueChanged="slider_ValueChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            </Grid>
+
+            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="Black">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="0.5*" />
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
-                <Button FontFamily="Segoe MDL2 Assets"
-                Content="&#xE90C;"
-                Width="40"
-                Height="40"
-                FontSize="24"
-Margin="10,0,0,0"
-                Background="Transparent"
-                Foreground="White"
-                VerticalAlignment="Top"
-                BorderThickness="0" Command="{Binding ToggleBookMarksCommand}" Grid.Column="0" />
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding SelectedBook.Title}"  FontSize="16" HorizontalAlignment="Right" Margin="0,0,20,0" />
-                    <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="0,0,20,0" Foreground="#C8C80E" Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}" FontFamily="Segoe MDL2 Assets" />
-                    <TextBlock VerticalAlignment="Center" Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"  FontSize="16" HorizontalAlignment="Left" Margin="0,0,20,0" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding SelectedBook.Title}" FontSize="16"
+                               HorizontalAlignment="Right" Margin="0,0,20,0" />
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="0,0,20,0"
+                               Foreground="#C8C80E"
+                               Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}"
+                               FontFamily="Segoe MDL2 Assets" />
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"
+                               FontSize="16" HorizontalAlignment="Left" />
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding PageCount, Converter={StaticResource PageNumberConverter2}}"
+                               FontSize="16" HorizontalAlignment="Left" Margin="0,0,20,0" />
                 </StackPanel>
             </Grid>
         </Grid>

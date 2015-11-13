@@ -2,6 +2,7 @@
 using Bookie.Common.Model;
 using Bookie.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -31,7 +32,6 @@ namespace Bookie.Views
         public MainPage()
         {
             this.InitializeComponent();
-
             Loaded += MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
             booksGridView.Visibility = Visibility.Visible;
@@ -53,13 +53,27 @@ namespace Bookie.Views
 
             viewmodel = DataContext as MainPageViewModel;
             viewmodel.ShelfVisibility = Visibility.Collapsed;
+            UpdateLettersWidths();
+
+
+
         }
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
             DetermineVisualState();
+            UpdateLettersWidths();
+        
+
+
         }
 
+
+        private void UpdateLettersWidths()
+        {
+            var s = ActualWidth - 20;
+            viewmodel.LetterWidth = s / 27;
+        }
 
         private void DetermineVisualState()
         {
@@ -86,59 +100,9 @@ namespace Bookie.Views
         {
         }
 
-        private void MenuButton5_Click(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(PdfPage));
-        }
 
-        private async void TextBlock_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            var op = new FileOpenPicker();
-            op.FileTypeFilter.Add("*");
-            op.ViewMode = PickerViewMode.List;
 
-            var file = await op.PickSingleFileAsync();
 
-            if (file != null)
-
-            {
-                token = StorageApplicationPermissions.FutureAccessList.Add(file);
-                var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["id"] = token;
-            }
-        }
-
-        private async void TextBlock_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            var t = localSettings.Values["id"].ToString();
-
-            if (t != null)
-
-            {
-                StorageFile fileFromList = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(t);
-
-                await (new Windows.UI.Popups.MessageDialog(fileFromList.DisplayName)).ShowAsync();
-            }
-        }
-
-        private void AppBarButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            //  _viewModel.AddFolder();
-        }
-
-        private void AppBarButton_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            booksGridView.Visibility = Visibility.Visible;
-            //   BooksCollectionViewSource.Source = viewmodel.AllBooks;
-            // BooksCollectionViewSource.IsSourceGrouped = false;
-        }
-
-        private void AppBarButton_Tapped_2(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            booksGridView.Visibility = Visibility.Collapsed;
-
-        }
 
         private void AppBarButton_Tapped_3(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
@@ -154,29 +118,12 @@ namespace Bookie.Views
 
         }
 
-        private void Button_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-        }
-
-        private void Grid_OnRightTapped(object sender, TappedRoutedEventArgs e)
-        {
-        }
-
-        private void Grid_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            var t = (Book)(e.OriginalSource as Image).DataContext;
-            viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
-
-            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-        }
+ 
 
         private void MessagingService_messages(object sender, BookieMessageEventArgs e)
         {
         }
 
-        private void Grid_RightTapped_1(object sender, RightTappedRoutedEventArgs e)
-        {
-        }
 
         private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
@@ -195,23 +142,8 @@ namespace Bookie.Views
 
         }
 
-        private void ComboBoxItem_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            booksGridView.ItemsSource = BooksCollectionViewSource.View;
-        }
 
-        private void ComboBoxItem_Tapped_1(object sender, TappedRoutedEventArgs e)
-        {
-            booksGridView.ItemsSource = BooksCollectionViewSourceNotgrouped.View;
-        }
-
-        private void Grid_DoubleTapped_1(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            var t = (Book)(e.OriginalSource as TextBlock).DataContext;
-            viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
-            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-        }
-
+   
         private async void Button_Tapped(object sender, TappedRoutedEventArgs e)
         {
             await EditPopup.ShowAsync();
@@ -439,6 +371,21 @@ namespace Bookie.Views
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
+
+
+            List<GridViewItem> it = new List<GridViewItem>();
+
+            var t = booksGridView.Items;
+            foreach (GridViewItem i in t)
+            {
+                if (i.Visibility == Visibility.Visible)
+                {
+                    it.Add(i);
+
+                }
+            }
+            var tt = "s";
+
             var book = (Book)(sender as Grid).DataContext;
             viewmodel.SelectedBook = book;
             booksGridView.ScrollIntoView(viewmodel.SelectedBook);

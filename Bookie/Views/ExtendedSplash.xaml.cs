@@ -63,13 +63,7 @@ namespace Bookie.Views
            // await RestoreStateAsync(loadState);
         }
 
-        async void RestoreStateAsync(bool loadState)
-        {
-            if (loadState)
-            {
-                // TODO: write code to load state
-            }
-        }
+       
 
         // Position the extended splash screen image in the same location as the system splash screen image.
         void PositionImage()

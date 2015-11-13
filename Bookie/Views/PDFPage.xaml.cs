@@ -1,11 +1,8 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved
-
+﻿using Bookie.Common.Model;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Bookie.Common.Model;
-using PdfViewModel;
-using System.Linq;
 using Windows.UI.Xaml.Navigation;
 
 namespace Bookie.Views
@@ -13,84 +10,158 @@ namespace Bookie.Views
     public sealed partial class PdfPage : Page
     {
         private ViewModels.PdfViewModel _viewmodel;
-
-        public ViewModels.PdfViewModel ViewModel
-        {
-            get { return _viewmodel; }
-        }
-
-
-        private int _currentPage;
+        public ViewModels.PdfViewModel ViewModel => _viewmodel;
 
         public PdfPage()
         {
             InitializeComponent();
-            var s = this.Width;
-            var p = this.ActualWidth;
+            ScrollViewer.Visibility = Visibility.Collapsed;
         }
-
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-           
-                _viewmodel.SelectedBook.CurrentPage = _viewmodel.CurrentPage;
+            if (_viewmodel.CurrentPage != 0 && _viewmodel.CurrentPage != 1 &&
+                _viewmodel.CurrentPage != _viewmodel.PageCount)
+            {
+                _viewmodel.SelectedBook.CurrentPage = (int) _viewmodel.CurrentPage;
                 _viewmodel.UpdateBook();
-            
- 
+            }
+            else
+            {
+                _viewmodel.SelectedBook.CurrentPage = null;
+                _viewmodel.UpdateBook();
+            }
         }
-
 
         private void EventHandlerViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            
-            if (!e.IsIntermediate)
+            if (e.IsIntermediate) return;
+            var scrollViewer = sender as ScrollViewer;
+            if (scrollViewer != null)
             {
-                var scrollViewer = sender as ScrollViewer;
-                if (scrollViewer != null)
-                {
-                    _viewmodel.V.UpdatePages(scrollViewer.ZoomFactor);
-                }
+                _viewmodel.PdfPages.UpdatePages(scrollViewer.ZoomFactor);
             }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             _viewmodel = DataContext as ViewModels.PdfViewModel;
+            _viewmodel.PdfLoadedEvent += _viewmodel_PdfLoadedEvent;
             _viewmodel.LoadDefaultFile();
-            _viewmodel.Notes = Visibility.Collapsed;
         }
 
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+
+
+        private void _viewmodel_PdfLoadedEvent(object sender, EventArgs e)
         {
-            var s = this.ActualWidth;
+            ScrollViewer.Visibility = Visibility.Visible;
+
+            var page = _viewmodel.SelectedBook.CurrentPage;
+
+            if (page == null) return;
+            var pageAsInt = (int)page;
+            
+            // Doesnt work as the ScrollViewer hasnt been populated yet. Needs a delay or something
+            var pageToffset = PageNumberToOffset(pageAsInt);
+            ScrollToPage(pageToffset);
         }
 
-        private void AppBarButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private double PageNumberToOffset(int pageNumber)
         {
-            var factor = Convert.ToSingle(ScrollViewer.ZoomFactor + 0.4);
+            if ((int) ScrollViewer.ExtentHeight == 0)
+            {
+                double pp2 = (921 * _viewmodel.PageCount) / ((double)_viewmodel.PageCount);
+                var result2 = pp2 * (pageNumber) - pp2;
+                return result2;
+            }
 
-            ScrollViewer.ChangeView(ScrollViewer.HorizontalOffset, ScrollViewer.VerticalOffset, factor);
+
+            double pp = ScrollViewer.ExtentHeight/((double)_viewmodel.PageCount);
+            var result = pp * (pageNumber) - pp;
+            return result;
         }
 
-        private void AppBarButton_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private int OffsetToPageNumber(double offset)
         {
-            var factor = Convert.ToSingle(ScrollViewer.ZoomFactor - 0.4);
-
-            ScrollViewer.ChangeView(ScrollViewer.HorizontalOffset, ScrollViewer.VerticalOffset, factor);
+            var to = (ScrollViewer.ExtentHeight / (_viewmodel.PageCount)); // how many points to a page
+            var result = offset / to;
+            return Convert.ToInt32(result +1);
         }
 
-        private void Grid_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void ScrollToPage(double offset)
         {
-            var s = sender as Grid;
-            var page = (PdfPageViewModel) s.DataContext;
-            _viewmodel.CurrentPage = Convert.ToInt32(page.PageNumber);
+            ScrollViewer.ScrollToVerticalOffset(offset);
+           // ScrollViewer.ChangeView(null, offset, null);
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+  
+        }
+
+        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            _viewmodel.CurrentPage = OffsetToPageNumber(ScrollViewer.VerticalOffset);
+        }
+
+        private void slider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            //if (_viewmodel != null)
+            //{
+            //    ScrollToPage(PageNumberToOffset((int)_viewmodel.CurrentPage));
+            //}
+        }
+
+        private bool IsScrollViewerReady()
+        {
+            var ready = false;
+            while (!ready)
+            {
+                if ((int)ScrollViewer.ExtentHeight == 0)
+                {
+                    ready = false;
+                }
+                else
+                {
+                    ready = true;
+                }
+                Task.Delay(TimeSpan.FromSeconds(5)).Wait();
+            }
+
+            return true;
+            
         }
 
         private void StackPanel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-           // lv.ScrollIntoView(_viewmodel.SelectedPage);
+            //var t = sender as StackPanel;
+            //var s = (BookMark) t.DataContext;
+
+                        //ScrollToPage(PageNumberToOffset(s.PageNumber));
+
         }
 
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var s = (BookMark) e.ClickedItem;
+            if (s == null) return;
+            ScrollToPage(PageNumberToOffset(s.PageNumber));
 
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var t = (sender as TextBox).Text;
+            if (!String.IsNullOrEmpty(t))
+            {
+                int page;
+                var result = Int32.TryParse(t, out page);
+                if (result)
+                {
+                    ScrollToPage(PageNumberToOffset(Convert.ToInt32(t)));
+                }
+            }
+
+        }
     }
 }

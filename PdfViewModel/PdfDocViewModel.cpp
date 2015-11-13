@@ -17,18 +17,23 @@ using namespace Platform;
 
 namespace PdfViewModel
 {
-	PdfDocViewModel::PdfDocViewModel(_In_ Windows::Data::Pdf::PdfDocument^ pdfDoc, _In_ Windows::Foundation::Size pageSize, _In_ PdfViewModel::SurfaceType surfaceType)
+
+
+	PdfDocViewModel::PdfDocViewModel(_In_ Windows::Data::Pdf::PdfDocument^ pdfDoc, _In_ Windows::Foundation::Size pageSize, _In_ PdfViewModel::SurfaceType surfaceType, _In_ MyEventHandler^ cback)
 		: pdfDocument(pdfDoc)
 	{
+
 		pdfViewContext = ref new PdfViewContext(pageSize, pdfDocument->GetPage(0)->Size, surfaceType);
 		storage = ref new Collections::Vector<Object^>();
 		storage->VectorChanged += ref new Windows::Foundation::Collections::VectorChangedEventHandler<Object^>(this, &PdfDocViewModel::StorageVectorChanged);
 		isVectorChangedObserved = false;
 
+
 		for (unsigned int pg = 0; pg < pdfDocument->PageCount; ++pg)
 		{
 			Append(CreateEmptyItem(pg));
 		}
+		cback();
 	}
 
 	
@@ -39,19 +44,19 @@ namespace PdfViewModel
 	Windows::Foundation::EventRegistrationToken PdfDocViewModel::VectorChanged::add(_In_ BindableVectorChangedEventHandler^ e)
 	{
 		isVectorChangedObserved = true;
-		return privateVectorChanged += e;
+		return publicVectorChanged += e;
 	}
 
 	void PdfDocViewModel::VectorChanged::remove(_In_ Windows::Foundation::EventRegistrationToken t)
 	{
-		privateVectorChanged -= t;
+		publicVectorChanged -= t;
 	}
 
 	void PdfDocViewModel::VectorChanged::raise(_In_ IBindableObservableVector^ vector, _In_ Object^ e)
 	{
 		if (isVectorChangedObserved)
 		{
-			privateVectorChanged(vector, e);
+			publicVectorChanged(vector, e);
 		}
 	}
 

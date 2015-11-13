@@ -17,7 +17,7 @@ namespace Bookie.Converters
                 DateTime date = (DateTime)value;
                 return new DateTimeOffset(date);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -30,7 +30,7 @@ namespace Bookie.Converters
                 DateTimeOffset dto = (DateTimeOffset)value;
                 return dto.DateTime;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

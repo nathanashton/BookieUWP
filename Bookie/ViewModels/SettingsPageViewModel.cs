@@ -37,7 +37,6 @@ namespace Bookie.ViewModels
             }
         }
 
-        private RelayCommand _addCommand;
 
         public RelayCommand AddCommand
         {
@@ -50,7 +49,6 @@ namespace Bookie.ViewModels
             }
         }
 
-        private RelayCommand _removeCommand;
 
         public RelayCommand RemoveCommand
         {
