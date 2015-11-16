@@ -103,6 +103,9 @@
     <Compile Include="BookmarkToggle.cs" />
     <Compile Include="Converters\BoolImageConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
+    <Compile Include="Converters\FoundBackgroundConverter.cs" />
+    <Compile Include="Converters\FoundForegroundConverter.cs" />
+    <Compile Include="Converters\InvertImageConverter.cs" />
     <Compile Include="Converters\MouseToScrollBarVisibility.cs" />
     <Compile Include="Converters\NullableValueConverter.cs" />
     <Compile Include="Converters\NullBoolConverter.cs" />
@@ -172,6 +175,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="common\BookieStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

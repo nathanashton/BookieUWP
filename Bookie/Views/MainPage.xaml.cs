@@ -8,11 +8,13 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using WinRTXamlToolkit.Controls.Extensions;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -23,6 +25,7 @@ namespace Bookie.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        int columnCount = 8;
 
         private MainPageViewModel viewmodel;
         private Brush _shelfBrushColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
@@ -38,8 +41,6 @@ namespace Bookie.Views
             MessagingService.Register(this, MessagingService_messages);
         }
 
-        private string token = null;
-
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += Current_SizeChanged;
@@ -49,20 +50,24 @@ namespace Bookie.Views
         {
             Window.Current.SizeChanged += Current_SizeChanged;
             DetermineVisualState();
-            //    cflow.SelectedItemChanged += Cflow_SelectedItemChanged;
-
             viewmodel = DataContext as MainPageViewModel;
             viewmodel.ShelfVisibility = Visibility.Collapsed;
             UpdateLettersWidths();
 
+            //var scrollViewer = booksGridView.GetFirstDescendantOfType<ScrollViewer>();
 
+            //var scrollbars = scrollViewer.GetDescendantsOfType<ScrollBar>().ToList();
+
+            //var verticalBar = scrollbars.FirstOrDefault(x => x.Orientation == Orientation.Vertical);
+            //verticalBar.Scroll += VerticalBar_Scroll;
 
         }
+
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
             DetermineVisualState();
-            UpdateLettersWidths();
+           // UpdateLettersWidths();
         
 
 
@@ -77,19 +82,18 @@ namespace Bookie.Views
 
         private void DetermineVisualState()
         {
-            //var state = string.Empty;
-            //var applicationView = ApplicationView.GetForCurrentView();
-            //var size = Window.Current.Bounds;
+         //   UpdateLettersWidths();
 
-            //    if (applicationView.Orientation == ApplicationViewOrientation.Landscape)
-            //        state = "Landscape";
-            //    else
-            //        state = "Portrait";
+            var applicationView = ApplicationView.GetForCurrentView();
+            if (applicationView.Orientation == ApplicationViewOrientation.Landscape)
+            {
+                columnCount = 8;
+            }
+            else
+            {
+                columnCount = 4;
+            }
 
-            //System.Diagnostics.Debug.WriteLine("Width: {0}, New VisulState: {1}",
-            //    size.Width, state);
-
-            //VisualStateManager.GoToState(this, state, true);
         }
 
         private void Page_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -98,6 +102,8 @@ namespace Bookie.Views
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+          //  UpdateLettersWidths();
+
         }
 
 
@@ -371,24 +377,69 @@ namespace Bookie.Views
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
-
-            List<GridViewItem> it = new List<GridViewItem>();
-
-            var t = booksGridView.Items;
-            foreach (GridViewItem i in t)
-            {
-                if (i.Visibility == Visibility.Visible)
-                {
-                    it.Add(i);
-
-                }
-            }
-            var tt = "s";
-
             var book = (Book)(sender as Grid).DataContext;
             viewmodel.SelectedBook = book;
             booksGridView.ScrollIntoView(viewmodel.SelectedBook);
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (booksGridView.Items == null) return;
+
+            var s = (ScrollViewer)sender;
+            var offset = s.VerticalOffset; 
+            offset -= 1;
+
+            var index = ((int)offset -1) * columnCount;
+
+            var item = booksGridView.Items[(int)index];
+
+            if (item != null)
+            {
+                
+                var letter = (item as Book).Title.ToCharArray();
+                var letter2 = letter[0].ToString().ToLower();
+                if (viewmodel != null)
+                {
+                    viewmodel.SelectLetter(letter2);
+
+                }
+            }
+
+        }
+
+        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+
+                if (child is T)
+                {
+                    return (T)child;
+                }
+                else
+                {
+                    child = FindVisualChild<T>(child);
+                    if (child != null)
+                    {
+                        return (T)child;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private void Grid_Tapped_1(object sender, TappedRoutedEventArgs e)
+        {
+            var t = (sender as Grid).DataContext;
+            var book = t as Letter;
+            var lower = book.Name.ToLower();
+            var found = viewmodel.FilteredBooks.FirstOrDefault(x => x.Title.ToCharArray()[0].ToString().ToLower() == lower);
+            if (found == null) return;
+            viewmodel.SelectLetter(lower);
+            booksGridView.ScrollIntoView(found);
+
         }
     }
 }

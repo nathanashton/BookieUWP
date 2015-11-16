@@ -11,6 +11,7 @@
         <converters:BoolImageConverter x:Key="BoolImageConverter" />
         <converters:PageNumberConverter x:Key="PageNumberConverter" />
         <converters:PageNumberConverter2 x:Key="PageNumberConverter2" />
+        <converters:InvertImageConverter x:Key="InvertImageConverter"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -21,7 +22,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="1" Background="#454444">
+        <Grid Grid.Row="0" Grid.Column="1" Background="{ThemeResource BackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -32,20 +33,19 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50" Background="Black">
-                <CommandBar.PrimaryCommands>
+            <CommandBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50" Background="Black" Template="{StaticResource CommandBarControlTemplate1}">
                     <AppBarButton Icon="Bookmarks">
                         <AppBarButton.Flyout>
                             <Flyout>
                                 <Grid Height="500">
 
 
-                                    <ListView SelectionMode="Single" SelectionChanged="ListView_SelectionChanged"
+                                    <ListView SelectionMode="Single" 
                                               Width="150" ItemsSource="{Binding SelectedBook.BookMarks}"
                                               IsItemClickEnabled="True" ItemClick="ListView_ItemClick">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" Tapped="StackPanel_Tapped">
+                                                <StackPanel Orientation="Horizontal">
                                                     <Image Height="20" Width="10" Stretch="Fill" Margin="0,0,10,0"
                                                            Source="ms-appx:///Assets/bookmark.png" />
                                                     <TextBlock Text="{Binding}" />
@@ -64,7 +64,6 @@
                             </Flyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
-                </CommandBar.PrimaryCommands>
             </CommandBar>
 
             <Grid Visibility="{Binding Progress}" Background="Transparent" Canvas.ZIndex="99" Grid.Row="1"
@@ -105,7 +104,7 @@
                     </ControlTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Orientation="Vertical" />
+                            <VirtualizingStackPanel Orientation="{Binding PageOrientation}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -123,7 +122,7 @@
                                         Canvas.ZIndex="1000" VerticalAlignment="Top" Content="" />
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
                                         Width="{Binding Width}">
-                                    <Image Source="{Binding ImageSourceVsisBackground}" HorizontalAlignment="Center"
+                                    <Grid Background="White" HorizontalAlignment="Center"
                                            Height="{Binding Height}" Width="{Binding Width}" />
                                 </Border>
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
@@ -137,7 +136,7 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <Grid Opacity="0.7" Grid.Row="2" Height="40" Background="#2b2b2b" Grid.Column="1">
+            <Grid Opacity="0.7" Grid.Row="2" Height="40" Background="{ThemeResource BackgroundBrush}" Grid.Column="1">
                 <Slider Foreground="Black" IsThumbToolTipEnabled="False" Name="slider" Maximum="{Binding PageCount}"
                         Minimum="{Binding SliderMinimum}" Value="{Binding CurrentPage, Mode=TwoWay}"
                         ValueChanged="slider_ValueChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

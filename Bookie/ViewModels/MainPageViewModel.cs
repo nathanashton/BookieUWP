@@ -371,6 +371,23 @@ namespace Bookie.ViewModels
             }
         }
 
+        public void SelectLetter(string letter)
+        {
+            foreach (var l in Letters)
+            {
+                if (l.Name.ToLower() == letter)
+                {
+                    l.Selected = true;
+                }
+                else
+                {
+                    l.Selected = false;
+
+                }
+            }
+
+        }
+
         public void Filter()
         {
             var f = new ObservableCollection<Book>(AllBooks);

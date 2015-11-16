@@ -24,6 +24,7 @@ namespace Bookie.Views
             var menuItem = e.AddedItems.First() as MenuItem;
             if (menuItem != null && menuItem.IsNavigation)
             {
+
                 SplitViewFrame.Navigate(menuItem.NavigationDestination);
                 SplitViewFrame.DataContext = menuItem.ViewModel;
             }

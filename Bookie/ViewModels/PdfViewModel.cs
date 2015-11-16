@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Bookie.Common.Model;
 using Bookie.Data.Repositories;
 using Bookie.Domain.Services;
@@ -16,6 +16,8 @@ namespace Bookie.ViewModels
 {
     public class PdfViewModel : NotifyBase
     {
+        private Orientation _pageOrientation;
+        public Bookie.Views.PdfPage scroll;
         private readonly BookMarkService _bookMarkService;
         private readonly BookService _bookService;
         private int _currentPage;
@@ -26,6 +28,16 @@ namespace Bookie.ViewModels
         private PdfDocument _pdfDocument;
         private StorageFile _pdfFile;
         private Visibility _progress;
+
+
+        public Orientation PageOrientation
+        {
+            get { return _pageOrientation; }
+            set { _pageOrientation = value;
+                NotifyPropertyChanged("PageOrientation");
+            }
+        }
+
 
         public int CurrentPage
         {
@@ -159,14 +171,34 @@ namespace Bookie.ViewModels
             if (pdfFile != null)
             {
                 Progress = Visibility.Visible;
-                _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
+                try
+                {
+                    _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
+
+                }
+                catch (Exception)
+                {
+                    Progress = Visibility.Collapsed;
+
+                    return;
+                }
             }
 
             if (_pdfDocument == null) return;
             Size pageSize;
             pageSize.Width = Window.Current.Bounds.Width;
             pageSize.Height = Window.Current.Bounds.Height;
-            PdfPages = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource, PdfPages_pdfLoaded);
+            try
+            {
+                PdfPages = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource,
+                    PdfPages_pdfLoaded);
+            }
+            catch (Exception)
+            {
+                Progress = Visibility.Collapsed;
+
+                return;
+            }
             UpdateBookmarks();
             NotifyPropertyChanged("SelectedBook");
             PageCount = (int)_pdfDocument.PageCount;
