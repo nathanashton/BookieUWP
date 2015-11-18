@@ -83,7 +83,7 @@ namespace Bookie.Views
 
         private void DetermineVisualState()
         {
-         //   UpdateLettersWidths();
+        UpdateLettersWidths();
 
             var applicationView = ApplicationView.GetForCurrentView();
             if (applicationView.Orientation == ApplicationViewOrientation.Landscape)
