@@ -28,7 +28,7 @@ namespace Bookie.Views
     partial class ExtendedSplash : Page
     {
         internal Rect splashImageRect; // Rect to store splash screen image coordinates.
-        private SplashScreen splash; // Variable to hold the splash screen object.
+        private readonly SplashScreen splash; // Variable to hold the splash screen object.
         internal bool dismissed = false; // Variable to track splash screen dismissal status.
         internal Frame rootFrame;
 

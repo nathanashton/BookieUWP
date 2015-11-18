@@ -1,5 +1,6 @@
 ﻿using Bookie.Common.Model;
 using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
@@ -13,6 +14,7 @@ namespace Bookie.Views
 {
     public sealed partial class PdfPage : Page
     {
+        private double _extents;
         private readonly ViewModels.PdfViewModel _viewmodel;
         public ViewModels.PdfViewModel ViewModel => _viewmodel;
 
@@ -22,7 +24,8 @@ namespace Bookie.Views
             if (DataContext == null)
             {
                 DataContext = new ViewModels.PdfViewModel();
-            } 
+            }
+            ScrollViewer.Visibility = Visibility.Visible;
 
             _viewmodel = DataContext as ViewModels.PdfViewModel;
             ScrollViewer.Visibility = Visibility.Collapsed;
@@ -30,7 +33,34 @@ namespace Bookie.Views
             _viewmodel.PdfLoadedEvent += _viewmodel_PdfLoadedEvent;
             _viewmodel.LoadDefaultFile();
 
+       //     ScrollViewer.WatchProperty("ExtentHeight", ScrollViewer_HeightChanged);
+         // ScrollViewer.WatchProperty("ExtentWidth", ScrollViewer_WidthChanged);
+
+
         }
+
+        private void ScrollViewer_HeightChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //if in landscape do nothing
+            //if portrait then set _extents
+
+        }
+
+        private void ScrollViewer_WidthChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //if ((double)e.NewValue == 0) return;
+
+            //var page = _viewmodel.SelectedBook.CurrentPage;
+
+            //if (page == null) return;
+            //  var pageAsInt = (int)page;
+
+            //  var pageToffset = PageNumberToOffset(pageAsInt);
+            //  ScrollToPage(pageToffset);
+        }
+
+
+
 
         private void PdfPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -74,31 +104,36 @@ namespace Bookie.Views
 
         private void EventHandlerViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
+            //if (_extents == 0)
+            //{
+            //    //ScrollViewer has loaded for the first time so scroll to last page
+            //    var page = _viewmodel.SelectedBook.CurrentPage;
+
+            //    if (page == null) return;
+            //    var pageAsInt = (int)page;
+
+            //    var pageToffset = PageNumberToOffset(pageAsInt);
+            //    ScrollToPage(pageToffset);
+            //}
+
+            //_extents = ScrollViewer.ExtentHeight;
+
+
+
+
             if (e.IsIntermediate) return;
             var scrollViewer = sender as ScrollViewer;
-            if (scrollViewer != null)
+            if
+                 (scrollViewer != null)
             {
                 _viewmodel.PdfPages.UpdatePages(scrollViewer.ZoomFactor);
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void _viewmodel_PdfLoadedEvent(object sender, EventArgs e)
         {
             ScrollViewer.Visibility = Visibility.Visible;
-
-            var page = _viewmodel.SelectedBook.CurrentPage;
-
-            if (page == null) return;
-            var pageAsInt = (int)page;
-            
-            // Doesnt work as the PDF hasnt been loaded yet so the pagecount is null.
-            var pageToffset = PageNumberToOffset(pageAsInt);
-            ScrollToPage(pageToffset);
         }
 
         private Size GetScreenSize()
@@ -117,26 +152,26 @@ namespace Bookie.Views
                 case ApplicationViewOrientation.Landscape:
                     if ((int) ScrollViewer.ExtentWidth == 0)
                     {
-                        double pp2 = (size.Width * _viewmodel.PageCount)/((double) _viewmodel.PageCount);
-                        var result2 = pp2*(pageNumber) - pp2;
+                        var pp2 = size.Width * _viewmodel.PageCount/_viewmodel.PageCount;
+                        var result2 = pp2*pageNumber - pp2;
                         return result2;
                     }
 
-                    double pp1 = ScrollViewer.ExtentWidth/_viewmodel.PageCount;
-                    var result1 = pp1*(pageNumber) - pp1;
+                    var pp1 = ScrollViewer.ExtentWidth/_viewmodel.PageCount;
+                    var result1 = pp1*pageNumber - pp1;
                     return result1;
 
                 case ApplicationViewOrientation.Portrait:
                     // If Scrollviewer hasnt been loaded with pages yet
                     if ((int) ScrollViewer.ExtentHeight == 0)
                     {
-                        double pp2 = ((size.Height - 72)*_viewmodel.PageCount)/((double) _viewmodel.PageCount);
-                        var result2 = pp2*(pageNumber) - pp2;
+                        var pp2 = (size.Height - 72)*_viewmodel.PageCount/_viewmodel.PageCount;
+                        var result2 = pp2*pageNumber - pp2;
                         return result2;
                     }
 
-                    double pp = ScrollViewer.ExtentHeight/_viewmodel.PageCount;
-                    var result = pp*(pageNumber) - pp;
+                    var pp = ScrollViewer.ExtentHeight/_viewmodel.PageCount;
+                    var result = pp*pageNumber - pp;
                     return result;
             }
 
@@ -148,12 +183,12 @@ namespace Bookie.Views
             switch (GetOrientation())
             {
                 case ApplicationViewOrientation.Landscape:
-                    var offsetToPage = (ScrollViewer.ExtentWidth / (_viewmodel.PageCount));
+                    var offsetToPage = ScrollViewer.ExtentWidth / _viewmodel.PageCount;
                     var pageNumber = offset / offsetToPage;
                     return Convert.ToInt32(pageNumber + 1);
 
                 case ApplicationViewOrientation.Portrait:
-                    var offsetToPage2 = (ScrollViewer.ExtentHeight/(_viewmodel.PageCount));
+                    var offsetToPage2 = ScrollViewer.ExtentHeight/_viewmodel.PageCount;
                     var pageNumber2 = offset / offsetToPage2;
                     return Convert.ToInt32(pageNumber2 + 1);
             }
@@ -165,11 +200,15 @@ namespace Bookie.Views
             switch (GetOrientation())
             {
                 case ApplicationViewOrientation.Landscape:
-                    ScrollViewer.ScrollToHorizontalOffset(offset);
+                  //  ScrollViewer.ScrollToHorizontalOffset(offset);
+        
+                    ScrollViewer.ChangeView(offset, ScrollViewer.VerticalOffset, ScrollViewer.ZoomFactor);
                     break;
 
                 case ApplicationViewOrientation.Portrait:
-                    ScrollViewer.ScrollToVerticalOffset(offset);
+                  //  ScrollViewer.ScrollToVerticalOffset(offset);
+                    ScrollViewer.ChangeView(ScrollViewer.HorizontalOffset, offset, ScrollViewer.ZoomFactor);
+
                     break;
             }
         }
@@ -215,6 +254,11 @@ namespace Bookie.Views
             {
                 ScrollToPage(PageNumberToOffset(Convert.ToInt32(text)));
             }
+        }
+
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var s = "t";
         }
     }
 }

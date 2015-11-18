@@ -28,8 +28,8 @@ namespace Bookie.Views
         int columnCount = 8;
 
         private MainPageViewModel viewmodel;
-        private Brush _shelfBrushColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
-        private Brush _gridBrushColor = new SolidColorBrush(Color.FromArgb(255, 43, 43, 43));
+        private readonly Brush _shelfBrushColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+        private readonly Brush _gridBrushColor = new SolidColorBrush(Color.FromArgb(255, 43, 43, 43));
 
 
         public MainPage()
@@ -67,7 +67,7 @@ namespace Bookie.Views
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
             DetermineVisualState();
-           // UpdateLettersWidths();
+         UpdateLettersWidths();
         
 
 
@@ -76,6 +76,7 @@ namespace Bookie.Views
 
         private void UpdateLettersWidths()
         {
+            if (viewmodel == null) return;
             var s = ActualWidth - 20;
             viewmodel.LetterWidth = s / 27;
         }

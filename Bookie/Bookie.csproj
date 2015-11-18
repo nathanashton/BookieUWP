@@ -18,6 +18,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>uwp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -105,7 +107,6 @@
     <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\FoundBackgroundConverter.cs" />
     <Compile Include="Converters\FoundForegroundConverter.cs" />
-    <Compile Include="Converters\InvertImageConverter.cs" />
     <Compile Include="Converters\MouseToScrollBarVisibility.cs" />
     <Compile Include="Converters\NullableValueConverter.cs" />
     <Compile Include="Converters\NullBoolConverter.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Converters\ScrapedBorderBrushConverter.cs" />
     <Compile Include="Converters\StarRatingConverter.cs" />
     <Compile Include="Converters\ZeroVisibilityConverter.cs" />
+    <Compile Include="DependencyObjectExtensions.cs" />
     <Compile Include="GroupInfoList.cs" />
     <Compile Include="ImportProgress.xaml.cs">
       <DependentUpon>ImportProgress.xaml</DependentUpon>
@@ -239,20 +241,6 @@
       <Project>{03ebab56-27d7-4273-972d-635ff5500fe4}</Project>
       <Name>PdfViewModel</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Syncfusion.Pdf.UWP">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.Pdf.UWP.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfShared.UWP">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.SfShared.UWP.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfTabControl.UWP">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.SfTabControl.UWP.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfTreeNavigator.UWP">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Syncfusion\Essential Studio\13.3.0.7\Assemblies for Universal Windows\10.0\Syncfusion.SfTreeNavigator.UWP.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

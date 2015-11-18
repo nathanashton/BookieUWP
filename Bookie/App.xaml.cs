@@ -27,7 +27,7 @@ namespace Bookie
 
         /// </summary>
 
-        private ILogger Log;
+        private readonly ILogger Log;
 
         public App()
         {

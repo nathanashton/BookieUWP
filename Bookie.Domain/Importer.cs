@@ -20,13 +20,13 @@ namespace Bookie.Domain
         public readonly BackgroundWorker Worker;
 
         // private SourceDal sources = new SourceDal();
-        private PdfCover pdfCover = new PdfCover();
+        private readonly PdfCover pdfCover = new PdfCover();
 
         // private CoverDal covers = new CoverDal();
-        private BookService _bookService;
+        private readonly BookService _bookService;
 
-        private SourceService _sourceService;
-        private ISourceRepository _sourcerepo;
+        private readonly SourceService _sourceService;
+        private readonly ISourceRepository _sourcerepo;
 
         private readonly ProgressWindowEventArgs _progressArgs = new ProgressWindowEventArgs();
 

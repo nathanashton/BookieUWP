@@ -5,13 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:Bookie.Converters"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    mc:Ignorable="d">
     <Page.Resources>
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
         <converters:BoolImageConverter x:Key="BoolImageConverter" />
         <converters:PageNumberConverter x:Key="PageNumberConverter" />
         <converters:PageNumberConverter2 x:Key="PageNumberConverter2" />
-        <converters:InvertImageConverter x:Key="InvertImageConverter"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -89,10 +88,10 @@
                           ZoomMode='Enabled'
                           MinZoomFactor="0.3"
                           MaxZoomFactor="4"
-                          ViewChanged="EventHandlerViewChanged" ViewChanging="ScrollViewer_ViewChanging"
+                          ViewChanged="EventHandlerViewChanged" ViewChanging="ScrollViewer_ViewChanging" SizeChanged="ScrollViewer_SizeChanged"
                           Background="Transparent">
 
-                <ItemsControl Name="lv" HorizontalAlignment="Center" ItemsSource="{Binding PdfPages}" Margin="20">
+                <ItemsControl Name="lv" HorizontalAlignment="Center" Margin="20" ItemsSource="{Binding PdfPages}">
                     <ControlTemplate x:Name='zoomedInViewControlTemplate'>
                         <ItemsPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                             <ItemsPresenter.Transitions>
@@ -122,7 +121,7 @@
                                         Canvas.ZIndex="1000" VerticalAlignment="Top" Content="" />
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
                                         Width="{Binding Width}">
-                                    <Grid Background="White" HorizontalAlignment="Center"
+                                    <Grid Background="Black" HorizontalAlignment="Center"
                                            Height="{Binding Height}" Width="{Binding Width}" />
                                 </Border>
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
@@ -136,11 +135,11 @@
                 </ItemsControl>
             </ScrollViewer>
 
-            <Grid Opacity="0.7" Grid.Row="2" Height="40" Background="{ThemeResource BackgroundBrush}" Grid.Column="1">
+            <!--<Grid Opacity="0.7" Grid.Row="2" Height="40" Background="{ThemeResource BackgroundBrush}" Grid.Column="1">
                 <Slider Foreground="Black" IsThumbToolTipEnabled="False" Name="slider" Maximum="{Binding PageCount}"
                         Minimum="{Binding SliderMinimum}" Value="{Binding CurrentPage, Mode=TwoWay}"
                         ValueChanged="slider_ValueChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </Grid>
+            </Grid>-->
 
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="Black">
                 <Grid.ColumnDefinitions>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Storage;
@@ -166,6 +167,10 @@ namespace Bookie.ViewModels
             _bookService.Update(SelectedBook);
         }
 
+
+    
+
+
         private async void LoadPdf(StorageFile pdfFile)
         {
             if (pdfFile != null)
@@ -173,7 +178,6 @@ namespace Bookie.ViewModels
                 Progress = Visibility.Visible;
                 try
                 {
-                    _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
 
                 }
                 catch (Exception)
@@ -184,14 +188,18 @@ namespace Bookie.ViewModels
                 }
             }
 
-            if (_pdfDocument == null) return;
+           // if (_pdfDocument == null) return;
             Size pageSize;
             pageSize.Width = Window.Current.Bounds.Width;
             pageSize.Height = Window.Current.Bounds.Height;
             try
             {
+                _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
+                PageCount = (int)_pdfDocument.PageCount;
                 PdfPages = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource,
                     PdfPages_pdfLoaded);
+              
+                PdfLoaded();
             }
             catch (Exception)
             {
@@ -201,7 +209,6 @@ namespace Bookie.ViewModels
             }
             UpdateBookmarks();
             NotifyPropertyChanged("SelectedBook");
-            PageCount = (int)_pdfDocument.PageCount;
             SliderMinimum = 1;
             CurrentPage = 1;
         }
@@ -218,8 +225,6 @@ namespace Bookie.ViewModels
 
         private void PdfPages_pdfLoaded()
         {
-            Progress = Visibility.Collapsed;
-            PdfLoadedEvent?.Invoke(this, null);
         }
 
         public async void LoadDefaultFile()
@@ -232,5 +237,17 @@ namespace Bookie.ViewModels
             LoadPdf(_loadedFile);
             
         }
+
+        private void PdfLoaded()
+        {
+            if (PdfLoadedEvent != null)
+            {
+                Progress = Visibility.Collapsed;
+
+                PdfLoadedEvent(this, null);
+            }
+
+        }
+
     }
 }

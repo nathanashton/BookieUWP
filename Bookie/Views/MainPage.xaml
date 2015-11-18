@@ -222,7 +222,7 @@
                                             <StackPanel Grid.Row="1"  Orientation="Vertical"
                     VerticalAlignment="Top">
 
-                                                <TextBlock Foreground="{ThemeResource MainText}" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="12" Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+                                                <TextBlock Foreground="{ThemeResource MainText}" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="12" Text="{Binding Title}" FontWeight="Bold" />
                                                 <TextBlock Visibility="{Binding Rating, Converter={StaticResource ZeroVisibilityConverter}}"  FontSize="10" Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="{ThemeResource RatingStars}"  FontFamily="Segoe MDL2 Assets" />
                                             </StackPanel>
                                         </Grid>
