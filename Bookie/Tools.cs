@@ -11,7 +11,7 @@ namespace Bookie
             var queue = new Queue<DependencyObject>();
             var count = VisualTreeHelper.GetChildrenCount(start);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var child = VisualTreeHelper.GetChild(start, i);
                 yield return child;
@@ -23,7 +23,7 @@ namespace Bookie
                 var parent = queue.Dequeue();
                 var count2 = VisualTreeHelper.GetChildrenCount(parent);
 
-                for (int i = 0; i < count2; i++)
+                for (var i = 0; i < count2; i++)
                 {
                     var child = VisualTreeHelper.GetChild(parent, i);
                     yield return child;

@@ -1,7 +1,7 @@
-﻿using Bookie.Common.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Bookie.Common.Model;
 
 namespace Bookie.Domain.Interfaces
 {

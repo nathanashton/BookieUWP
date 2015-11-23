@@ -8,7 +8,7 @@ namespace Bookie
 
         public new IEnumerator<object> GetEnumerator()
         {
-            return (System.Collections.Generic.IEnumerator<object>)base.GetEnumerator();
+            return base.GetEnumerator();
         }
     }
 }

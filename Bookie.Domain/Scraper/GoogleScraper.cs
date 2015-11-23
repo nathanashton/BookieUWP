@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using Bookie.Common;
 using Bookie.Common.Model;
 using Bookie.Domain.Interfaces;
@@ -42,14 +38,14 @@ namespace Bookie.Domain.Scraper
 
             var result = await GetXml(GetUrlForSearch());
 
-            Regex titleRegex = new Regex("<dc:title>(.*)</dc:title>");
+            var titleRegex = new Regex("<dc:title>(.*)</dc:title>");
             var titleMatch = titleRegex.Match(result);
             if (titleMatch.Success)
             {
                 foundBook.Title = titleMatch.Groups[1].ToString();
             }
 
-            Regex abstractRegex = new Regex("<dc:description>(.*)</dc:description>");
+            var abstractRegex = new Regex("<dc:description>(.*)</dc:description>");
             var abstractMatch = abstractRegex.Match(result);
             if (abstractMatch.Success)
             {
@@ -58,7 +54,7 @@ namespace Bookie.Domain.Scraper
 
             DateTime publishedDate;
 
-            Regex dateRegex = new Regex("<dc:date>(.*)</dc:date>");
+            var dateRegex = new Regex("<dc:date>(.*)</dc:date>");
             var dateMatch = dateRegex.Match(result);
             if (dateMatch.Success)
             {
@@ -69,14 +65,14 @@ namespace Bookie.Domain.Scraper
                 }
             }
 
-            Regex authorRegex = new Regex("<dc:creator>(.*)</dc:creator>");
+            var authorRegex = new Regex("<dc:creator>(.*)</dc:creator>");
             var authorMatch = authorRegex.Match(result);
             if (authorMatch.Success)
             {
-               foundBook.Author = authorMatch.Groups[1].ToString();
+                foundBook.Author = authorMatch.Groups[1].ToString();
             }
 
-            Regex publisherRegex = new Regex("<dc:publisher>(.*)</dc:publisher>");
+            var publisherRegex = new Regex("<dc:publisher>(.*)</dc:publisher>");
             var publisherMatch = publisherRegex.Match(result);
             if (publisherMatch.Success)
             {
@@ -98,22 +94,19 @@ namespace Bookie.Domain.Scraper
             //}
 
 
-            SearchResult sresult = new SearchResult();
+            var sresult = new SearchResult();
 
-            if (String.IsNullOrEmpty(foundBook.Title))
+            if (string.IsNullOrEmpty(foundBook.Title))
             {
                 sresult.Book = null;
-
             }
             else
             {
                 sresult.Book = foundBook;
-
             }
 
 
             searchResults.Add(sresult);
-
 
 
             //try
@@ -132,12 +125,6 @@ namespace Bookie.Domain.Scraper
             //{
 
             //}
-
-
-
-
-
-
 
 
             // var ns = new XmlNamespaceManager(xdcDocument.NameTable);

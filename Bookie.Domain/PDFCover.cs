@@ -1,11 +1,11 @@
-﻿using Bookie.Common;
-using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using Bookie.Domain.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.Data.Pdf;
 using Windows.Storage;
+using Bookie.Common;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using Bookie.Domain.Services;
 
 namespace Bookie.Domain
 {
@@ -22,7 +22,7 @@ namespace Bookie.Domain
 
                 var pdfFile = await storageFolder.GetFileAsync(book.FileName);
                 ///Load Pdf File
-              //  StorageFile pdfFile = null;
+                //  StorageFile pdfFile = null;
 
                 _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
 
@@ -36,7 +36,10 @@ namespace Bookie.Domain
                         // next, generate a bitmap of the page
                         var thumbfolder = await Globals.GetCoversFolder();
 
-                        var pngFile = await thumbfolder.CreateFileAsync(Utils.GenerateRandomString() + ".png", CreationCollisionOption.ReplaceExisting);
+                        var pngFile =
+                            await
+                                thumbfolder.CreateFileAsync(Utils.GenerateRandomString() + ".png",
+                                    CreationCollisionOption.ReplaceExisting);
 
                         if (pngFile != null)
                         {

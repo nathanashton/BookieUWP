@@ -8,9 +8,10 @@
 
     <Grid Background="#2b2b2b">
         <Canvas>
-            <Image x:Name="extendedSplashImage" Source="ms-appx:///Assets/SplashScreen.png"/>
-       
-                <ProgressRing   Name="splashProgressRing" IsActive="True" Width="40" Height="40" Foreground="White" HorizontalAlignment="Center"/>
+            <Image x:Name="extendedSplashImage" Source="ms-appx:///Assets/SplashScreen.png" />
+
+            <ProgressRing Name="splashProgressRing" IsActive="True" Width="40" Height="40" Foreground="White"
+                          HorizontalAlignment="Center" />
         </Canvas>
     </Grid>
 </Page>

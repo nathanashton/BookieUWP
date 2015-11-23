@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -10,7 +6,6 @@ namespace Bookie.Domain.Scraper
 {
     public class Scraper
     {
-
         public async Task<GoogleResult> Scrape(string isbn)
         {
             var result = await GetJson(GetUrlForSearch(isbn));
@@ -31,6 +26,5 @@ namespace Bookie.Domain.Scraper
             var result = await response.Content.ReadAsStringAsync();
             return result;
         }
-
     }
 }

@@ -1,26 +1,20 @@
-﻿using Windows.UI;
+﻿using System;
+using Windows.UI;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace Bookie.Converters
 {
-    using System;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Data;
-
     public class FoundForegroundConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            var s = (bool)value;
+            var s = (bool) value;
             if (s)
             {
-                return new SolidColorBrush(Colors.Black);
+                return App.Current.Resources["LettersForegroundHighlighted"] as Brush;
             }
-            else
-            {
-                return new SolidColorBrush(Colors.White);
-            }
+            return App.Current.Resources["LettersForeground"] as Brush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)

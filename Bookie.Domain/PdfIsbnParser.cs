@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Bookie.Domain
 {
@@ -10,7 +8,7 @@ namespace Bookie.Domain
 
         public static string FindIsbn(string text)
         {
-            var rFileIsbn = Regex.Match(text.ToString(), @"ISBN.*?([X\d\-_ .]{10,20})");
+            var rFileIsbn = Regex.Match(text, @"ISBN.*?([X\d\-_ .]{10,20})");
             if (!rFileIsbn.Success)
             {
                 return null;

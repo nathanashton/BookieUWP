@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace Bookie.Converters
@@ -11,7 +6,7 @@ namespace Bookie.Converters
     public class NullBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
-                              string culture)
+            string culture)
         {
             if (value == null)
             {
@@ -21,15 +16,14 @@ namespace Bookie.Converters
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
-                                  string culture)
+            string culture)
         {
-            var s = (bool)value;
+            var s = (bool) value;
             if (!s)
             {
                 return null;
             }
             return value;
-
         }
     }
 }

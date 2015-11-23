@@ -1,34 +1,35 @@
-﻿using Bookie.Common;
-using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using Bookie.Domain.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Xml;
 using Windows.Storage;
+using Windows.Storage.Search;
+using Bookie.Common;
+using Bookie.Common.EventArgs;
+using Bookie.Common.Interfaces;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using Bookie.Domain.Services;
 using static System.String;
 
 namespace Bookie.Domain
 {
     public class Importer : IProgressPublisher
     {
-        public event EventHandler<BookEventArgs> BookChanged;
+        // private CoverDal covers = new CoverDal();
+        private readonly BookService _bookService;
 
-        public readonly BackgroundWorker Worker;
+        private readonly ProgressWindowEventArgs _progressArgs = new ProgressWindowEventArgs();
+        private readonly ISourceRepository _sourcerepo;
+
+        private readonly SourceService _sourceService;
 
         // private SourceDal sources = new SourceDal();
         private readonly PdfCover pdfCover = new PdfCover();
 
-        // private CoverDal covers = new CoverDal();
-        private readonly BookService _bookService;
-
-        private readonly SourceService _sourceService;
-        private readonly ISourceRepository _sourcerepo;
-
-        private readonly ProgressWindowEventArgs _progressArgs = new ProgressWindowEventArgs();
+        public readonly BackgroundWorker Worker;
 
         public Importer(IBookRepository bookRepository, ISourceRepository sourceRepository)
         {
@@ -46,9 +47,25 @@ namespace Bookie.Domain
             Worker.ProgressChanged += Worker_ProgressChanged;
         }
 
+        public event EventHandler<ProgressWindowEventArgs> ProgressChanged;
+
+        public event EventHandler<EventArgs> ProgressComplete;
+
+        public event EventHandler<EventArgs> ProgressStarted;
+
+        public void ProgressCancel()
+        {
+            if (Worker.IsBusy)
+            {
+                Worker.CancelAsync();
+            }
+        }
+
+        public event EventHandler<BookEventArgs> BookChanged;
+
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            var book = (Book)e.UserState;
+            var book = (Book) e.UserState;
             if (book != null)
             {
                 _progressArgs.OperationName = "Importing Books";
@@ -72,7 +89,7 @@ namespace Bookie.Domain
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<string> filter = new List<string>();
+            var filter = new List<string>();
             filter.Add(".pdf");
 
             var storageFolders = _sourceService.GetAllAsStorageFolders().Result;
@@ -80,7 +97,7 @@ namespace Bookie.Domain
             foreach (var storageFolder in storageFolders)
             {
                 var source = _sourceService.GetByUrl(storageFolder.Path);
-                var options = new Windows.Storage.Search.QueryOptions(Windows.Storage.Search.CommonFileQuery.OrderByName, filter);
+                var options = new QueryOptions(CommonFileQuery.OrderByName, filter);
                 var ss = storageFolder.CreateItemQueryWithOptions(options);
                 var storageFiles = ss.GetItemsAsync().GetAwaiter().GetResult();
                 for (var i = 0; i < storageFiles.Count; i++)
@@ -106,12 +123,12 @@ namespace Bookie.Domain
                     {
                         //If there is an XML for pdf then uses its data, otherwise find ISBN and scrape
                         var xml =
-                        _sourceService.GetStorageFolderFromSource(source)
-                            .GetAwaiter()
-                            .GetResult()
-                            .TryGetItemAsync(book.Title + ".xml")
-                            .GetAwaiter()
-                            .GetResult();
+                            _sourceService.GetStorageFolderFromSource(source)
+                                .GetAwaiter()
+                                .GetResult()
+                                .TryGetItemAsync(book.Title + ".xml")
+                                .GetAwaiter()
+                                .GetResult();
                         if (xml != null)
                         {
                             book = XmlToBook(xml as StorageFile, book);
@@ -192,7 +209,8 @@ namespace Bookie.Domain
 
                             case "Year":
                                 DateTime datePublished;
-                                var successDate = DateTime.TryParseExact(reader.ReadElementContentAsString(), "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out datePublished);
+                                var successDate = DateTime.TryParseExact(reader.ReadElementContentAsString(), "yyyy",
+                                    CultureInfo.InvariantCulture, DateTimeStyles.None, out datePublished);
                                 if (successDate)
                                 {
                                     outBook.DatePublished = datePublished;
@@ -250,7 +268,7 @@ namespace Bookie.Domain
 
         public void OnBookChanged(Book book, BookEventArgs.BookState bookState, int? progress)
         {
-            BookChanged?.Invoke(this, new BookEventArgs { Book = book, State = bookState, Progress = progress });
+            BookChanged?.Invoke(this, new BookEventArgs {Book = book, State = bookState, Progress = progress});
         }
 
         public void UpdateBooksFromSources()
@@ -258,20 +276,6 @@ namespace Bookie.Domain
             OnProgressStarted();
 
             Worker.RunWorkerAsync();
-        }
-
-        public event EventHandler<ProgressWindowEventArgs> ProgressChanged;
-
-        public event EventHandler<EventArgs> ProgressComplete;
-
-        public event EventHandler<EventArgs> ProgressStarted;
-
-        public void ProgressCancel()
-        {
-            if (Worker.IsBusy)
-            {
-                Worker.CancelAsync();
-            }
         }
 
         private void OnProgressComplete()

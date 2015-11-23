@@ -1,8 +1,6 @@
-﻿namespace Bookie.Common
+﻿namespace Bookie.Common.EventArgs
 {
-    using System;
-
-    public class ProgressWindowEventArgs : EventArgs
+    public class ProgressWindowEventArgs : System.EventArgs
     {
         public int ProgressPercentage { get; set; }
         public string OperationName { get; set; }

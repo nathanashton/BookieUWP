@@ -1,8 +1,8 @@
-﻿using Bookie.ViewModels;
-using System.Linq;
+﻿using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Bookie.ViewModels;
 
 namespace Bookie.Views
 {
@@ -10,7 +10,7 @@ namespace Bookie.Views
     {
         public Shell()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             // Navigate to the first page (optionally)
             var type = (DataContext as ShellViewModel).Menu.First().NavigationDestination;
@@ -24,7 +24,6 @@ namespace Bookie.Views
             var menuItem = e.AddedItems.First() as MenuItem;
             if (menuItem != null && menuItem.IsNavigation)
             {
-
                 SplitViewFrame.Navigate(menuItem.NavigationDestination);
                 SplitViewFrame.DataContext = menuItem.ViewModel;
             }

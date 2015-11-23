@@ -7,21 +7,40 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Bookie.Common;
+using Bookie.Common.EventArgs;
+using Bookie.Common.Interfaces;
 using Bookie.Common.Model;
 using Bookie.Data.Repositories;
 using Bookie.Domain.Services;
 using Bookie.Mvvm;
+using Bookie.Views;
 using static System.String;
 
 namespace Bookie.ViewModels
 {
     public class MainPageViewModel : NotifyBase, IProgressSubscriber
-    {
-        private ObservableCollection<Letter> _letters;
+    { private double _shelfHeight;
+
+        public double ShelfHeight
+        {
+            get { return _shelfHeight; }
+            set { _shelfHeight = value;
+                NotifyPropertyChanged("ShelfHeight");
+            }
+        }
+
         private readonly BookService _bookService = new BookService(new BookRepository());
         private List<Book> _allBooks;
 
+        private ScrollMode _booksScroll;
+
+        private Book _draggedBook;
+
+        private bool _filterBookmarks;
+
         private string _filterCount;
+
+        private bool _filterDescription;
         private ObservableCollection<Book> _filteredBooks;
 
 
@@ -32,92 +51,57 @@ namespace Bookie.ViewModels
 
         private bool _filterScraped;
 
+        private Brush _gridBrush;
+
         private ImportProgress _importProgress;
+        private ObservableCollection<Letter> _letters;
+
+        private double _letterWidth;
 
         private bool _pageHasBookMark;
-
-        private bool _filterDescription;
-
-        public ObservableCollection<Letter> Letters
-        {
-            get {return _letters;}
-            set { _letters = value;
-                NotifyPropertyChanged("Letters");
-            }
-            
-        }
-
-
-        public bool FilterDescription
-        {
-            get { return _filterDescription; }
-            set { _filterDescription = value;
-                NotifyPropertyChanged("FilterDescription");
-                Filter();
-
-            }
-        }
-
-        private bool _filterBookmarks;
-
-        public bool FilterBookmarks
-        {
-            get { return _filterBookmarks; }
-            set
-            {
-                _filterBookmarks = value;
-                NotifyPropertyChanged("FilterBookmarks");
-                Filter();
-
-            }
-        }
 
         private List<int> _ratings;
         private Book _selectedBook;
 
-        private double _letterWidth;
+        private ObservableCollection<Book> _shelfBooks;
 
-        public double LetterWidth
-        {
-            get { return _letterWidth; }
-            set { _letterWidth = value;
-                NotifyPropertyChanged("LetterWidth");
-                UpdateLetterWidths();
-            }
-        }
+        private Brush _shelfBrush;
+
+        private Visibility _shelfVisibility;
 
 
         public MainPageViewModel()
         {
+            ShelfHeight = 0;
             Letters = new ObservableCollection<Letter>();
-            var zero = new Letter { Name = "0", LWidth = LetterWidth };
+            var zero = new Letter {Name = "0", LWidth = LetterWidth};
 
             var a = new Letter {Name = "A", LWidth = LetterWidth};
-            var b = new Letter { Name = "B", LWidth = LetterWidth };
-            var c = new Letter { Name = "C", LWidth = LetterWidth };
-            var d = new Letter { Name = "D", LWidth = LetterWidth };
-            var e = new Letter { Name = "E", LWidth = LetterWidth };
-            var f = new Letter { Name = "F", LWidth = LetterWidth };
-            var g = new Letter { Name = "G", LWidth = LetterWidth };
-            var h = new Letter { Name = "H", LWidth = LetterWidth };
-            var i = new Letter { Name = "I", LWidth = LetterWidth };
-            var j = new Letter { Name = "J", LWidth = LetterWidth };
-            var k = new Letter { Name = "K", LWidth = LetterWidth };
-            var l = new Letter { Name = "L", LWidth = LetterWidth };
-            var m = new Letter { Name = "M", LWidth = LetterWidth };
-            var n = new Letter { Name = "N", LWidth = LetterWidth };
-            var o = new Letter { Name = "O", LWidth = LetterWidth };
-            var p = new Letter { Name = "P", LWidth = LetterWidth };
-            var q = new Letter { Name = "Q", LWidth = LetterWidth };
-            var r = new Letter { Name = "R", LWidth = LetterWidth };
-            var s = new Letter { Name = "S", LWidth = LetterWidth };
-            var t = new Letter { Name = "T", LWidth = LetterWidth };
-            var u = new Letter { Name = "U", LWidth = LetterWidth };
-            var v = new Letter { Name = "V", LWidth = LetterWidth };
-            var w = new Letter { Name = "W", LWidth = LetterWidth };
-            var x = new Letter { Name = "X", LWidth = LetterWidth };
-            var y = new Letter { Name = "Y", LWidth = LetterWidth };
-            var z = new Letter { Name = "Z", LWidth = LetterWidth };
+            var b = new Letter {Name = "B", LWidth = LetterWidth};
+            var c = new Letter {Name = "C", LWidth = LetterWidth};
+            var d = new Letter {Name = "D", LWidth = LetterWidth};
+            var e = new Letter {Name = "E", LWidth = LetterWidth};
+            var f = new Letter {Name = "F", LWidth = LetterWidth};
+            var g = new Letter {Name = "G", LWidth = LetterWidth};
+            var h = new Letter {Name = "H", LWidth = LetterWidth};
+            var i = new Letter {Name = "I", LWidth = LetterWidth};
+            var j = new Letter {Name = "J", LWidth = LetterWidth};
+            var k = new Letter {Name = "K", LWidth = LetterWidth};
+            var l = new Letter {Name = "L", LWidth = LetterWidth};
+            var m = new Letter {Name = "M", LWidth = LetterWidth};
+            var n = new Letter {Name = "N", LWidth = LetterWidth};
+            var o = new Letter {Name = "O", LWidth = LetterWidth};
+            var p = new Letter {Name = "P", LWidth = LetterWidth};
+            var q = new Letter {Name = "Q", LWidth = LetterWidth};
+            var r = new Letter {Name = "R", LWidth = LetterWidth};
+            var s = new Letter {Name = "S", LWidth = LetterWidth};
+            var t = new Letter {Name = "T", LWidth = LetterWidth};
+            var u = new Letter {Name = "U", LWidth = LetterWidth};
+            var v = new Letter {Name = "V", LWidth = LetterWidth};
+            var w = new Letter {Name = "W", LWidth = LetterWidth};
+            var x = new Letter {Name = "X", LWidth = LetterWidth};
+            var y = new Letter {Name = "Y", LWidth = LetterWidth};
+            var z = new Letter {Name = "Z", LWidth = LetterWidth};
             Letters.Add(zero);
             Letters.Add(a);
             Letters.Add(b);
@@ -147,7 +131,6 @@ namespace Bookie.ViewModels
             Letters.Add(z);
 
 
-
             ProgressService.RegisterSubscriber(this);
             AllBooks = new List<Book>();
             RefreshBooksFromDb();
@@ -159,20 +142,61 @@ namespace Bookie.ViewModels
             Ratings.Add(4);
             Ratings.Add(5);
             BooksScroll = ScrollMode.Enabled;
-           
         }
 
-        private Brush _shelfBrush;
+        public ObservableCollection<Letter> Letters
+        {
+            get { return _letters; }
+            set
+            {
+                _letters = value;
+                NotifyPropertyChanged("Letters");
+            }
+        }
+
+
+        public bool FilterDescription
+        {
+            get { return _filterDescription; }
+            set
+            {
+                _filterDescription = value;
+                NotifyPropertyChanged("FilterDescription");
+                Filter();
+            }
+        }
+
+        public bool FilterBookmarks
+        {
+            get { return _filterBookmarks; }
+            set
+            {
+                _filterBookmarks = value;
+                NotifyPropertyChanged("FilterBookmarks");
+                Filter();
+            }
+        }
+
+        public double LetterWidth
+        {
+            get { return _letterWidth; }
+            set
+            {
+                _letterWidth = value;
+                NotifyPropertyChanged("LetterWidth");
+                UpdateLetterWidths();
+            }
+        }
 
         public Brush ShelfBrush
         {
             get { return _shelfBrush; }
-            set { _shelfBrush = value;
+            set
+            {
+                _shelfBrush = value;
                 NotifyPropertyChanged("ShelfBrush");
             }
         }
-
-        private Brush _gridBrush;
 
         public Brush GridBrush
         {
@@ -183,16 +207,6 @@ namespace Bookie.ViewModels
                 NotifyPropertyChanged("GridBrush");
             }
         }
-
-        public void UpdateLetterWidths()
-        {
-            foreach (var l in Letters)
-            {
-                l.LWidth = LetterWidth;
-            }
-
-        }
-
 
 
         public RelayCommand OpenBookCommand
@@ -233,12 +247,12 @@ namespace Bookie.ViewModels
             }
         }
 
-        private ObservableCollection<Book> _shelfBooks;
-
         public ObservableCollection<Book> ShelfBooks
         {
             get { return _shelfBooks; }
-            set { _shelfBooks = value;
+            set
+            {
+                _shelfBooks = value;
                 NotifyPropertyChanged("ShelfBooks");
             }
         }
@@ -316,12 +330,12 @@ namespace Bookie.ViewModels
             }
         }
 
-        private Visibility _shelfVisibility;
-
         public Visibility ShelfVisibility
         {
             get { return _shelfVisibility; }
-            set { _shelfVisibility = value;
+            set
+            {
+                _shelfVisibility = value;
                 NotifyPropertyChanged("ShelfVisibility");
             }
         }
@@ -330,7 +344,7 @@ namespace Bookie.ViewModels
         {
             get
             {
-                if (!IsNullOrEmpty(FilterQuery) || FilterScraped ||FilterReading || FilterFavourites)
+                if (!IsNullOrEmpty(FilterQuery) || FilterScraped || FilterReading || FilterFavourites)
                 {
                     return new SolidColorBrush(Colors.Yellow);
                 }
@@ -338,9 +352,24 @@ namespace Bookie.ViewModels
             }
         }
 
-        public void UpdateShelfBooks()
+        public ScrollMode BooksScroll
         {
-            ShelfBooks = new ObservableCollection<Book>(AllBooks.Where(x => x.Shelf == true));
+            get { return _booksScroll; }
+            set
+            {
+                _booksScroll = value;
+                NotifyPropertyChanged("BooksScroll");
+            }
+        }
+
+        public Book DraggedBook
+        {
+            get { return _draggedBook; }
+            set
+            {
+                _draggedBook = value;
+                NotifyPropertyChanged("DraggedBook");
+            }
         }
 
 
@@ -363,6 +392,19 @@ namespace Bookie.ViewModels
             RefreshBooksFromDb();
         }
 
+        public void UpdateLetterWidths()
+        {
+            foreach (var l in Letters)
+            {
+                l.LWidth = LetterWidth;
+            }
+        }
+
+        public void UpdateShelfBooks()
+        {
+            ShelfBooks = new ObservableCollection<Book>(AllBooks.Where(x => x.Shelf));
+        }
+
         private void OpenBook()
         {
             if (SelectedBook?.FileName != null)
@@ -382,10 +424,8 @@ namespace Bookie.ViewModels
                 else
                 {
                     l.Selected = false;
-
                 }
             }
-
         }
 
         public void Filter()
@@ -413,7 +453,11 @@ namespace Bookie.ViewModels
             }
             if (FilterDescription)
             {
-                var result = f.Where(x => x.Abstract != null && !IsNullOrEmpty(FilterQuery) && x.Abstract.ToLower().Contains(FilterQuery.ToLower()));
+                var result =
+                    f.Where(
+                        x =>
+                            x.Abstract != null && !IsNullOrEmpty(FilterQuery) &&
+                            x.Abstract.ToLower().Contains(FilterQuery.ToLower()));
                 f = new ObservableCollection<Book>(result);
             }
             if (FilterBookmarks)
@@ -425,18 +469,7 @@ namespace Bookie.ViewModels
             FilteredBooks = new ObservableCollection<Book>(f);
             FilterCount = "Found " + FilteredBooks.Count;
             NotifyPropertyChanged("FilterColor");
-
         }
-
-        private ScrollMode _booksScroll;
-
-        public ScrollMode BooksScroll
-        {
-            get { return _booksScroll; }
-            set { _booksScroll = value;
-                NotifyPropertyChanged("BooksScroll");
-            }
-        }  
 
         private async void RefreshBooksFromDb()
         {
@@ -509,20 +542,10 @@ namespace Bookie.ViewModels
             FilteredBooks = new ObservableCollection<Book>(AllBooks);
         }
 
-        private Book _draggedBook;
-
-        public Book DraggedBook
-        {
-            get { return _draggedBook; }
-            set { _draggedBook = value;
-                NotifyPropertyChanged("DraggedBook");
-            }
-        }
-
         public void UpdateBook(Book book)
         {
             _bookService.Update(book);
-         //   RefreshBooksFromDb();
+            //   RefreshBooksFromDb();
         }
     }
 }

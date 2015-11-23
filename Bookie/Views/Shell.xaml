@@ -15,7 +15,7 @@
                    IsPaneOpen="False"
                    CompactPaneLength="60"
                    OpenPaneLength="150"
-                   PaneBackground="Green"
+                   PaneBackground="Transparent"
                    DisplayMode="Overlay">
             <SplitView.Pane>
                 <Grid x:Name="SplitViewPane"
@@ -24,7 +24,7 @@
                       HorizontalAlignment="Stretch"
                       ManipulationMode="TranslateX"
                       ManipulationCompleted="SplitViewPane_ManipulationCompleted"
-                      Background="Black">
+                      Background="{ThemeResource NavBarBackground}">
                     <ListView ItemsSource="{Binding Menu}"
                               SelectionChanged="Menu_SelectionChanged"
                               Margin="0 68 0 0"
@@ -36,12 +36,12 @@
                                               Glyph="{Binding Glyph}"
                                               VerticalAlignment="Center"
                                               HorizontalAlignment="Center"
-                                              Margin="10,0,0,0" 
-                                              Foreground="White"
+                                              Margin="10,0,0,0"
+                                              Foreground="{ThemeResource NavBarForeground}"
                                               ToolTipService.ToolTip="{Binding Text}" />
                                     <TextBlock Text="{Binding Text}"
                                                Margin="28 0 0 0"
-                                               Foreground="White" />
+                                               Foreground="{ThemeResource NavBarForeground}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -54,13 +54,13 @@
                 <Grid>
 
                     <!-- Navigation Frame -->
-                    <Frame x:Name="SplitViewFrame">
+                    <Frame x:Name="SplitViewFrame" Background="{ThemeResource MainBackground}">
                         <Frame.ContentTransitions>
                             <TransitionCollection>
                                 <NavigationThemeTransition>
                                     <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                        <EntranceNavigationTransitionInfo />
-                                    </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                        
+<EntranceNavigationTransitionInfo/>                                    </NavigationThemeTransition.DefaultNavigationTransitionInfo>
                                 </NavigationThemeTransition>
                             </TransitionCollection>
                         </Frame.ContentTransitions>
@@ -85,9 +85,9 @@
                 Width="40"
                 Height="40"
                 FontSize="24"
-Margin="10,0,0,0"
+                Margin="10,0,0,0"
                 Background="Transparent"
-                Foreground="White"
+                Foreground="{ThemeResource NavBarForeground}"
                 VerticalAlignment="Top"
                 BorderThickness="0"
                 Click="HamburgerButton_Click" />

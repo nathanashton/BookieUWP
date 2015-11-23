@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public class IndustryIdentifier
 {
@@ -43,12 +42,8 @@ public class VolumeInfo
 
     public string authorsstring
     {
-        get
-        {
-            return string.Join(",", authors.ToArray());
-        }
+        get { return string.Join(",", authors.ToArray()); }
     }
-
 }
 
 public class SaleInfo

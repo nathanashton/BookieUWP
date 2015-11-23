@@ -1,13 +1,13 @@
-﻿namespace Bookie.Converters
-{
-    using System;
-    using Windows.UI.Xaml.Data;
+﻿using System;
+using Windows.UI.Xaml.Data;
 
+namespace Bookie.Converters
+{
     public class StarRatingConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            if (String.IsNullOrEmpty(value.ToString()) || value.ToString() == "0")
+            if (string.IsNullOrEmpty(value.ToString()) || value.ToString() == "0")
             {
                 return "";
             }

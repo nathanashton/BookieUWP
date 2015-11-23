@@ -1,9 +1,8 @@
-﻿namespace Bookie.Common
-{
-    using Model;
-    using System;
+﻿using Bookie.Common.Model;
 
-    public class BookEventArgs : EventArgs
+namespace Bookie.Common.EventArgs
+{
+    public class BookEventArgs : System.EventArgs
     {
         public enum BookState
         {

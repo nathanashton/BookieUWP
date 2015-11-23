@@ -102,9 +102,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BindableInkCanvas.cs" />
-    <Compile Include="BookmarkToggle.cs" />
     <Compile Include="Converters\BoolImageConverter.cs" />
+    <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\FoundBackgroundConverter.cs" />
     <Compile Include="Converters\FoundForegroundConverter.cs" />
@@ -117,9 +116,8 @@
     <Compile Include="Converters\ScrapedBorderBrushConverter.cs" />
     <Compile Include="Converters\StarRatingConverter.cs" />
     <Compile Include="Converters\ZeroVisibilityConverter.cs" />
-    <Compile Include="DependencyObjectExtensions.cs" />
     <Compile Include="GroupInfoList.cs" />
-    <Compile Include="ImportProgress.xaml.cs">
+    <Compile Include="Views\ImportProgress.xaml.cs">
       <DependentUpon>ImportProgress.xaml</DependentUpon>
     </Compile>
     <Compile Include="Letter.cs" />
@@ -178,6 +176,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Themes\Black.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\Blue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
     <Page Include="common\BookieStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -191,7 +199,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
-    <Page Include="ImportProgress.xaml">
+    <Page Include="Themes\Red.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\ImportProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -223,6 +236,9 @@
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
+    <SDKReference Include="Syncfusion 8.1 controls for Universal XAML, Version=13.3.0.7">
+      <Name>Syncfusion 8.1 controls for Universal XAML</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>

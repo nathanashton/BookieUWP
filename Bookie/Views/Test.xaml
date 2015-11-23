@@ -13,44 +13,46 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ContentDialog  x:Name="EditPopup" PrimaryButtonText="ok" SecondaryButtonText="cancel" IsPrimaryButtonEnabled="True" IsSecondaryButtonEnabled="True" >
+        <ContentDialog x:Name="EditPopup" PrimaryButtonText="ok" SecondaryButtonText="cancel"
+                       IsPrimaryButtonEnabled="True" IsSecondaryButtonEnabled="True">
             <Grid Margin="0,20,0,0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
 
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Margin="5" Grid.Column="0" Grid.Row="0" Text="Title"/>
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="0" Text="Title" />
                 <TextBox Margin="5" Grid.Column="1" Grid.Row="0" Text="{Binding SelectedBook.Title, Mode=TwoWay}" />
 
-                <TextBlock Margin="5" Grid.Column="0" Grid.Row="1" Text="Rating"/>
-                <TextBox Margin="5" Width="50" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1" Text="{Binding SelectedBook.Rating, Mode=TwoWay}" />
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="1" Text="Rating" />
+                <TextBox Margin="5" Width="50" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1"
+                         Text="{Binding SelectedBook.Rating, Mode=TwoWay}" />
 
-                <TextBlock Margin="5" Grid.Column="0" Grid.Row="2" Text="No Date"/>
-                <CheckBox Margin="5" Grid.Column="1" Grid.Row="2" IsChecked="True"/>
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="2" Text="No Date" />
+                <CheckBox Margin="5" Grid.Column="1" Grid.Row="2" IsChecked="True" />
 
-                <TextBlock Margin="5" Grid.Column="0" Grid.Row="3" Text="Published"/>
-                <DatePicker Margin="5" Grid.Column="1" Grid.Row="3" Date="{Binding SelectedBook.DatePublished, Mode=TwoWay, Converter={StaticResource DateConverter}}" />
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="3" Text="Published" />
+                <DatePicker Margin="5" Grid.Column="1" Grid.Row="3"
+                            Date="{Binding SelectedBook.DatePublished, Mode=TwoWay, Converter={StaticResource DateConverter}}" />
 
-                <TextBlock Margin="5" Grid.Column="0" Grid.Row="4" Text="Pages"/>
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="4" Text="Pages" />
                 <TextBox Margin="5" Grid.Column="1" Grid.Row="4" Text="{Binding SelectedBook.Pages, Mode=TwoWay}" />
 
-                <TextBlock Margin="5" Grid.Column="0" Grid.Row="5" Text="Abstract"/>
-                <TextBox Margin="5" Grid.Column="1" Grid.Row="5" TextWrapping="Wrap" Height="100" Text="{Binding SelectedBook.Abstract, Mode=TwoWay}" />
-                
+                <TextBlock Margin="5" Grid.Column="0" Grid.Row="5" Text="Abstract" />
+                <TextBox Margin="5" Grid.Column="1" Grid.Row="5" TextWrapping="Wrap" Height="100"
+                         Text="{Binding SelectedBook.Abstract, Mode=TwoWay}" />
+
             </Grid>
-            
-            
-            
+
 
         </ContentDialog>
     </Grid>

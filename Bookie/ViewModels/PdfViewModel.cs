@@ -1,6 +1,6 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Storage;
@@ -12,29 +12,73 @@ using Bookie.Data.Repositories;
 using Bookie.Domain.Services;
 using Bookie.Mvvm;
 using PdfViewModel;
+using Syncfusion.Pdf.Parsing;
+using PdfPage = Bookie.Views.PdfPage;
 
 namespace Bookie.ViewModels
 {
     public class PdfViewModel : NotifyBase
     {
-        private Orientation _pageOrientation;
-        public Bookie.Views.PdfPage scroll;
+        private bool _fullScreen;
+
+        public bool FullScreen
+        {
+            get { return _fullScreen; }
+            set { _fullScreen = value;
+                NotifyPropertyChanged("FullScreen");
+            }
+        }
         private readonly BookMarkService _bookMarkService;
         private readonly BookService _bookService;
+        private Visibility _bookMarksVisibility;
         private int _currentPage;
+        private PdfLoadedDocument _doc;
         private StorageFile _loadedFile;
-        private double _sliderMinimum;
-        private PdfDocViewModel _pdfPages;
         private int _pageCount;
+
+        private Orientation _pageOrientation;
         private PdfDocument _pdfDocument;
         private StorageFile _pdfFile;
+        private PdfDocViewModel _pdfPages;
         private Visibility _progress;
 
+        private BookMark _selectedBookMark;
+        private double _sliderMinimum;
+        public PdfPage scroll;
+
+        public PdfViewModel()
+        {
+            _bookMarkService = new BookMarkService(new BookMarkRepository());
+            _bookService = new BookService(new BookRepository());
+            BookMarksVisibility = Visibility.Collapsed;
+        }
+
+        public PdfLoadedDocument doc
+        {
+            get { return _doc; }
+            set
+            {
+                _doc = value;
+                NotifyPropertyChanged("doc");
+            }
+        }
+
+        public Visibility BookMarksVisibility
+        {
+            get { return _bookMarksVisibility; }
+            set
+            {
+                _bookMarksVisibility = value;
+                NotifyPropertyChanged("BookMarksVisibility");
+            }
+        }
 
         public Orientation PageOrientation
         {
             get { return _pageOrientation; }
-            set { _pageOrientation = value;
+            set
+            {
+                _pageOrientation = value;
                 NotifyPropertyChanged("PageOrientation");
             }
         }
@@ -102,15 +146,29 @@ namespace Bookie.ViewModels
             }
         }
 
-        public event EventHandler PdfLoadedEvent;
-
         public RelayCommand BookMarkCommand => new RelayCommand(BookMarkPage);
 
-        public PdfViewModel()
+        public RelayCommand ToggleBookMarksCommand => new RelayCommand(ToggleBookMarks);
+
+        public BookMark SelectedBookMark
         {
-            _bookMarkService = new BookMarkService(new BookMarkRepository());
-            _bookService = new BookService(new BookRepository());
+            get { return _selectedBookMark; }
+            set
+            {
+                _selectedBookMark = value;
+                NotifyPropertyChanged("SelectedBookMark");
+            }
         }
+
+        public event EventHandler PdfLoadedEvent;
+
+        private void ToggleBookMarks(object parameter)
+        {
+            BookMarksVisibility = BookMarksVisibility == Visibility.Collapsed
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
 
         private void BookMarkPage(object parameter)
         {
@@ -168,9 +226,6 @@ namespace Bookie.ViewModels
         }
 
 
-    
-
-
         private async void LoadPdf(StorageFile pdfFile)
         {
             if (pdfFile != null)
@@ -178,7 +233,6 @@ namespace Bookie.ViewModels
                 Progress = Visibility.Visible;
                 try
                 {
-
                 }
                 catch (Exception)
                 {
@@ -188,17 +242,17 @@ namespace Bookie.ViewModels
                 }
             }
 
-           // if (_pdfDocument == null) return;
+            // if (_pdfDocument == null) return;
             Size pageSize;
             pageSize.Width = Window.Current.Bounds.Width;
             pageSize.Height = Window.Current.Bounds.Height;
             try
             {
                 _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
-                PageCount = (int)_pdfDocument.PageCount;
+                PageCount = (int) _pdfDocument.PageCount;
                 PdfPages = new PdfDocViewModel(_pdfDocument, pageSize, SurfaceType.VirtualSurfaceImageSource,
                     PdfPages_pdfLoaded);
-              
+
                 PdfLoaded();
             }
             catch (Exception)
@@ -213,16 +267,6 @@ namespace Bookie.ViewModels
             CurrentPage = 1;
         }
 
-        private BookMark _selectedBookMark;
-
-        public BookMark SelectedBookMark
-        {
-            get { return _selectedBookMark; }
-            set { _selectedBookMark = value;
-                NotifyPropertyChanged("SelectedBookMark");
-            }
-        }
-
         private void PdfPages_pdfLoaded()
         {
         }
@@ -235,7 +279,15 @@ namespace Bookie.ViewModels
             var file = await storageFolder.GetFileAsync(ShellViewModel.SelectedBook.FileName);
             _loadedFile = file;
             LoadPdf(_loadedFile);
-            
+            if (file != null)
+            {
+                var stream = await file.OpenAsync(FileAccessMode.Read);
+                var fileStream = stream.AsStreamForRead();
+
+                var buffer = new byte[fileStream.Length];
+                fileStream.Read(buffer, 0, buffer.Length);
+                doc = new PdfLoadedDocument(buffer);
+            }
         }
 
         private void PdfLoaded()
@@ -246,8 +298,6 @@ namespace Bookie.ViewModels
 
                 PdfLoadedEvent(this, null);
             }
-
         }
-
     }
 }

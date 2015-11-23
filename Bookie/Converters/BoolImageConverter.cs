@@ -1,13 +1,10 @@
-﻿using Windows.UI;
+﻿using System;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Bookie.Converters
 {
-    using System;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Data;
-
     public class BoolImageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
@@ -22,8 +19,8 @@ namespace Bookie.Converters
                 Opacity = 0.1,
                 ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/bookmark.png"))
             };
-            var s = (bool)value;
-            return s == true ? i : f;
+            var s = (bool) value;
+            return s ? i : f;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)

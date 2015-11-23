@@ -1,9 +1,9 @@
-﻿using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
 
 namespace Bookie.Domain.Services
 {
@@ -23,7 +23,7 @@ namespace Bookie.Domain.Services
 
         public BookMark GetById(int id)
         {
-            return _repository.Find(x=> x.Id == id).FirstOrDefault();
+            return _repository.Find(x => x.Id == id).FirstOrDefault();
         }
 
         public async Task<List<BookMark>> GetAll()
@@ -33,7 +33,7 @@ namespace Bookie.Domain.Services
 
         public List<BookMark> GetAllForBook(Book book)
         {
-            return  _repository.Find(x => x.Book.Id == book.Id).ToList();
+            return _repository.Find(x => x.Book.Id == book.Id).ToList();
         }
 
         public BookMark Add(BookMark book)

@@ -1,19 +1,19 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace Bookie.Converters
 {
-    internal sealed class MouseOverToScrollBarVisibility : IValueConverter
+    public class BoolVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            return (bool) value ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden;
+            return (bool)value == true ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
-            throw new NotSupportedException();
+            throw new NotImplementedException();
         }
     }
 }

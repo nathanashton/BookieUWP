@@ -10,11 +10,16 @@ namespace Bookie.Data.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        public  ICollection<Book> Find(Func<Book, bool> where)
+        public ICollection<Book> Find(Func<Book, bool> where)
         {
             using (var ctx = new Context())
             {
-                return ctx.Books.Include(r => r.Cover).Include(x=> x.BookMarks).Include(y=> y.Source).Where(where).ToList();
+                return
+                    ctx.Books.Include(r => r.Cover)
+                        .Include(x => x.BookMarks)
+                        .Include(y => y.Source)
+                        .Where(where)
+                        .ToList();
             }
         }
 
@@ -32,7 +37,8 @@ namespace Bookie.Data.Repositories
         {
             using (var ctx = new Context())
             {
-                return await ctx.Books.Include(r => r.Cover).Include(x => x.BookMarks).Include(t => t.Source).ToListAsync();
+                return
+                    await ctx.Books.Include(r => r.Cover).Include(x => x.BookMarks).Include(t => t.Source).ToListAsync();
             }
         }
 

@@ -13,7 +13,7 @@ namespace Bookie.Data.Repositories
         {
             using (var ctx = new Context())
             {
-                return ctx.Sources.Include(t=>t.Books).Where(where).ToList();
+                return ctx.Sources.Include(t => t.Books).Where(where).ToList();
             }
         }
 
@@ -31,7 +31,7 @@ namespace Bookie.Data.Repositories
         {
             using (var ctx = new Context())
             {
-                return ctx.Sources.Include(r=> r.Books).ToList();
+                return ctx.Sources.Include(r => r.Books).ToList();
             }
         }
     }

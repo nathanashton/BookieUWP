@@ -1,10 +1,10 @@
-﻿using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using Microsoft.Data.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
+using Microsoft.Data.Entity;
 
 namespace Bookie.Data.Repositories
 {
@@ -50,10 +50,9 @@ namespace Bookie.Data.Repositories
         {
             using (var ctx = new Context())
             {
-
-                    ctx.Bookmarks.Attach(bookmark);
-                    ctx.Bookmarks.Remove(bookmark);
-                    await ctx.SaveChangesAsync();
+                ctx.Bookmarks.Attach(bookmark);
+                ctx.Bookmarks.Remove(bookmark);
+                await ctx.SaveChangesAsync();
             }
         }
     }

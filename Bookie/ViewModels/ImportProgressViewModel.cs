@@ -5,14 +5,14 @@ namespace Bookie.ViewModels
 {
     public class ImportProgressViewModel : NotifyBase
     {
+        private string _operation;
+
+        private int _progress;
         private string _title;
 
         public string Title
         {
-            get
-            {
-                return _title;
-            }
+            get { return _title; }
             set
             {
                 _title = value;
@@ -22,23 +22,12 @@ namespace Bookie.ViewModels
 
         public RelayCommand CancelCommand
         {
-            get
-            {
-                return new RelayCommand((object args) =>
-                {
-                    Cancel();
-                });
-            }
+            get { return new RelayCommand((object args) => { Cancel(); }); }
         }
-
-        private string _operation;
 
         public string Operation
         {
-            get
-            {
-                return _operation;
-            }
+            get { return _operation; }
             set
             {
                 _operation = value;
@@ -46,14 +35,9 @@ namespace Bookie.ViewModels
             }
         }
 
-        private int _progress;
-
         public int Progress
         {
-            get
-            {
-                return _progress;
-            }
+            get { return _progress; }
             set
             {
                 _progress = value;

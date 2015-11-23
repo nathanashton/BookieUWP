@@ -43,7 +43,7 @@ namespace Bookie.Common.Model
             {
                 if (CurrentPage != null && Pages != null)
                 {
-                    var percentage = ((double)CurrentPage / (double)Pages) * 100;
+                    var percentage = (double) CurrentPage/(double) Pages*100;
                     return percentage;
                 }
                 return null;
@@ -61,11 +61,16 @@ namespace Bookie.Common.Model
         }
 
         [NotMapped]
-        public ImageSource Image => !IsNullOrEmpty(Cover?.FileName) ? new BitmapImage(new Uri("ms-appdata:///local/Covers/" + Cover.FileName)) : new BitmapImage(new Uri("ms-appx:///Assets/nocover.png"));
+        public ImageSource Image
+            =>
+                !IsNullOrEmpty(Cover?.FileName)
+                    ? new BitmapImage(new Uri("ms-appdata:///local/Covers/" + Cover.FileName))
+                    : new BitmapImage(new Uri("ms-appx:///Assets/nocover.png"));
 
         public override string ToString()
         {
-            return $"Id: {Id}, Title: {Title}, Abstract: {Abstract}, DatePublished: {DatePublished}, Pages: {Pages}, FullPathAndFileName: {FullPathAndFileName}, FileName: {FileName}, BookMarks: {BookMarks}, Cover: {Cover}, Source: {Source}";
+            return
+                $"Id: {Id}, Title: {Title}, Abstract: {Abstract}, DatePublished: {DatePublished}, Pages: {Pages}, FullPathAndFileName: {FullPathAndFileName}, FileName: {FileName}, BookMarks: {BookMarks}, Cover: {Cover}, Source: {Source}";
         }
     }
 }

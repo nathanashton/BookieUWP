@@ -1,4 +1,4 @@
-﻿<Page
+﻿<Page xmlns:Media="using:Syncfusion.UI.Xaml.Controls.Media" 
     x:Class="Bookie.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,24 +7,42 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-        <ListBox ItemsSource="{Binding Sources}" Width="300" SelectedItem="{Binding SelectedSource, Mode=TwoWay}" HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Background="Gray">
+    <Grid Background="{ThemeResource MainBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" ItemsSource="{Binding Sources}" Width="300"
+                 SelectedItem="{Binding SelectedSource, Mode=TwoWay}" HorizontalAlignment="Center" Height="300"
+                 VerticalAlignment="Center" Background="{ThemeResource ShelfBackground}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path}" />
+                    <TextBlock Text="{Binding Path}" Foreground="{ThemeResource MainText}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock  VerticalAlignment="Bottom" Margin="0,0,0,70" Foreground="White" Text="{Binding SelectedSource.Path}" />
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+     <TextBlock Text="Theme (Requires restart)"/>
+            <ComboBox ItemsSource="{Binding Themes}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{Binding Theme, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+        </StackPanel>
+
+
     </Grid>
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar Background="{ThemeResource CommandBarBackground}">
             <CommandBar.PrimaryCommands>
-                <AppBarButton Foreground="White" Icon="Refresh" Label="Update" Command="{Binding UpdateCommand}" />
+                <AppBarButton Foreground="{ThemeResource CommandBarForeground}" Icon="Refresh" Label="Update" Command="{Binding UpdateCommand}" />
 
-                <AppBarButton Icon="Add" Label="Import" Command="{Binding AddCommand}" />
-                <AppBarButton Label="Remove" Icon="Remove" Command="{Binding RemoveCommand}" />
+                <AppBarButton Foreground="{ThemeResource CommandBarForeground}" Icon="Add" Label="Import" Command="{Binding AddCommand}" />
+                <AppBarButton Foreground="{ThemeResource CommandBarForeground}" Label="Remove" Icon="Remove" Command="{Binding RemoveCommand}" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

@@ -1,9 +1,9 @@
-﻿using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
 
 namespace Bookie.Domain.Services
 {
@@ -34,7 +34,6 @@ namespace Bookie.Domain.Services
         public async Task<List<Book>> GetAll()
         {
             return await _repository.GetAll();
-       
         }
 
         public Book Add(Book book)

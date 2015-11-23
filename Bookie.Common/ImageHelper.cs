@@ -1,8 +1,8 @@
-﻿using Bookie.Common.Model;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Bookie.Common.Model;
 
 namespace Bookie.Common
 {
@@ -24,7 +24,7 @@ namespace Bookie.Common
                     await bitmapImage.SetSourceAsync(stream);
                 }
             }
-            return (bitmapImage);
+            return bitmapImage;
         }
     }
 }

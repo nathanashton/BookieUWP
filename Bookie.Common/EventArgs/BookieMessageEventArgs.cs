@@ -1,8 +1,6 @@
-﻿namespace Bookie.Common
+﻿namespace Bookie.Common.EventArgs
 {
-    using System;
-
-    public class BookieMessageEventArgs : EventArgs
+    public class BookieMessageEventArgs : System.EventArgs
     {
         public string MoreDetails { get; set; }
         public string Message { get; set; }

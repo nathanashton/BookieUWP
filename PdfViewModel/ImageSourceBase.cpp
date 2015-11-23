@@ -23,7 +23,7 @@ namespace PdfViewModel
 
 	void ImageSourceBase::SetPageDimensions(_In_ float userWidth, _In_ float userHeight)
 	{
-		float dpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
+		float dpi = DisplayInformation::GetForCurrentView()->LogicalDpi * 2;
 		width = userWidth * dpi / 100;
 		height = userHeight * dpi / 100;
 	}

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Syncfusion.Pdf;
 using Syncfusion.Pdf.Parsing;
-
 
 namespace Bookie.Domain
 {
@@ -25,7 +20,7 @@ namespace Bookie.Domain
         {
             var doc = new PdfLoadedDocument();
             await doc.OpenAsync(file);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (var i = startPageNumber; i <= endPageNumber; i++)
             {
                 var page = doc.Pages[i];
@@ -33,7 +28,5 @@ namespace Bookie.Domain
             }
             return sb.ToString();
         }
-
-
     }
 }

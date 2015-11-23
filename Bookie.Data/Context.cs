@@ -1,8 +1,8 @@
-﻿using Bookie.Common.Model;
-using Microsoft.Data.Entity;
-using System;
+﻿using System;
 using System.IO;
 using Windows.Storage;
+using Bookie.Common.Model;
+using Microsoft.Data.Entity;
 
 namespace Bookie.Data
 {
@@ -15,22 +15,22 @@ namespace Bookie.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string databaseFilePath = "bookie.db";
+            var databaseFilePath = "bookie.db";
             try
             {
                 databaseFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, databaseFilePath);
             }
             catch (InvalidOperationException)
-            { }
+            {
+            }
 
             optionsBuilder.UseSqlite($"Data source={databaseFilePath}");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Book>().Ignore(e => e.Image);
-            modelBuilder.Entity<Book>().HasOne(e => e.Source).WithMany(r => r.Books).ForeignKey(r=> r.SourceId);
+            modelBuilder.Entity<Book>().HasOne(e => e.Source).WithMany(r => r.Books).ForeignKey(r => r.SourceId);
 
             modelBuilder.Entity<Book>().HasOne(e => e.Cover).WithOne(r => r.Book);
             modelBuilder.Entity<Book>().HasMany(e => e.BookMarks).WithOne(t => t.Book);

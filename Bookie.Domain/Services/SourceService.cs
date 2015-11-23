@@ -1,11 +1,11 @@
-﻿using Bookie.Common.Model;
-using Bookie.Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Bookie.Common.Model;
+using Bookie.Domain.Interfaces;
 
 namespace Bookie.Domain.Services
 {

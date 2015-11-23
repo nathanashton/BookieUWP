@@ -1,7 +1,8 @@
-﻿namespace Bookie.Common
-{
-    using System;
+﻿using Bookie.Common.EventArgs;
+using Bookie.Common.Interfaces;
 
+namespace Bookie.Common
+{
     public static class ProgressService
     {
         private static IProgressSubscriber subscriber;
@@ -20,12 +21,12 @@
             publisher.ProgressComplete += publisher_ProgressComplete;
         }
 
-        private static void publisher_ProgressComplete(object sender, EventArgs e)
+        private static void publisher_ProgressComplete(object sender, System.EventArgs e)
         {
             subscriber._progress_ProgressCompleted(publisher, e);
         }
 
-        private static void publisher_ProgressStarted(object sender, EventArgs e)
+        private static void publisher_ProgressStarted(object sender, System.EventArgs e)
         {
             subscriber._progress_ProgressStarted(publisher, e);
         }

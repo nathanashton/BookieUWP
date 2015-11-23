@@ -5,57 +5,77 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:Bookie.Converters"
-    Background="{ThemeResource BackgroundBrush}"
+    Background="{ThemeResource MainBackground}"
 
-    mc:Ignorable="d" Tapped="Page_Tapped" SizeChanged="Page_SizeChanged" d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
+    mc:Ignorable="d" SizeChanged="Page_SizeChanged"
+    d:DataContext="{d:DesignData /SampleData/MainPageViewModelSampleData.xaml}">
     <Page.Resources>
-        <CollectionViewSource x:Name="BooksCollectionViewSource" IsSourceGrouped="False" Source="{Binding FilteredBooks}" />
-        <CollectionViewSource x:Name="BooksCollectionViewSourceNotgrouped" IsSourceGrouped="False" Source="{Binding Books}" />
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
         <converters:NullableValueConverter x:Key="NullableValueConverter" />
         <converters:DateConverter x:Key="DateConverter" />
         <converters:NullBoolConverter x:Key="NullBoolConverter" />
-        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter"/>
-        <converters:ZeroVisibilityConverter x:Key="ZeroVisibilityConverter"/>
-        <converters:FoundBackgroundConverter x:Key="FoundBGConverter"/>
-        <converters:FoundForegroundConverter x:Key="FoundFGConverter"/>
+        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+        <converters:ZeroVisibilityConverter x:Key="ZeroVisibilityConverter" />
+        <converters:FoundBackgroundConverter x:Key="FoundBGConverter" />
+        <converters:FoundForegroundConverter x:Key="FoundFGConverter" />
         <Style x:Key="GridViewStyle1" TargetType="GridView">
-            <Setter Property="Padding" Value="0,0,0,10"/>
-            <Setter Property="IsTabStop" Value="False"/>
-            <Setter Property="TabNavigation" Value="Once"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
-            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
-            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True"/>
-            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
-            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
-            <Setter Property="IsSwipeEnabled" Value="True"/>
+            <Setter Property="Padding" Value="0,0,0,10" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="TabNavigation" Value="Once" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled" />
+            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True" />
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
+            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True" />
+            <Setter Property="IsSwipeEnabled" Value="True" />
             <Setter Property="ItemContainerTransitions">
                 <Setter.Value>
                     <TransitionCollection>
-                        <AddDeleteThemeTransition/>
-                        <ContentThemeTransition/>
-                        <ReorderThemeTransition/>
-                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
+                        <AddDeleteThemeTransition />
+                        <ContentThemeTransition />
+                        <ReorderThemeTransition />
+                        <EntranceThemeTransition IsStaggeringEnabled="False" />
                     </TransitionCollection>
                 </Setter.Value>
             </Setter>
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <ItemsWrapGrid Orientation="Horizontal"/>
+                        <ItemsWrapGrid Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="GridView">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-                            <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw" ViewChanged="ScrollViewer_ViewChanged" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
-                                <ItemsPresenter FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}" HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw"
+                                          ViewChanged="ScrollViewer_ViewChanged"
+                                          BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
+                                          HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                          HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                          IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                                          IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}"
+                                          IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}"
+                                          IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                                          IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                                          TabNavigation="{TemplateBinding TabNavigation}"
+                                          VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                          VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                          ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <ItemsPresenter FooterTransitions="{TemplateBinding FooterTransitions}"
+                                                FooterTemplate="{TemplateBinding FooterTemplate}"
+                                                Footer="{TemplateBinding Footer}"
+                                                HeaderTemplate="{TemplateBinding HeaderTemplate}"
+                                                Header="{TemplateBinding Header}"
+                                                HeaderTransitions="{TemplateBinding HeaderTransitions}"
+                                                Padding="{TemplateBinding Padding}" />
                             </ScrollViewer>
                         </Border>
                     </ControlTemplate>
@@ -64,7 +84,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource BackgroundBrush}">
+    <Grid Background="{ThemeResource MainBackground}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -78,23 +98,30 @@
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ScrollViewer Background="Black"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Row="0"  VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
-                    <ItemsControl Background="Black"  Height="40" HorizontalContentAlignment="Center" VerticalAlignment="Stretch" ItemsSource="{Binding Letters}">
+                <ScrollViewer Background="{ThemeResource LettersBackground}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                              Grid.Row="0" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled"
+                              HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled">
+                    <ItemsControl Background="{ThemeResource LettersBackground}" Height="40" HorizontalContentAlignment="Center"
+                                  VerticalAlignment="Stretch" ItemsSource="{Binding Letters}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Tapped="Grid_Tapped_1" Margin="0" Padding="0" HorizontalAlignment="Center" Background="{Binding Selected, Converter={StaticResource FoundBGConverter}}" Height="30" Width="{Binding LWidth}">
-                                    <TextBlock Margin="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Name}"  Foreground="{Binding Selected, Converter={StaticResource FoundFGConverter}}"/>
+                                <Grid Tapped="Grid_Tapped_1" Margin="0" Padding="0" HorizontalAlignment="Center"
+                                      Background="{Binding Selected, Converter={StaticResource FoundBGConverter}}"
+                                      Height="30" Width="{Binding LWidth}">
+                                    <TextBlock Margin="0" Padding="0" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" Text="{Binding Name}"
+                                               Foreground="{Binding Selected, Converter={StaticResource FoundFGConverter}}" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemContainerStyle>
                             <Style TargetType="FrameworkElement">
-                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="Margin" Value="0" />
                             </Style>
                         </ItemsControl.ItemContainerStyle>
                         <ItemsControl.ItemsPanel>
@@ -108,8 +135,19 @@
 
                 <Border Grid.Row="1" Margin="10,10,10,0" BorderBrush="{Binding GridBrush}" BorderThickness="2">
 
-                    <GridView  ScrollViewer.VerticalScrollMode="{Binding BooksScroll}"   Background="{ThemeResource BackgroundBrush}" Canvas.ZIndex="600"   CanDragItems="True" DragItemsStarting="gview_DragItemsStarting" SelectedItem="{Binding SelectedBook, Mode=TwoWay}" AllowDrop="True" ItemsSource="{Binding FilteredBooks}" Drop="gview_Drop" DropCompleted="gview_DropCompleted" DragEnter="gview_DragEnter" DragLeave="gview_DragLeave" x:Name="booksGridView" Style="{StaticResource GridViewStyle1}">
-
+                    <GridView ScrollViewer.VerticalScrollMode="{Binding BooksScroll}"
+                              Background="{ThemeResource MainBackground}" Canvas.ZIndex="600" CanDragItems="True"
+                              DragItemsStarting="gview_DragItemsStarting"
+                              SelectedItem="{Binding SelectedBook, Mode=TwoWay}" AllowDrop="True"
+                              ItemsSource="{Binding FilteredBooks}" Drop="gview_Drop"
+                              DropCompleted="gview_DropCompleted" DragEnter="gview_DragEnter"
+                              DragLeave="gview_DragLeave" x:Name="booksGridView"
+                              Style="{StaticResource GridViewStyle1}" ShowsScrollingPlaceholders="True">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <AddDeleteThemeTransition/>
+                            </TransitionCollection>
+                        </GridView.ItemContainerTransitions>
 
                         <GridView.ItemTemplate>
                             <DataTemplate>
@@ -125,37 +163,48 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" FontSize="14" VerticalAlignment="Center" Text="{Binding Title}" FontWeight="Bold" TextWrapping="Wrap" />
+                                                <TextBlock Grid.Row="0" FontSize="14" VerticalAlignment="Center"
+                                                           Text="{Binding Title}" FontWeight="Bold" TextWrapping="Wrap" />
 
-                                                <TextBlock Margin="0,8,0,8" Grid.Row="1"  Text="{Binding Abstract}" FontSize="12" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Margin="0,8,0,8" Grid.Row="1" Text="{Binding Abstract}"
+                                                           FontSize="12" TextWrapping="WrapWholeWords" />
 
-                                                <StackPanel VerticalAlignment="Center" Orientation="Vertical" Grid.Row="2">
+                                                <StackPanel VerticalAlignment="Center" Orientation="Vertical"
+                                                            Grid.Row="2">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock FontSize="12"   Text="Pages" FontWeight="Bold" />
-                                                        <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Pages}" />
+                                                        <TextBlock FontSize="12" Text="Pages" FontWeight="Bold" />
+                                                        <TextBlock FontSize="12" Margin="10,0,0,0"
+                                                                   Text="{Binding Pages}" />
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock FontSize="12" Text="Year" FontWeight="Bold" />
-                                                        <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding DatePublishedString}" />
+                                                        <TextBlock FontSize="12" Margin="10,0,0,0"
+                                                                   Text="{Binding DatePublishedString}" />
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock FontSize="12" Text="ISBN" FontWeight="Bold" />
 
-                                                        <TextBlock  FontSize="12" Margin="10,0,0,0" Text="{Binding Isbn}" />
+                                                        <TextBlock FontSize="12" Margin="10,0,0,0"
+                                                                   Text="{Binding Isbn}" />
                                                     </StackPanel>
 
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock FontSize="12" VerticalAlignment="Center"  Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
-                                                        <TextBlock FontSize="12" VerticalAlignment="Center"  Text="{Binding Author}" />
+                                                        <TextBlock FontSize="12" VerticalAlignment="Center"
+                                                                   Text="Authors" Margin="0,0,10,0" FontWeight="Bold" />
+                                                        <TextBlock FontSize="12" VerticalAlignment="Center"
+                                                                   Text="{Binding Author}" />
                                                     </StackPanel>
 
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock FontSize="12" VerticalAlignment="Center" Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
-                                                        <TextBlock FontSize="12" VerticalAlignment="Center" Text="{Binding Publisher}" />
+                                                        <TextBlock FontSize="12" VerticalAlignment="Center"
+                                                                   Text="Publisher" Margin="0,0,10,0" FontWeight="Bold" />
+                                                        <TextBlock FontSize="12" VerticalAlignment="Center"
+                                                                   Text="{Binding Publisher}" />
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                                    <Button Content="Edit" FontSize="12" Margin="5" Tapped="Button_Tapped"/>
+                                                    <Button Content="Edit" FontSize="12" Margin="5"
+                                                            Tapped="Button_Tapped" />
                                                 </StackPanel>
 
                                             </Grid>
@@ -164,28 +213,44 @@
                                     <Grid Margin="5" Height="260" Width="135">
 
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
 
-                                        <Border Grid.Row="0" Width="130" Height="175" VerticalAlignment="Top" BorderBrush="{ThemeResource ImageBorder}" BorderThickness="1">
-                                            <Image Source="{Binding Image}"  Stretch="Fill" />
+                                        <Border Grid.Row="0" Width="130" Height="175" VerticalAlignment="Top"
+                                                BorderBrush="{ThemeResource ImageBorder}" BorderThickness="1">
+                                            <Image Source="{Binding Image}" Stretch="Fill" />
                                         </Border>
 
 
-                                        <StackPanel Margin="0,5,0,0" Grid.Row="1" Orientation="Vertical" Width="130"  VerticalAlignment="Stretch">
+                                        <StackPanel Margin="0,5,0,0" Grid.Row="1" Orientation="Vertical" Width="130"
+                                                    VerticalAlignment="Stretch">
 
 
+                                            <TextBlock Foreground="{ThemeResource MainText}"
+                                                       TextTrimming="CharacterEllipsis" FontSize="16"
+                                                       Text="{Binding Title}" FontWeight="Bold" />
+                                            <ProgressBar Opacity="0.5" Margin="0,3,0,0"
+                                                         Visibility="{Binding CurrentPagePercentage, Converter={StaticResource NullVisibilityConverter}}"
+                                                         Value="{Binding CurrentPagePercentage}" Height="5"
+                                                         HorizontalAlignment="Stretch" />
 
-                                            <TextBlock Foreground="{ThemeResource MainText}" TextTrimming="CharacterEllipsis" FontSize="16" Text="{Binding Title}" FontWeight="Bold"/>
-                                            <ProgressBar Opacity="0.5" Margin="0,3,0,0"  Visibility="{Binding CurrentPagePercentage, Converter={StaticResource NullVisibilityConverter}}" Value="{Binding CurrentPagePercentage}" Height="5" HorizontalAlignment="Stretch"/>
+                                            <TextBlock Margin="0,3,0,3"
+                                                       Visibility="{Binding Rating, Converter={StaticResource ZeroVisibilityConverter}}"
+                                                       FontSize="10"
+                                                       Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}"
+                                                       Foreground="{ThemeResource RatingStars}"
+                                                       FontFamily="Segoe MDL2 Assets" />
+                                            <TextBlock Foreground="{ThemeResource SubText}" Text="{Binding Publisher}"
+                                                       Width="130" Height="18" FontSize="13"
+                                                       TextTrimming="WordEllipsis" TextWrapping="Wrap"
+                                                       HorizontalAlignment="Left" />
 
-                                            <TextBlock Margin="0,3,0,3" Visibility="{Binding Rating, Converter={StaticResource ZeroVisibilityConverter}}"  FontSize="10" Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="{ThemeResource RatingStars}"  FontFamily="Segoe MDL2 Assets" />
-                                            <TextBlock Foreground="{ThemeResource SubText}" Text="{Binding Publisher}" Width="130" Height="18" FontSize="13" TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" />
-
-                                            <TextBlock Text="{Binding DatePublishedString}" Foreground="{ThemeResource SubText}"
-                      Height="23" Width="130" FontSize="12"
-                       TextTrimming="WordEllipsis" TextWrapping="Wrap" HorizontalAlignment="Left" Opacity="0.5" />
+                                            <TextBlock Text="{Binding DatePublishedString}"
+                                                       Foreground="{ThemeResource SubText}"
+                                                       Height="23" Width="130" FontSize="12"
+                                                       TextTrimming="WordEllipsis" TextWrapping="Wrap"
+                                                       HorizontalAlignment="Left" Opacity="0.5" />
 
                                         </StackPanel>
                                     </Grid>
@@ -194,36 +259,68 @@
                         </GridView.ItemTemplate>
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                <WrapGrid Orientation="Horizontal" HorizontalAlignment="Center" />
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                     </GridView>
                 </Border>
 
 
+                <Grid Margin="10" Height="{Binding ShelfHeight}" Visibility="Visible" Grid.Row="2">
 
-                <Border Margin="10" Height="198" Visibility="{Binding ShelfVisibility}" Grid.Row="2" BorderThickness="2" BorderBrush="{Binding ShelfBrush}">
-                    <ScrollViewer VerticalContentAlignment="Center" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled">
-                        <GridView VerticalAlignment="Center" VerticalContentAlignment="Center" SelectionMode="None" Canvas.ZIndex="500" Name="shelfGridView" AllowDrop="True" DragEnter="ggview_DragEnter_1" DragLeave="ggview_DragLeave" CanDragItems="True" DragItemsStarting="GridView_DragItemsStarting" DropCompleted="ggview_DropCompleted" Background="{ThemeResource ShelfBackground}" Drop="ggview_Drop"  ItemsSource="{Binding ShelfBooks}" >
+                    <Grid.Transitions>
+                        <TransitionCollection>
+                            <PaneThemeTransition  Edge="Bottom"/>
+                        </TransitionCollection>
+                    </Grid.Transitions>
+                    <Border 
+                        BorderThickness="2" BorderBrush="{Binding ShelfBrush}">
+             
+
+
+                    <ScrollViewer VerticalContentAlignment="Center" VerticalScrollBarVisibility="Hidden"
+                                  VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto"
+                                  HorizontalScrollMode="Enabled">
+
+             
+
+                        <GridView VerticalAlignment="Center" VerticalContentAlignment="Center" SelectionMode="None"
+                                  Canvas.ZIndex="500" Name="shelfGridView" AllowDrop="True"
+                                  DragEnter="ggview_DragEnter_1" DragLeave="ggview_DragLeave" CanDragItems="True"
+                                  DragItemsStarting="GridView_DragItemsStarting" DropCompleted="ggview_DropCompleted"
+                                  Background="{ThemeResource ShelfBackground}" Drop="ggview_Drop"
+                                  ItemsSource="{Binding ShelfBooks}">
+
+                            
+                            
+                            
+                            
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid VerticalAlignment="Center" Tapped="Grid_Tapped">
-                                        <Grid Margin="10" Width="110" >
+                                        <Grid Margin="10" Width="110">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
 
 
-
-                                            <Border Grid.Row="0"  Width="110" Height="142" VerticalAlignment="Top"  BorderBrush="{ThemeResource ImageBorder}" BorderThickness="1">
-                                                <Image Source="{Binding Image}"  Stretch="Fill" />
+                                            <Border Grid.Row="0" Width="110" Height="142" VerticalAlignment="Top"
+                                                    BorderBrush="{ThemeResource ImageBorder}" BorderThickness="1">
+                                                <Image Source="{Binding Image}" Stretch="Fill" />
                                             </Border>
-                                            <StackPanel Grid.Row="1"  Orientation="Vertical"
-                    VerticalAlignment="Top">
+                                            <StackPanel Grid.Row="1" Orientation="Vertical"
+                                                        VerticalAlignment="Top">
 
-                                                <TextBlock Foreground="{ThemeResource MainText}" TextTrimming="CharacterEllipsis" Margin="0,3,0,3" FontSize="12" Text="{Binding Title}" FontWeight="Bold" />
-                                                <TextBlock Visibility="{Binding Rating, Converter={StaticResource ZeroVisibilityConverter}}"  FontSize="10" Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}" Foreground="{ThemeResource RatingStars}"  FontFamily="Segoe MDL2 Assets" />
+                                                <TextBlock Foreground="{ThemeResource MainText}"
+                                                           TextTrimming="CharacterEllipsis" Margin="0,3,0,3"
+                                                           FontSize="12" Text="{Binding Title}" FontWeight="Bold" />
+                                                <TextBlock
+                                                    Visibility="{Binding Rating, Converter={StaticResource ZeroVisibilityConverter}}"
+                                                    FontSize="10"
+                                                    Text="{Binding Rating, Converter={StaticResource StarRatingConverter}}"
+                                                    Foreground="{ThemeResource RatingStars}"
+                                                    FontFamily="Segoe MDL2 Assets" />
                                             </StackPanel>
                                         </Grid>
                                     </Grid>
@@ -231,71 +328,82 @@
                             </GridView.ItemTemplate>
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapGrid Orientation="Vertical" MaximumRowsOrColumns="1"/>
+                                    <WrapGrid Orientation="Vertical" MaximumRowsOrColumns="1" />
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
                         </GridView>
                     </ScrollViewer>
                 </Border>
+                </Grid>
             </Grid>
 
-            <ContentDialog Background="Gray" Width="400" Height="200" x:Name="ProgressPopup" PrimaryButtonText="cancel" IsPrimaryButtonEnabled="True">
+            <ContentDialog Background="Gray" Width="400" Height="200" x:Name="ProgressPopup" PrimaryButtonText="cancel"
+                           IsPrimaryButtonEnabled="True">
 
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <TextBlock Text="Importing" />
-                    <ProgressBar IsIndeterminate="False" Value="30"  VerticalAlignment="Center" Width="300" Height="20" />
+                    <ProgressBar IsIndeterminate="False" Value="30" VerticalAlignment="Center" Width="300" Height="20" />
                 </StackPanel>
             </ContentDialog>
 
-            <ContentDialog x:Name="EditPopup" PrimaryButtonText="ok" SecondaryButtonText="cancel" IsPrimaryButtonEnabled="True" IsSecondaryButtonEnabled="True" PrimaryButtonClick="EditPopup_PrimaryButtonClick">
+            <ContentDialog x:Name="EditPopup" PrimaryButtonText="ok" SecondaryButtonText="cancel"
+                           IsPrimaryButtonEnabled="True" IsSecondaryButtonEnabled="True"
+                           PrimaryButtonClick="EditPopup_PrimaryButtonClick">
                 <Grid Margin="0,20,0,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
 
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="0" Text="Title"/>
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="0" Text="Title" />
                     <TextBox Margin="5" Grid.Column="1" Grid.Row="0" Text="{Binding SelectedBook.Title, Mode=TwoWay}" />
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="1" Text="Rating"/>
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="1" Text="Rating" />
                     <!--<TextBox Margin="5" Grid.Column="1" Grid.Row="1" Text="{Binding SelectedBook.Rating, Mode=TwoWay}" />-->
-                    <ComboBox Margin="5" Grid.Column="1" ItemsSource="{Binding Ratings}" Grid.Row="1" SelectedItem="{Binding SelectedBook.Rating, Mode=TwoWay}"/>
+                    <ComboBox Margin="5" Grid.Column="1" ItemsSource="{Binding Ratings}" Grid.Row="1"
+                              SelectedItem="{Binding SelectedBook.Rating, Mode=TwoWay}" />
 
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="2" Text="Favourite"/>
-                    <CheckBox Margin="5" Grid.Column="1" Grid.Row="2" IsChecked="{Binding SelectedBook.Favourite, Mode=TwoWay}"/>
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="2" Text="Favourite" />
+                    <CheckBox Margin="5" Grid.Column="1" Grid.Row="2"
+                              IsChecked="{Binding SelectedBook.Favourite, Mode=TwoWay}" />
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="3" Text="Has Date"/>
-                    <CheckBox x:Name="cbox" Margin="5" Grid.Column="1" Grid.Row="3" IsChecked="{Binding SelectedBook.DatePublished, Converter={StaticResource NullBoolConverter}}"/>
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="3" Text="Has Date" />
+                    <CheckBox x:Name="cbox" Margin="5" Grid.Column="1" Grid.Row="3"
+                              IsChecked="{Binding SelectedBook.DatePublished, Converter={StaticResource NullBoolConverter}}" />
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="4" Text="Published"/>
-                    <DatePicker IsEnabled="{Binding ElementName=cbox, Path=IsChecked}" Margin="5" Grid.Column="1" Grid.Row="4" Date="{Binding SelectedBook.DatePublished, Mode=TwoWay, Converter={StaticResource DateConverter}}" />
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="4" Text="Published" />
+                    <DatePicker IsEnabled="{Binding ElementName=cbox, Path=IsChecked}" Margin="5" Grid.Column="1"
+                                Grid.Row="4"
+                                Date="{Binding SelectedBook.DatePublished, Mode=TwoWay, Converter={StaticResource DateConverter}}" />
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="5" Text="Pages"/>
-                    <TextBox Margin="5" Grid.Column="1" Grid.Row="5" Text="{Binding SelectedBook.Pages, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" />
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="5" Text="Pages" />
+                    <TextBox Margin="5" Grid.Column="1" Grid.Row="5"
+                             Text="{Binding SelectedBook.Pages, Mode=TwoWay, Converter={StaticResource NullableValueConverter}}" />
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="6" Text="ISBN"/>
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="6" Text="ISBN" />
                     <TextBox Margin="5" Grid.Column="1" Grid.Row="6" Text="{Binding SelectedBook.Isbn, Mode=TwoWay}" />
 
-                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="7" Text="Abstract"/>
-                    <TextBox Margin="5" Grid.Column="1" Grid.Row="7" TextWrapping="Wrap" Height="100" Text="{Binding SelectedBook.Abstract, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Column="0" Grid.Row="7" Text="Abstract" />
+                    <TextBox Margin="5" Grid.Column="1" Grid.Row="7" TextWrapping="Wrap" Height="100"
+                             Text="{Binding SelectedBook.Abstract, Mode=TwoWay}" />
 
                 </Grid>
             </ContentDialog>
         </Grid>
 
-        <CommandBar Grid.Column="0"  Grid.Row="0"  Background="Black" Foreground="White">
+        <CommandBar Grid.Column="0" Grid.Row="0" Background="{ThemeResource CommandBarBackground}" Foreground="{ThemeResource CommandBarForeground}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Foreground="{Binding FilterColor}" Label="Filter" Icon="Filter">
                     <AppBarButton.Flyout>
@@ -314,29 +422,38 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="0" Grid.Column="0" Text="Query" Foreground="White" />
-                                <TextBox  Margin="5" Grid.Row="0" Grid.Column="1"  Text="{Binding FilterQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="0" Grid.Column="0"
+                                           Text="Query" Foreground="White" />
+                                <TextBox Margin="5" Grid.Row="0" Grid.Column="1"
+                                         Text="{Binding FilterQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
-                                <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="1" Grid.Column="0" Text="Sort" Foreground="White" />
+                                <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="1" Grid.Column="0"
+                                           Text="Sort" Foreground="White" />
                                 <ComboBox IsEnabled="False" Margin="5" Grid.Row="1" Grid.Column="1">
                                     <ComboBoxItem IsSelected="True" Content="Title" />
                                     <ComboBoxItem Content="Date Added" />
                                     <ComboBoxItem Content="Date Published" />
                                 </ComboBox>
 
-                                <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="2" Grid.Column="0" Text="Filter" Foreground="White" />
+                                <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="2" Grid.Column="0"
+                                           Text="Filter" Foreground="White" />
 
-                                <StackPanel  Margin="5" Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-                                    <CheckBox Content="Favourites" IsChecked="{Binding FilterFavourites, Mode=TwoWay}" Foreground="White" />
-                                    <CheckBox Content="Reading" IsChecked="{Binding FilterReading, Mode=TwoWay}" Foreground="White" />
+                                <StackPanel Margin="5" Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                                    <CheckBox Content="Favourites" IsChecked="{Binding FilterFavourites, Mode=TwoWay}"
+                                              Foreground="White" />
+                                    <CheckBox Content="Reading" IsChecked="{Binding FilterReading, Mode=TwoWay}"
+                                              Foreground="White" />
                                 </StackPanel>
                                 <StackPanel Margin="5" Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
-                                    <CheckBox Content="Scraped" IsChecked="{Binding FilterScraped, Mode=TwoWay}" Foreground="White" />
-                                    <CheckBox Content="Filter Description" IsChecked="{Binding FilterDescription, Mode=TwoWay}" Foreground="White" />
+                                    <CheckBox Content="Scraped" IsChecked="{Binding FilterScraped, Mode=TwoWay}"
+                                              Foreground="White" />
+                                    <CheckBox Content="Filter Description"
+                                              IsChecked="{Binding FilterDescription, Mode=TwoWay}" Foreground="White" />
                                 </StackPanel>
                                 <StackPanel Margin="5" Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
-                                    <CheckBox Content="Has BookMarks" IsChecked="{Binding FilterBookmarks, Mode=TwoWay}" Foreground="White" />
+                                    <CheckBox Content="Has BookMarks"
+                                              IsChecked="{Binding FilterBookmarks, Mode=TwoWay}" Foreground="White" />
                                 </StackPanel>
 
 
@@ -344,13 +461,14 @@
                         </Flyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Foreground="White"  Label="Shelf View" Icon="DockBottom" Tapped="AppBarButton_Tapped_3" />
+                <AppBarButton Foreground="{ThemeResource CommandBarForeground}" Label="Shelf View" Icon="DockBottom" Tapped="AppBarButton_Tapped_3" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
 
-        <Grid Grid.Row="2" Height="30" Background="Black">
-            <TextBlock Text="{Binding FilterCount}" FontSize="14" FontWeight="Bold" Margin="0,0,20,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
-    
+        <Grid Grid.Row="2" Height="30" Background="{ThemeResource CommandBarBackground}">
+            <TextBlock Text="{Binding FilterCount}" Foreground="{ThemeResource CommandBarForeground}" FontSize="14" FontWeight="Bold" Margin="0,0,20,0"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+
         </Grid>
     </Grid>
 </Page>

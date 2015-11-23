@@ -1,5 +1,5 @@
-﻿using Bookie.Mvvm;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using Bookie.Mvvm;
 
 namespace Bookie.ViewModels
 {

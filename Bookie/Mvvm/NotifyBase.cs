@@ -15,7 +15,7 @@ namespace Bookie.Mvvm
             if (PropertyChanged != null)
             {
                 await
-                    Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                         () => { PropertyChanged(this, new PropertyChangedEventArgs(info)); });
             }
         }

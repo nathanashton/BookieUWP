@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
 
 namespace Bookie.Data.Migrations
@@ -8,83 +7,60 @@ namespace Bookie.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Source",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Path = table.Column<string>(nullable: true),
-                    Token = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Source", x => x.Id);
-                });
-            migrationBuilder.CreateTable(
-                name: "Book",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Abstract = table.Column<string>(nullable: true),
-                    Author = table.Column<string>(nullable: true),
-                    CurrentPage = table.Column<int>(nullable: true),
-                    DatePublished = table.Column<DateTime>(nullable: true),
-                    Favourite = table.Column<bool>(nullable: false),
-                    FileName = table.Column<string>(nullable: true),
-                    FullPathAndFileName = table.Column<string>(nullable: true),
-                    Isbn = table.Column<string>(nullable: true),
-                    Pages = table.Column<int>(nullable: true),
-                    Publisher = table.Column<string>(nullable: true),
-                    Rating = table.Column<int>(nullable: false),
-                    Scraped = table.Column<bool>(nullable: false),
-                    Shelf = table.Column<bool>(nullable: false),
-                    SourceId = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true)
-                },
+            migrationBuilder.CreateTable("Source", table => new
+            {
+                Id = table.Column<int>(nullable: false)
+                    .Annotation("Sqlite:Autoincrement", true),
+                Path = table.Column<string>(nullable: true),
+                Token = table.Column<string>(nullable: true)
+            },
+                constraints: table => { table.PrimaryKey("PK_Source", x => x.Id); });
+            migrationBuilder.CreateTable("Book", table => new
+            {
+                Id = table.Column<int>(nullable: false)
+                    .Annotation("Sqlite:Autoincrement", true),
+                Abstract = table.Column<string>(nullable: true),
+                Author = table.Column<string>(nullable: true),
+                CurrentPage = table.Column<int>(nullable: true),
+                DatePublished = table.Column<DateTime>(nullable: true),
+                Favourite = table.Column<bool>(nullable: false),
+                FileName = table.Column<string>(nullable: true),
+                FullPathAndFileName = table.Column<string>(nullable: true),
+                Isbn = table.Column<string>(nullable: true),
+                Pages = table.Column<int>(nullable: true),
+                Publisher = table.Column<string>(nullable: true),
+                Rating = table.Column<int>(nullable: false),
+                Scraped = table.Column<bool>(nullable: false),
+                Shelf = table.Column<bool>(nullable: false),
+                SourceId = table.Column<int>(nullable: false),
+                Title = table.Column<string>(nullable: true)
+            },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Book", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Book_Source_SourceId",
-                        column: x => x.SourceId,
-                        principalTable: "Source",
-                        principalColumn: "Id");
+                    table.ForeignKey("FK_Book_Source_SourceId", x => x.SourceId, "Source", "Id");
                 });
-            migrationBuilder.CreateTable(
-                name: "BookMark",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BookId = table.Column<int>(nullable: true),
-                    PageNumber = table.Column<int>(nullable: false)
-                },
+            migrationBuilder.CreateTable("BookMark", table => new
+            {
+                Id = table.Column<int>(nullable: false)
+                    .Annotation("Sqlite:Autoincrement", true),
+                BookId = table.Column<int>(nullable: true),
+                PageNumber = table.Column<int>(nullable: false)
+            },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BookMark", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BookMark_Book_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Book",
-                        principalColumn: "Id");
+                    table.ForeignKey("FK_BookMark_Book_BookId", x => x.BookId, "Book", "Id");
                 });
-            migrationBuilder.CreateTable(
-                name: "Cover",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false),
-                    FileName = table.Column<string>(nullable: true)
-                },
+            migrationBuilder.CreateTable("Cover", table => new
+            {
+                Id = table.Column<int>(nullable: false),
+                FileName = table.Column<string>(nullable: true)
+            },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cover", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cover_Book_Id",
-                        column: x => x.Id,
-                        principalTable: "Book",
-                        principalColumn: "Id");
+                    table.ForeignKey("FK_Cover_Book_Id", x => x.Id, "Book", "Id");
                 });
         }
 
