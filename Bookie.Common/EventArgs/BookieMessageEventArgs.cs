@@ -4,6 +4,5 @@
     {
         public string MoreDetails { get; set; }
         public string Message { get; set; }
-        public bool Fatal { get; set; }
     }
 }

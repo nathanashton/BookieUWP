@@ -27,9 +27,11 @@ namespace Bookie.Domain
         private readonly SourceService _sourceService;
 
         // private SourceDal sources = new SourceDal();
-        private readonly PdfCover pdfCover = new PdfCover();
+        private readonly PdfCover _pdfCover = new PdfCover();
 
         public readonly BackgroundWorker Worker;
+        public readonly BackgroundWorker WorkerCleanup;
+
 
         public Importer(IBookRepository bookRepository, ISourceRepository sourceRepository)
         {
@@ -45,7 +47,69 @@ namespace Bookie.Domain
             Worker.DoWork += Worker_DoWork;
             Worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             Worker.ProgressChanged += Worker_ProgressChanged;
+
+            WorkerCleanup = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            WorkerCleanup.DoWork += WorkerCleanup_DoWork;
+            WorkerCleanup.RunWorkerCompleted += WorkerCleanup_RunWorkerCompleted;
+            WorkerCleanup.ProgressChanged += WorkerCleanup_ProgressChanged;
+
+
+
         }
+
+        private void WorkerCleanup_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var book = (Book)e.UserState;
+            if (book != null)
+            {
+                _progressArgs.OperationName = "Cleaning Up";
+                _progressArgs.ProgressPercentage = Convert.ToInt32(e.ProgressPercentage);
+                _progressArgs.ProgressText = "Removed book";
+                OnProgressChange(_progressArgs);
+            }
+            else
+            {
+                _progressArgs.OperationName = "Cleaning Up";
+                _progressArgs.ProgressPercentage = Convert.ToInt32(e.ProgressPercentage);
+                _progressArgs.ProgressText = "No Change";
+                OnProgressChange(_progressArgs);
+            }
+        }
+
+        private void WorkerCleanup_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            OnProgressComplete();
+        }
+
+        private void WorkerCleanup_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var books = _bookService.GetAllAsync().GetAwaiter().GetResult();
+
+            //foreach book check if it physicall exist else delete from db.
+
+
+            for (int index = 0; index < books.Count; index++)
+            {
+                var book = books[index];
+                var progress = Utils.CalculatePercentage(index, 0, books.Count);
+                var storageFolder = StorageFolder.GetFolderFromPathAsync(book.Source.Path).GetAwaiter().GetResult();
+                var exists = storageFolder.TryGetItemAsync(book.FileName).GetAwaiter().GetResult(); // null not found
+                if (exists == null)
+                {
+                    _bookService.Remove(book);
+                    WorkerCleanup.ReportProgress(progress, book);
+                }
+                else
+                {
+                    WorkerCleanup.ReportProgress(progress, null);
+                }
+            }
+        }
+
 
         public event EventHandler<ProgressWindowEventArgs> ProgressChanged;
 
@@ -85,24 +149,29 @@ namespace Bookie.Domain
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             OnProgressComplete();
+            Cleanup();
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            var filter = new List<string>();
-            filter.Add(".pdf");
+            var filter = new List<string> {".pdf"};
 
-            var storageFolders = _sourceService.GetAllAsStorageFolders().Result;
+            var storageFolders = _sourceService.GetAllAsStorageFoldersAsync().Result;
 
             foreach (var storageFolder in storageFolders)
             {
                 var source = _sourceService.GetByUrl(storageFolder.Path);
                 var options = new QueryOptions(CommonFileQuery.OrderByName, filter);
                 var ss = storageFolder.CreateItemQueryWithOptions(options);
-                var storageFiles = ss.GetItemsAsync().GetAwaiter().GetResult();
-                for (var i = 0; i < storageFiles.Count; i++)
+
+                //Get all PDF files
+                var pdfFiles = ss.GetItemsAsync().GetAwaiter().GetResult();
+
+
+
+                for (var i = 0; i < pdfFiles.Count; i++)
                 {
-                    var progress = Utils.CalculatePercentage(i, 0, storageFiles.Count);
+                    var progress = Utils.CalculatePercentage(i, 0, pdfFiles.Count);
                     if (Worker.CancellationPending)
                     {
                         e.Cancel = true;
@@ -111,19 +180,21 @@ namespace Bookie.Domain
 
                     var book = new Book
                     {
-                        Title = Path.GetFileNameWithoutExtension(storageFiles[i].Name),
+                        Title = Path.GetFileNameWithoutExtension(pdfFiles[i].Name),
                         Source = source,
-                        FileName = Path.GetFileName(storageFiles[i].Path),
-                        FullPathAndFileName = storageFiles[i].Path,
+                        FileName = Path.GetFileName(pdfFiles[i].Path),
+                        FullPathAndFileName = pdfFiles[i].Path,
                         Rating = 0
                     };
 
-                    var existingBook = _bookService.Find(b => b.FullPathAndFileName == book.FullPathAndFileName);
+                    var book1 = book;
+                    var existingBook = _bookService.Find(b => b.FullPathAndFileName == book1.FullPathAndFileName);
+
                     if (existingBook.Count == 0) // Add Book
                     {
                         //If there is an XML for pdf then uses its data, otherwise find ISBN and scrape
                         var xml =
-                            _sourceService.GetStorageFolderFromSource(source)
+                            _sourceService.GetStorageFolderFromSourceAsync(source)
                                 .GetAwaiter()
                                 .GetResult()
                                 .TryGetItemAsync(book.Title + ".xml")
@@ -135,11 +206,11 @@ namespace Bookie.Domain
                         }
                         else
                         {
-                            book = UseIsbn(storageFiles[i] as StorageFile, book);
+                            book = UseIsbn(pdfFiles[i] as StorageFile, book);
                         }
 
                         var cover = new Cover();
-                        var coverPath = pdfCover.GenerateCoverImage(book, 0, _sourcerepo).Result;
+                        var coverPath = _pdfCover.GenerateCoverImage(book, 0, _sourcerepo).Result;
                         cover.FileName = Path.GetFileName(coverPath);
 
                         book.Cover = cover;
@@ -196,7 +267,6 @@ namespace Bookie.Domain
                 {
                     if (reader.IsStartElement())
                     {
-                        var s = reader.Name;
                         switch (reader.Name)
                         {
                             case "Title":
@@ -277,6 +347,13 @@ namespace Bookie.Domain
 
             Worker.RunWorkerAsync();
         }
+
+        private void Cleanup()
+        {
+            OnProgressStarted();
+            WorkerCleanup.RunWorkerAsync();
+        }
+
 
         private void OnProgressComplete()
         {

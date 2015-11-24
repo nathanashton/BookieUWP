@@ -17,6 +17,7 @@ namespace Bookie.ViewModels
 {
     public class SettingsPageViewModel : NotifyBase
     {
+        public Theme CurrentTheme { get; set; }
         private Theme _theme;
 
         public Theme Theme
@@ -112,6 +113,12 @@ namespace Bookie.ViewModels
            // Theme = Themes.FirstOrDefault(x => x.Resource.Source == BookieSettings.Theme.Resource.Source);
 
             BookieSettings.SaveSettings();
+            if (Theme.Name != CurrentTheme.Name)
+            {
+                ShellViewModel.ShowMessage("Restart required to change theme", null);
+
+            }
+
 
         }
 
@@ -152,6 +159,11 @@ namespace Bookie.ViewModels
             var importer = new Importer(new BookRepository(), new SourceRepository());
 
             importer.UpdateBooksFromSources();
+
+
+            //Remove any books that dont exist anymore
+            //Clean up covers that arent used anymore
+
         }
     }
 }

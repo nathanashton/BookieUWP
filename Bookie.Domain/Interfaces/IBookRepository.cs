@@ -9,10 +9,12 @@ namespace Bookie.Domain.Interfaces
     {
         ICollection<Book> Find(Func<Book, bool> where);
 
-        Task<Book> Add(Book book);
+        Task<Book> AddAsync(Book book);
 
-        Task<List<Book>> GetAll();
+        Task<List<Book>> GetAllAsync();
 
         void Update(Book book);
+
+        void Remove(Book book);
     }
 }

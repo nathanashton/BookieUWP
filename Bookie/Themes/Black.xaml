@@ -28,5 +28,8 @@
     <Brush x:Key="ShelfBackground">#202020</Brush>
     <Brush x:Key="RatingStars">#C8C80E</Brush>
 
-
+	<SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="Silver" />
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="Black" />
+	
+	
 </ResourceDictionary>

@@ -15,12 +15,14 @@
 
     <Brush x:Key="LettersBackground">#174781</Brush>
     <Brush x:Key="LettersForeground">White</Brush>
-    <Brush x:Key="LettersBackgroundHighlighted">#1f61ac</Brush>
+    <Brush x:Key="LettersBackgroundHighlighted">Black</Brush>
     <Brush x:Key="LettersForegroundHighlighted">White</Brush>
 
     <Brush x:Key="ImageBorder">#174781</Brush>
 
     <Brush x:Key="ShelfBackground">#202020</Brush>
     <Brush x:Key="RatingStars">#C8C80E</Brush>
-    
+
+    <SolidColorBrush x:Key="SystemControlHighlightAccentBrush" Color="#174781" />
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush" Color="#174781" />
 </ResourceDictionary>

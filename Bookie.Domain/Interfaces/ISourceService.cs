@@ -13,9 +13,9 @@ namespace Bookie.Domain.Interfaces
 
         List<Source> GetAll();
 
-        Task<List<StorageFolder>> GetAllAsStorageFolders();
+        Task<List<StorageFolder>> GetAllAsStorageFoldersAsync();
 
-        Task<StorageFolder> GetStorageFolderFromSource(Source source);
+        Task<StorageFolder> GetStorageFolderFromSourceAsync(Source source);
 
         Source Add(Source source);
     }

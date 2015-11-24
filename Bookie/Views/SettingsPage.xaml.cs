@@ -33,6 +33,7 @@ namespace Bookie.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            _viewmodel.CurrentTheme = BookieSettings.Theme;
             _viewmodel.Load();
         }
 

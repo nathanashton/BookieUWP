@@ -123,7 +123,7 @@ namespace Bookie.Views
         {
             try
             {
-                var t = (Book) (e.OriginalSource as Image).DataContext;
+                var t = (Book) (e.OriginalSource as Canvas).DataContext;
                 viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
             }
@@ -149,9 +149,11 @@ namespace Bookie.Views
             }
 
             viewmodel.UpdateBook(viewmodel.SelectedBook);
-            var a = new BookEventArgs();
-            a.Book = viewmodel.SelectedBook;
-            a.State = BookEventArgs.BookState.Updated;
+            var a = new BookEventArgs
+            {
+                Book = viewmodel.SelectedBook,
+                State = BookEventArgs.BookState.Updated
+            };
             viewmodel.BookChanged(this, a);
         }
 
@@ -394,6 +396,11 @@ namespace Bookie.Views
             if (found == null) return;
             viewmodel.SelectLetter(lower);
             booksGridView.ScrollIntoView(found);
+        }
+
+        private void Flyout_Closed(object sender, object e)
+        {
+            viewmodel.Filter();
         }
     }
 }

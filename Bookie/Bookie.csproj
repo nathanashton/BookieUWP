@@ -105,8 +105,11 @@
     <Compile Include="Converters\BoolImageConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
+    <Compile Include="Converters\FavouriteVisibilityConverter.cs" />
     <Compile Include="Converters\FoundBackgroundConverter.cs" />
     <Compile Include="Converters\FoundForegroundConverter.cs" />
+    <Compile Include="Converters\HasBookmarksVisibilityConverter.cs" />
+    <Compile Include="Converters\InvertBoolVisibilityConverter.cs" />
     <Compile Include="Converters\MouseToScrollBarVisibility.cs" />
     <Compile Include="Converters\NullableValueConverter.cs" />
     <Compile Include="Converters\NullBoolConverter.cs" />

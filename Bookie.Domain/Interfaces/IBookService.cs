@@ -13,10 +13,12 @@ namespace Bookie.Domain.Interfaces
 
         Book GetById(int id);
 
-        Task<List<Book>> GetAll();
+        Task<List<Book>> GetAllAsync();
 
         Book Add(Book book);
 
         void Update(Book book);
+
+        void Remove(Book book);
     }
 }

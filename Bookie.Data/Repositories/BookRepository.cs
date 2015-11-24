@@ -23,7 +23,7 @@ namespace Bookie.Data.Repositories
             }
         }
 
-        public async Task<Book> Add(Book book)
+        public async Task<Book> AddAsync(Book book)
         {
             using (var ctx = new Context())
             {
@@ -33,7 +33,7 @@ namespace Bookie.Data.Repositories
             }
         }
 
-        public async Task<List<Book>> GetAll()
+        public async Task<List<Book>> GetAllAsync()
         {
             using (var ctx = new Context())
             {
@@ -49,6 +49,36 @@ namespace Bookie.Data.Repositories
                 ctx.Books.Attach(book);
                 ctx.Entry(book).State = EntityState.Modified;
                 await ctx.SaveChangesAsync();
+            }
+        }
+
+        public void Remove(Book book)
+        {
+            using (var ctx = new Context())
+            {
+                if (book.Cover != null)
+                {
+                    ctx.Covers.Attach(book.Cover);
+                    ctx.Entry(book.Cover).State = EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                }
+
+                if (book.BookMarks != null && book.BookMarks.Count > 0)
+                {
+                    foreach (var bookmark in book.BookMarks)
+                    {
+                        ctx.Bookmarks.Attach(bookmark);
+                        ctx.Entry(bookmark).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+
+                    }
+                }
+
+                ctx.Books.Attach(book);
+                ctx.Entry(book).State = EntityState.Deleted;
+
+                ctx.SaveChanges();
             }
         }
     }

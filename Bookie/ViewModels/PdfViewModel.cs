@@ -186,6 +186,7 @@ namespace Bookie.ViewModels
                     SelectedBook.BookMarks.Remove(existingBookMark);
                     NotifyPropertyChanged("SelectedBook");
                 }
+                ShellViewModel.ShowMessage("Bookmark Removed", null);
             }
             else
             {
@@ -204,6 +205,8 @@ namespace Bookie.ViewModels
                     NotifyPropertyChanged("SelectedBook");
                     _bookMarkService.Add(bookmark);
                 }
+                ShellViewModel.ShowMessage("Bookmark Added", null);
+
             }
             UpdateBookmarks();
         }

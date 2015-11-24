@@ -10,8 +10,15 @@
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
         <converters:BoolImageConverter x:Key="BoolImageConverter" />
         <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+        <converters:InvertBoolVisibilityConverter x:Key="InvertBoolVisibilityConverter" />
+
         <converters:PageNumberConverter x:Key="PageNumberConverter" />
         <converters:PageNumberConverter2 x:Key="PageNumberConverter2" />
+        
+        <ControlTemplate x:Key="buttonTemplate" TargetType="Button">
+            <Path Data="M0,0 L0,80 L-80,0 z" Fill="{ThemeResource NavBarBackground}" Stroke="{ThemeResource NavBarBackground}" StrokeThickness="1" />
+        </ControlTemplate>
+        
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -63,7 +70,11 @@
                 <AppBarButton Icon="Zoom" Foreground="{ThemeResource CommandBarForeground}">
                     <AppBarButton.Flyout>
                         <Flyout>
-                            <TextBox Margin="20" Width="50" Height="25" TextChanged="TextBox_TextChanged" />
+                            <StackPanel Margin="10" Orientation="Vertical">
+                                <TextBlock HorizontalAlignment="Center" Margin="5" Text="Goto" Foreground="{ThemeResource MainText}"/>
+                                <TextBox x:Name="JumpToPage" Margin="5" Width="50" Height="25" LostFocus="TextBox_LostFocus" TextChanged="TextBox_TextChanged" />
+
+                            </StackPanel>
                         </Flyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
@@ -139,11 +150,11 @@
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
                                                Text="{Binding PageNumber}" Foreground="White" />
                                 </Grid>
-                                <Button Margin="10" Width="60" Height="160"
-                                        Background="{Binding BookMark, Converter={StaticResource BoolImageConverter}}"
+                                <Button Background="{ThemeResource CommandBarBackground}" Width="80" Height="80" Opacity="{Binding BookMark,Converter={StaticResource InvertBoolVisibilityConverter}}"
                                         Command="{Binding DataContext.BookMarkCommand, ElementName=lv}"
                                         CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right"
-                                        Canvas.ZIndex="1000" VerticalAlignment="Top" Content="" />
+                                        Canvas.ZIndex="2000" VerticalAlignment="Top" Content="" />
+                                
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
                                         Width="{Binding Width}">
                                     <Grid Background="Black" HorizontalAlignment="Center"
@@ -174,20 +185,24 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding SelectedBook.Title}" FontSize="16"
-                               HorizontalAlignment="Right" Margin="0,0,20,0" Foreground="{ThemeResource CommandBarForeground}"/>
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="0,0,20,0"
+                  
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"
+                               FontSize="14" HorizontalAlignment="Left" Foreground="{ThemeResource CommandBarForeground}" />
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding PageCount, Converter={StaticResource PageNumberConverter2}}"
+                               FontSize="14" HorizontalAlignment="Left" Margin="0,0,20,0" Foreground="{ThemeResource CommandBarForeground}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left">
+                    <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{Binding SelectedBook.Title}" FontSize="14"
+                               HorizontalAlignment="Right" Margin="20,0,20,0" Foreground="{ThemeResource CommandBarForeground}"/>
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0,0,20,0"
                                Foreground="{ThemeResource RatingStars}"
                                Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}"
                                FontFamily="Segoe MDL2 Assets" />
-                    <TextBlock VerticalAlignment="Center"
-                               Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"
-                               FontSize="16" HorizontalAlignment="Left" Foreground="{ThemeResource CommandBarForeground}" />
-                    <TextBlock VerticalAlignment="Center"
-                               Text="{Binding PageCount, Converter={StaticResource PageNumberConverter2}}"
-                               FontSize="16" HorizontalAlignment="Left" Margin="0,0,20,0" Foreground="{ThemeResource CommandBarForeground}" />
                 </StackPanel>
-                <Button Grid.Column="0" Height="40" Width="50" Command="{Binding ToggleBookMarksCommand}" />
+                <Button Grid.Column="0" Background="{ThemeResource NavBarBackground}"  Height="40" Width="50" Command="{Binding ToggleBookMarksCommand}" />
             </Grid>
         </Grid>
     </Grid>

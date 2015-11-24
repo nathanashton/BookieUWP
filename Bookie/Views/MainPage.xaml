@@ -18,6 +18,10 @@
         <converters:ZeroVisibilityConverter x:Key="ZeroVisibilityConverter" />
         <converters:FoundBackgroundConverter x:Key="FoundBGConverter" />
         <converters:FoundForegroundConverter x:Key="FoundFGConverter" />
+        <converters:HasBookmarksVisibilityConverter x:Key="HasBookmarksConverter" />
+        <converters:FavouriteVisibilityConverter x:Key="BoolVisibilityConverter" />
+
+
         <Style x:Key="GridViewStyle1" TargetType="GridView">
             <Setter Property="Padding" Value="0,0,0,10" />
             <Setter Property="IsTabStop" Value="False" />
@@ -36,9 +40,6 @@
                 <Setter.Value>
                     <TransitionCollection>
                         <AddDeleteThemeTransition />
-                        <ContentThemeTransition />
-                        <ReorderThemeTransition />
-                        <EntranceThemeTransition IsStaggeringEnabled="False" />
                     </TransitionCollection>
                 </Setter.Value>
             </Setter>
@@ -143,12 +144,7 @@
                               DropCompleted="gview_DropCompleted" DragEnter="gview_DragEnter"
                               DragLeave="gview_DragLeave" x:Name="booksGridView"
                               Style="{StaticResource GridViewStyle1}" ShowsScrollingPlaceholders="True">
-                        <GridView.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <AddDeleteThemeTransition/>
-                            </TransitionCollection>
-                        </GridView.ItemContainerTransitions>
-
+            
                         <GridView.ItemTemplate>
                             <DataTemplate>
 
@@ -219,9 +215,17 @@
 
                                         <Border Grid.Row="0" Width="130" Height="175" VerticalAlignment="Top"
                                                 BorderBrush="{ThemeResource ImageBorder}" BorderThickness="1">
-                                            <Image Source="{Binding Image}" Stretch="Fill" />
-                                        </Border>
 
+                                            <Canvas>
+                                                <Canvas.Background>
+                                                    <ImageBrush ImageSource="{Binding Image}" Stretch="Fill" />
+                                                </Canvas.Background>
+                                                <Path Canvas.Left="128" Visibility="{Binding BookMarks, Converter={StaticResource HasBookmarksConverter}}"  Data="M0,0 L0,20 L-20,0 z" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="{ThemeResource CommandBarBackground}" Stroke="{ThemeResource NavBarBackground}" StrokeThickness="1" />
+                                                <Path Visibility="{Binding Favourite, Converter={StaticResource BoolVisibilityConverter}}"  Canvas.Top="20" Data="M0,0 L20,-20 L0,-20 z" Fill="{ThemeResource RatingStars}" Stroke="{ThemeResource RatingStars}"  StrokeThickness="1" />                                            </Canvas>
+
+
+                                  
+                                        </Border>
 
                                         <StackPanel Margin="0,5,0,0" Grid.Row="1" Orientation="Vertical" Width="130"
                                                     VerticalAlignment="Stretch">
@@ -230,7 +234,7 @@
                                             <TextBlock Foreground="{ThemeResource MainText}"
                                                        TextTrimming="CharacterEllipsis" FontSize="16"
                                                        Text="{Binding Title}" FontWeight="Bold" />
-                                            <ProgressBar Opacity="0.5" Margin="0,3,0,0"
+                                            <ProgressBar Opacity="0.8" Margin="0,3,0,0"
                                                          Visibility="{Binding CurrentPagePercentage, Converter={StaticResource NullVisibilityConverter}}"
                                                          Value="{Binding CurrentPagePercentage}" Height="5"
                                                          HorizontalAlignment="Stretch" />
@@ -407,7 +411,7 @@
             <CommandBar.PrimaryCommands>
                 <AppBarButton Foreground="{Binding FilterColor}" Label="Filter" Icon="Filter">
                     <AppBarButton.Flyout>
-                        <Flyout>
+                        <Flyout Closed="Flyout_Closed">
                             <Grid Margin="10" Width="350">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="45" />
@@ -425,7 +429,7 @@
                                 <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="0" Grid.Column="0"
                                            Text="Query" Foreground="White" />
                                 <TextBox Margin="5" Grid.Row="0" Grid.Column="1"
-                                         Text="{Binding FilterQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                         Text="{Binding FilterQuery, Mode=TwoWay}" />
 
 
                                 <TextBlock VerticalAlignment="Center" Margin="5" Grid.Row="1" Grid.Column="0"
@@ -466,7 +470,7 @@
         </CommandBar>
 
         <Grid Grid.Row="2" Height="30" Background="{ThemeResource CommandBarBackground}">
-            <TextBlock Text="{Binding FilterCount}" Foreground="{ThemeResource CommandBarForeground}" FontSize="14" FontWeight="Bold" Margin="0,0,20,0"
+            <TextBlock Text="{Binding FilterCount}" Foreground="{ThemeResource CommandBarForeground}" FontSize="14" Margin="0,0,20,0"
                        HorizontalAlignment="Right" VerticalAlignment="Center" />
 
         </Grid>

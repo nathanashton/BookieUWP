@@ -18,7 +18,7 @@ namespace Bookie.Domain
             try
             {
                 var sources = new SourceService(sourceRepository);
-                var storageFolder = await sources.GetStorageFolderFromSource(book.Source);
+                var storageFolder = await sources.GetStorageFolderFromSourceAsync(book.Source);
 
                 var pdfFile = await storageFolder.GetFileAsync(book.FileName);
                 ///Load Pdf File

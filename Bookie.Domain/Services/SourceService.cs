@@ -33,7 +33,7 @@ namespace Bookie.Domain.Services
             return _repository.GetAll().ToList();
         }
 
-        public async Task<List<StorageFolder>> GetAllAsStorageFolders()
+        public async Task<List<StorageFolder>> GetAllAsStorageFoldersAsync()
         {
             var all = _repository.GetAll();
             var folders = new List<StorageFolder>();
@@ -50,7 +50,7 @@ namespace Bookie.Domain.Services
             return _repository.Add(source);
         }
 
-        public async Task<StorageFolder> GetStorageFolderFromSource(Source source)
+        public async Task<StorageFolder> GetStorageFolderFromSourceAsync(Source source)
         {
             var f = _repository.Find(x => x.Path == source.Path);
             var folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(source.Token);

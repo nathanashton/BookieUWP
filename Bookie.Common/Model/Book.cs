@@ -62,10 +62,18 @@ namespace Bookie.Common.Model
 
         [NotMapped]
         public ImageSource Image
-            =>
-                !IsNullOrEmpty(Cover?.FileName)
-                    ? new BitmapImage(new Uri("ms-appdata:///local/Covers/" + Cover.FileName))
-                    : new BitmapImage(new Uri("ms-appx:///Assets/nocover.png"));
+        {
+            get
+            {
+                if (!IsNullOrEmpty(Cover?.FileName))
+                {
+                    return new BitmapImage(new Uri("ms-appdata:///local/Covers/" + Cover.FileName));
+                } else
+                {
+                    return new BitmapImage(new Uri("ms-appx:///Assets/nocover.png"));
+                }
+            }
+        }
 
         public override string ToString()
         {

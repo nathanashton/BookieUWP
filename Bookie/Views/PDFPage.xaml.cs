@@ -252,15 +252,7 @@ namespace Bookie.Views
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var textBox = sender as TextBox;
-            var text = textBox?.Text;
-            if (IsNullOrEmpty(text)) return;
-            int page;
-            var result = TryParse(text, out page);
-            if (result)
-            {
-                ScrollToPage(PageNumberToOffset(Convert.ToInt32(text)));
-            }
+
         }
 
         private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -306,6 +298,24 @@ namespace Bookie.Views
             { ViewModel.FullScreen = true; }
 
 
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+          
+            var text = JumpToPage?.Text;
+            if (IsNullOrEmpty(text)) return;
+            int page;
+            var result = TryParse(text, out page);
+            if (result)
+            {
+                ScrollToPage(PageNumberToOffset(Convert.ToInt32(text)));
+            }
+        }
+
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var s = "t";
         }
     }
 }

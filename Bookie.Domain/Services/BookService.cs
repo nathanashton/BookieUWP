@@ -31,19 +31,26 @@ namespace Bookie.Domain.Services
             return _repository.Find(book => book.Id == id).FirstOrDefault();
         }
 
-        public async Task<List<Book>> GetAll()
+        public async Task<List<Book>> GetAllAsync()
         {
-            return await _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
         public Book Add(Book book)
         {
-            return _repository.Add(book).Result;
+            return _repository.AddAsync(book).Result;
         }
 
         public void Update(Book book)
         {
             _repository.Update(book);
         }
+
+        public void Remove(Book book)
+        {
+            _repository.Remove(book);
+        }
+
+
     }
 }

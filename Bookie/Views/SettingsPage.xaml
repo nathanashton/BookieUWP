@@ -5,6 +5,7 @@
     xmlns:local="using:Bookie.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:drawing="using:System.Drawing"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource MainBackground}">
@@ -12,26 +13,32 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ListBox Grid.Row="0" ItemsSource="{Binding Sources}" Width="300"
-                 SelectedItem="{Binding SelectedSource, Mode=TwoWay}" HorizontalAlignment="Center" Height="300"
-                 VerticalAlignment="Center" Background="{ThemeResource ShelfBackground}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Path}" Foreground="{ThemeResource MainText}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
 
-        <StackPanel Grid.Row="1" Orientation="Vertical">
-     <TextBlock Text="Theme (Requires restart)"/>
-            <ComboBox ItemsSource="{Binding Themes}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{Binding Theme, Mode=TwoWay}">
+        <StackPanel Margin="160,20,0,0" Grid.Row="0" Orientation="Vertical">
+            <TextBlock Text="Sources" Foreground="{ThemeResource MainText}" Margin="10"/>
+
+            <ListBox Margin="10" ItemsSource="{Binding Sources}" Width="300"
+                 SelectedItem="{Binding SelectedSource, Mode=TwoWay}" HorizontalAlignment="Left" Height="300"
+                 VerticalAlignment="Center" Background="{ThemeResource ShelfBackground}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path}" Foreground="{ThemeResource MainText}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        
+
+
+        <StackPanel Margin="160,0,0,0" Grid.Row="1" Orientation="Vertical">
+        <TextBlock Text="Theme (Requires restart)" Foreground="{ThemeResource MainText}" Margin="10"/>
+            <ComboBox Margin="10" Width="100" ItemsSource="{Binding Themes}" SelectionChanged="ComboBox_SelectionChanged" SelectedItem="{Binding Theme, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-
         </StackPanel>
 
 

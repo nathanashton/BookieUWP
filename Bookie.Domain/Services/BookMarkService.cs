@@ -28,7 +28,7 @@ namespace Bookie.Domain.Services
 
         public async Task<List<BookMark>> GetAll()
         {
-            return await _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
         public List<BookMark> GetAllForBook(Book book)
@@ -38,7 +38,7 @@ namespace Bookie.Domain.Services
 
         public BookMark Add(BookMark book)
         {
-            return _repository.Add(book).Result;
+            return _repository.AddAsync(book).Result;
         }
 
         public void Update(BookMark book)

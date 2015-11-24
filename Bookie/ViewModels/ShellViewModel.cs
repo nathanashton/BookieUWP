@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
+using Bookie.Common.EventArgs;
 using Bookie.Common.Model;
 using Bookie.Views;
 
@@ -40,6 +42,19 @@ namespace Bookie.ViewModels
         public SettingsPageViewModel SettingsViewModel { get; set; }
 
         public static Book SelectedBook { get; set; }
+
+        public delegate void MessageHandler(BookieMessageEventArgs e);
+
+        public static event MessageHandler ShowMessageEvent;
+
+        public static void ShowMessage(string message, string moredetails)
+        {
+            if (ShowMessageEvent != null)
+            {
+                ShowMessageEvent(new BookieMessageEventArgs {MoreDetails = moredetails, Message = message});
+            }
+        }
+
 
         public ElementTheme Theme
         {

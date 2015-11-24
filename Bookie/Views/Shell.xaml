@@ -5,7 +5,11 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:viewModels="using:Bookie.ViewModels"
       mc:Ignorable="d">
-
+    <Page.Resources>
+        <Flyout x:Key="myFlyout" Placement="Top">
+            <TextBlock Name="flyoutText" />
+        </Flyout>
+    </Page.Resources>
     <Page.DataContext>
         <viewModels:ShellViewModel />
     </Page.DataContext>
@@ -54,7 +58,7 @@
                 <Grid>
 
                     <!-- Navigation Frame -->
-                    <Frame x:Name="SplitViewFrame" Background="{ThemeResource MainBackground}">
+                    <Frame x:Name="SplitViewFrame" Background="{ThemeResource MainBackground}"  FlyoutBase.AttachedFlyout="{StaticResource myFlyout}">
                         <Frame.ContentTransitions>
                             <TransitionCollection>
                                 <NavigationThemeTransition>

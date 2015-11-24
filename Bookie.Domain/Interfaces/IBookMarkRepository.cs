@@ -9,9 +9,9 @@ namespace Bookie.Domain.Interfaces
     {
         ICollection<BookMark> Find(Func<BookMark, bool> where);
 
-        Task<BookMark> Add(BookMark book);
+        Task<BookMark> AddAsync(BookMark book);
 
-        Task<List<BookMark>> GetAll();
+        Task<List<BookMark>> GetAllAsync();
 
         void Update(BookMark book);
 

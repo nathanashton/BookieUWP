@@ -162,7 +162,7 @@ namespace Bookie.ViewModels
             {
                 _filterDescription = value;
                 NotifyPropertyChanged("FilterDescription");
-                Filter();
+             //   Filter();
             }
         }
 
@@ -173,7 +173,7 @@ namespace Bookie.ViewModels
             {
                 _filterBookmarks = value;
                 NotifyPropertyChanged("FilterBookmarks");
-                Filter();
+             //   Filter();
             }
         }
 
@@ -231,7 +231,7 @@ namespace Bookie.ViewModels
             set
             {
                 _filterQuery = value;
-                Filter();
+              //  Filter();
                 NotifyPropertyChanged("FilterColor");
                 NotifyPropertyChanged("FilterQuery");
             }
@@ -274,7 +274,7 @@ namespace Bookie.ViewModels
             {
                 _filterFavourites = value;
                 NotifyPropertyChanged("FilterFavourites");
-                Filter();
+               // Filter();
             }
         }
 
@@ -285,7 +285,7 @@ namespace Bookie.ViewModels
             {
                 _filterReading = value;
                 NotifyPropertyChanged("FilterReading");
-                Filter();
+               // Filter();
             }
         }
 
@@ -296,7 +296,7 @@ namespace Bookie.ViewModels
             {
                 _filterScraped = value;
                 NotifyPropertyChanged("FilterScraped");
-                Filter();
+            //    Filter();
             }
         }
 
@@ -430,6 +430,8 @@ namespace Bookie.ViewModels
 
         public void Filter()
         {
+            
+
             var f = new ObservableCollection<Book>(AllBooks);
             if (!IsNullOrEmpty(FilterQuery))
             {
@@ -473,10 +475,10 @@ namespace Bookie.ViewModels
 
         private async void RefreshBooksFromDb()
         {
-            AllBooks = await _bookService.GetAll();
+            AllBooks = await _bookService.GetAllAsync();
             FilteredBooks = new ObservableCollection<Book>(AllBooks);
             UpdateShelfBooks();
-            FilterCount = "Found " + FilteredBooks.Count;
+            FilterCount = "Found " + FilteredBooks.Count + " results";
         }
 
 
@@ -496,50 +498,51 @@ namespace Bookie.ViewModels
             {
                 case BookEventArgs.BookState.Added:
                     var bookExistsAdded =
-                        AllBooks.Any(
+                        FilteredBooks.Any(
                             b =>
                                 b.Id
                                 == e.Book.Id);
                     if (!bookExistsAdded)
                     {
-                        AllBooks.Add(e.Book);
+                        FilteredBooks.Add(e.Book);
                     }
                     NotifyPropertyChanged("FilterCount");
                     break;
 
                 case BookEventArgs.BookState.Removed:
                     var bookExistsRemoved =
-                        AllBooks.Any(
+                        FilteredBooks.Any(
                             b =>
                                 b.Id
                                 == e.Book.Id);
                     if (bookExistsRemoved)
                     {
-                        AllBooks.Remove(e.Book);
+
+                        FilteredBooks.Remove(e.Book);
                     }
                     NotifyPropertyChanged("FilterCount");
                     break;
 
                 case BookEventArgs.BookState.Updated: //Remove book from list and re-add it
                     var bookExistsUpdated =
-                        AllBooks.FirstOrDefault(
+                        FilteredBooks.FirstOrDefault(
                             b =>
                                 b.FullPathAndFileName
                                 == e.Book.FullPathAndFileName);
                     if (bookExistsUpdated != null)
                     {
-                        var index = AllBooks.IndexOf(bookExistsUpdated);
-                        AllBooks.Remove(bookExistsUpdated);
-                        AllBooks.Insert(index, e.Book);
+                        var index = FilteredBooks.IndexOf(bookExistsUpdated);
+                        FilteredBooks.RemoveAt(index);
+                       FilteredBooks.Insert(index, e.Book);
                     }
                     else
                     {
-                        AllBooks.Add(e.Book);
+                        FilteredBooks.Add(e.Book);
                     }
                     NotifyPropertyChanged("FilterCount");
                     break;
             }
-            FilteredBooks = new ObservableCollection<Book>(AllBooks);
+       //   FilteredBooks = new ObservableCollection<Book>(AllBooks);
         }
 
         public void UpdateBook(Book book)

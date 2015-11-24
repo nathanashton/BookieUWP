@@ -18,7 +18,7 @@ namespace Bookie.Data.Repositories
             }
         }
 
-        public async Task<BookMark> Add(BookMark book)
+        public async Task<BookMark> AddAsync(BookMark book)
         {
             using (var ctx = new Context())
             {
@@ -28,7 +28,7 @@ namespace Bookie.Data.Repositories
             }
         }
 
-        public async Task<List<BookMark>> GetAll()
+        public async Task<List<BookMark>> GetAllAsync()
         {
             using (var ctx = new Context())
             {
