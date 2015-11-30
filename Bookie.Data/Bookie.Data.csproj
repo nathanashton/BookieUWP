@@ -107,9 +107,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20151109050635_Initial.cs" />
-    <Compile Include="Migrations\20151109050635_Initial.designer.cs">
-      <DependentUpon>20151109050635_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\20151130011440_Initial.cs" />
+    <Compile Include="Migrations\20151130011440_Initial.designer.cs">
+      <DependentUpon>20151130011440_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ContextModelSnapshot.cs" />
     <Compile Include="Repositories\BookMarkRepository.cs" />

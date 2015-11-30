@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Media;
 using Bookie.Common;
 using Bookie.Common.EventArgs;
 using Bookie.Common.Model;
+using Bookie.Data.Repositories;
+using Bookie.Domain;
 using Bookie.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -55,6 +57,7 @@ namespace Bookie.Views
             viewmodel = DataContext as MainPageViewModel;
             viewmodel.ShelfVisibility = Visibility.Collapsed;
             UpdateLettersWidths();
+
 
             //var scrollViewer = booksGridView.GetFirstDescendantOfType<ScrollViewer>();
 
@@ -101,8 +104,10 @@ namespace Bookie.Views
         }
 
 
-        private void AppBarButton_Tapped_3(object sender, TappedRoutedEventArgs e)
+        private async void AppBarButton_Tapped_3(object sender, TappedRoutedEventArgs e)
         {
+
+
             if (viewmodel.ShelfHeight == 0)
             {
                 viewmodel.ShelfHeight = 198;
@@ -291,6 +296,8 @@ namespace Bookie.Views
             a.State = BookEventArgs.BookState.Updated;
             viewmodel.BookChanged(this, a);
             viewmodel.UpdateBook(book);
+            ShellViewModel.ShowMessage("Removed from shelf", null);
+
         }
 
 
@@ -320,6 +327,7 @@ namespace Bookie.Views
             a.State = BookEventArgs.BookState.Updated;
             viewmodel.BookChanged(this, a);
             viewmodel.UpdateBook(book);
+            ShellViewModel.ShowMessage("Added to shelf", null);
         }
 
         private void gview_DropCompleted(UIElement sender, DropCompletedEventArgs args)

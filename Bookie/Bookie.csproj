@@ -126,7 +126,6 @@
     <Compile Include="Letter.cs" />
     <Compile Include="Mvvm\BindableBase.cs" />
     <Compile Include="Mvvm\DelegateCommand.cs" />
-    <Compile Include="Mvvm\NotifyBase.cs" />
     <Compile Include="Notifications.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="ViewModels\ImportProgressViewModel.cs" />

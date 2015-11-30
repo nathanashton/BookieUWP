@@ -121,6 +121,8 @@
     <Compile Include="Model\BookMark.cs" />
     <Compile Include="Model\Cover.cs" />
     <Compile Include="Model\GoogleResult.cs" />
+    <Compile Include="Model\TagResult.cs" />
+    <Compile Include="NotifyBase.cs" />
     <Compile Include="ProgressService.cs" />
     <Compile Include="EventArgs\ProgressWindowEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

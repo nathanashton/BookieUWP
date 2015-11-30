@@ -42,6 +42,9 @@
             </Grid.ColumnDefinitions>
             <CommandBar Visibility="{Binding FullScreen, Converter={StaticResource BoolVisibilityConverter}}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50"
                         Background="{ThemeResource CommandBarBackground}" Template="{StaticResource CommandBarControlTemplate1}">
+                
+                <AppBarButton Tapped="AppBarButton_Tapped" Icon="Orientation"/>
+                
                 <AppBarButton Icon="Bookmarks" Foreground="{ThemeResource CommandBarForeground}">
                     <AppBarButton.Flyout>
                         <Flyout>

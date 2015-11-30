@@ -1,4 +1,5 @@
-﻿using Bookie.Mvvm;
+﻿using Bookie.Common;
+using Bookie.Mvvm;
 
 namespace Bookie
 {

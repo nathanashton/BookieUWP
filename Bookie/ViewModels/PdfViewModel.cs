@@ -7,6 +7,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Bookie.Common;
 using Bookie.Common.Model;
 using Bookie.Data.Repositories;
 using Bookie.Domain.Services;

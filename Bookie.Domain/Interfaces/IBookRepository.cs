@@ -16,5 +16,8 @@ namespace Bookie.Domain.Interfaces
         void Update(Book book);
 
         void Remove(Book book);
+
+        bool Exists(Book book);
+
     }
 }

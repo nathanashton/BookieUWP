@@ -81,5 +81,13 @@ namespace Bookie.Data.Repositories
                 ctx.SaveChanges();
             }
         }
+
+        public bool Exists(Book book)
+        {
+            using (var ctx = new Context())
+            {
+                return ctx.Books.Any(x => x.FullPathAndFileName == book.FullPathAndFileName);
+            }
+        }
     }
 }

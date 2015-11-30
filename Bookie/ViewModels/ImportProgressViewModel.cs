@@ -35,6 +35,18 @@ namespace Bookie.ViewModels
             }
         }
 
+        private string _operationSubText;
+
+        public string OperationSubText
+        {
+            get { return _operationSubText; }
+            set
+            {
+                _operationSubText = value;
+                NotifyPropertyChanged("OperationSubText");
+            }
+        }
+
         public int Progress
         {
             get { return _progress; }

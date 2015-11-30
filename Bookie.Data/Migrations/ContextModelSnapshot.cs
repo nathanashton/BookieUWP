@@ -1,11 +1,14 @@
 using System;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
+using Microsoft.Data.Entity.Metadata;
+using Microsoft.Data.Entity.Migrations;
+using Bookie.Data;
 
 namespace Bookie.Data.Migrations
 {
-    [DbContext(typeof (Context))]
-    internal class ContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(Context))]
+    partial class ContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -13,96 +16,96 @@ namespace Bookie.Data.Migrations
                 .Annotation("ProductVersion", "7.0.0-beta8-15964");
 
             modelBuilder.Entity("Bookie.Common.Model.Book", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd();
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                b.Property<string>("Abstract");
+                    b.Property<string>("Abstract");
 
-                b.Property<string>("Author");
+                    b.Property<string>("Author");
 
-                b.Property<int?>("CurrentPage");
+                    b.Property<int?>("CurrentPage");
 
-                b.Property<DateTime?>("DatePublished");
+                    b.Property<DateTime?>("DatePublished");
 
-                b.Property<bool>("Favourite");
+                    b.Property<bool>("Favourite");
 
-                b.Property<string>("FileName");
+                    b.Property<string>("FileName");
 
-                b.Property<string>("FullPathAndFileName");
+                    b.Property<string>("FullPathAndFileName");
 
-                b.Property<string>("Isbn");
+                    b.Property<string>("Isbn");
 
-                b.Property<int?>("Pages");
+                    b.Property<int?>("Pages");
 
-                b.Property<string>("Publisher");
+                    b.Property<string>("Publisher");
 
-                b.Property<int>("Rating");
+                    b.Property<int>("Rating");
 
-                b.Property<bool>("Scraped");
+                    b.Property<bool>("Scraped");
 
-                b.Property<bool>("Shelf");
+                    b.Property<bool>("Shelf");
 
-                b.Property<int>("SourceId");
+                    b.Property<int>("SourceId");
 
-                b.Property<string>("Title");
+                    b.Property<string>("Title");
 
-                b.HasKey("Id");
-            });
+                    b.HasKey("Id");
+                });
 
             modelBuilder.Entity("Bookie.Common.Model.BookMark", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd();
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                b.Property<int?>("BookId");
+                    b.Property<int?>("BookId");
 
-                b.Property<int>("PageNumber");
+                    b.Property<int>("PageNumber");
 
-                b.HasKey("Id");
-            });
+                    b.HasKey("Id");
+                });
 
             modelBuilder.Entity("Bookie.Common.Model.Cover", b =>
-            {
-                b.Property<int>("Id");
+                {
+                    b.Property<int>("Id");
 
-                b.Property<string>("FileName");
+                    b.Property<string>("FileName");
 
-                b.HasKey("Id");
-            });
+                    b.HasKey("Id");
+                });
 
             modelBuilder.Entity("Bookie.Common.Model.Source", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd();
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                b.Property<string>("Path");
+                    b.Property<string>("Path");
 
-                b.Property<string>("Token");
+                    b.Property<string>("Token");
 
-                b.HasKey("Id");
-            });
+                    b.HasKey("Id");
+                });
 
             modelBuilder.Entity("Bookie.Common.Model.Book", b =>
-            {
-                b.HasOne("Bookie.Common.Model.Source")
-                    .WithMany()
-                    .ForeignKey("SourceId");
-            });
+                {
+                    b.HasOne("Bookie.Common.Model.Source")
+                        .WithMany()
+                        .ForeignKey("SourceId");
+                });
 
             modelBuilder.Entity("Bookie.Common.Model.BookMark", b =>
-            {
-                b.HasOne("Bookie.Common.Model.Book")
-                    .WithMany()
-                    .ForeignKey("BookId");
-            });
+                {
+                    b.HasOne("Bookie.Common.Model.Book")
+                        .WithMany()
+                        .ForeignKey("BookId");
+                });
 
             modelBuilder.Entity("Bookie.Common.Model.Cover", b =>
-            {
-                b.HasOne("Bookie.Common.Model.Book")
-                    .WithOne()
-                    .ForeignKey("Bookie.Common.Model.Cover", "Id");
-            });
+                {
+                    b.HasOne("Bookie.Common.Model.Book")
+                        .WithOne()
+                        .ForeignKey("Bookie.Common.Model.Cover", "Id");
+                });
         }
     }
 }

@@ -11,6 +11,7 @@ using Bookie.Common.EventArgs;
 using Bookie.Common.Interfaces;
 using Bookie.Common.Model;
 using Bookie.Data.Repositories;
+using Bookie.Domain;
 using Bookie.Domain.Services;
 using Bookie.Mvvm;
 using Bookie.Views;
@@ -29,6 +30,16 @@ namespace Bookie.ViewModels
             }
         }
 
+        private ObservableCollection<TagResult> _tags;
+
+        public ObservableCollection<TagResult> Tags
+        {
+            get { return _tags; }
+            set { _tags = value;
+                NotifyPropertyChanged("Tags");
+            }
+        }
+        
         private readonly BookService _bookService = new BookService(new BookRepository());
         private List<Book> _allBooks;
 
@@ -468,6 +479,20 @@ namespace Bookie.ViewModels
                 f = new ObservableCollection<Book>(result);
             }
 
+            // Currently only returns results that contain ALL tags
+            if (Tags != null)
+            {
+                foreach (var word in Tags)
+                {
+                    if (word.Checked)
+                    {
+                        var result = f.Where(x => x.Title.Split(' ').Contains(word.Word));
+                        f = new ObservableCollection<Book>(result);
+                    }
+                }
+            }
+
+
             FilteredBooks = new ObservableCollection<Book>(f);
             FilterCount = "Found " + FilteredBooks.Count;
             NotifyPropertyChanged("FilterColor");
@@ -477,6 +502,9 @@ namespace Bookie.ViewModels
         {
             AllBooks = await _bookService.GetAllAsync();
             FilteredBooks = new ObservableCollection<Book>(AllBooks);
+            Tagger t = new Tagger(new BookRepository());
+            var result = await t.Go();
+            Tags = new System.Collections.ObjectModel.ObservableCollection<TagResult>(result);
             UpdateShelfBooks();
             FilterCount = "Found " + FilteredBooks.Count + " results";
         }

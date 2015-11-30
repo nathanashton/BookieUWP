@@ -412,7 +412,7 @@
                 <AppBarButton Foreground="{Binding FilterColor}" Label="Filter" Icon="Filter">
                     <AppBarButton.Flyout>
                         <Flyout Closed="Flyout_Closed">
-                            <Grid Margin="10" Width="350">
+                            <Grid Margin="10" Width="400">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="45" />
                                     <RowDefinition Height="45" />
@@ -420,6 +420,10 @@
 
                                     <RowDefinition Height="45" />
                                     <RowDefinition Height="*" />
+                                    <RowDefinition Height="45" />
+
+                                    <RowDefinition Height="Auto" />
+
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -460,6 +464,24 @@
                                               IsChecked="{Binding FilterBookmarks, Mode=TwoWay}" Foreground="White" />
                                 </StackPanel>
 
+<TextBlock VerticalAlignment="Center" Margin="5" Text="Tags" Foreground="White" Grid.Column="0" Grid.Row="5"/>
+                                <Button Margin="5" Content="Clear" Grid.Row="5" Grid.Column="1"/>
+                                
+                                <GridView SelectionMode="Extended" ItemsSource="{Binding Tags}" Grid.ColumnSpan="2" Grid.Column="0"  Grid.Row="6" Height="200">
+                                    <GridView.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding Checked, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                                <TextBlock Margin="0,-6,0,0" Text="{Binding}" FontSize="11" VerticalAlignment="Center" />
+                                            </CheckBox>
+                                        </DataTemplate>
+                                    </GridView.ItemTemplate>
+                                    <GridView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapGrid Margin="0"  Orientation="Horizontal" HorizontalAlignment="Center" />
+                                        </ItemsPanelTemplate>
+                                    </GridView.ItemsPanel>
+                                </GridView>
+                                
 
                             </Grid>
                         </Flyout>

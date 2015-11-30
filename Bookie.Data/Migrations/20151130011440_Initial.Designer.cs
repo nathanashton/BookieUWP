@@ -8,7 +8,7 @@ using Bookie.Data;
 namespace Bookie.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20151109050635_Initial")]
+    [Migration("20151130011440_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

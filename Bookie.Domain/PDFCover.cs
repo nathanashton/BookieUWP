@@ -5,7 +5,6 @@ using Windows.Storage;
 using Bookie.Common;
 using Bookie.Common.Model;
 using Bookie.Domain.Interfaces;
-using Bookie.Domain.Services;
 
 namespace Bookie.Domain
 {
@@ -13,50 +12,41 @@ namespace Bookie.Domain
     {
         private PdfDocument _pdfDocument;
 
-        public async Task<string> GenerateCoverImage(Book book, uint pageIndex, ISourceRepository sourceRepository)
+        public async Task<string> GenerateCoverImage(Book book, uint pageIndex, ISourceRepository sourceRepository, StorageFolder storageFolder, StorageFile pdfFile)
         {
             try
             {
-                var sources = new SourceService(sourceRepository);
-                var storageFolder = await sources.GetStorageFolderFromSourceAsync(book.Source);
-
-                var pdfFile = await storageFolder.GetFileAsync(book.FileName);
-                ///Load Pdf File
-                //  StorageFile pdfFile = null;
-
-                _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
-
-                if (_pdfDocument != null && _pdfDocument.PageCount > 0)
+               // var pdfFile = await storageFolder.GetFileAsync(book.FileName);
+        
+                try
                 {
-                    //Get Pdf page
-                    var pdfPage = _pdfDocument.GetPage(pageIndex);
+                    _pdfDocument = await PdfDocument.LoadFromFileAsync(pdfFile);
 
-                    if (pdfPage != null)
-                    {
-                        // next, generate a bitmap of the page
-                        var thumbfolder = await Globals.GetCoversFolder();
-
-                        var pngFile =
-                            await
-                                thumbfolder.CreateFileAsync(Utils.GenerateRandomString() + ".png",
-                                    CreationCollisionOption.ReplaceExisting);
-
-                        if (pngFile != null)
-                        {
-                            var randomStream = await pngFile.OpenAsync(FileAccessMode.ReadWrite);
-                            await pdfPage.RenderToStreamAsync(randomStream);
-                            await randomStream.FlushAsync();
-
-                            randomStream.Dispose();
-                            pdfPage.Dispose();
-                            //await this.resfreshcontent();
-                            return pngFile.Path;
-                        }
-                        return null;
-                    }
+                }
+                catch (Exception)
+                {
                     return null;
                 }
-                return null;
+
+                if (_pdfDocument == null || _pdfDocument.PageCount <= 0) return null;
+                //Get Pdf page
+                var pdfPage = _pdfDocument.GetPage(pageIndex);
+
+                if (pdfPage == null) return null;
+                // next, generate a bitmap of the page
+                var thumbfolder = await Globals.GetCoversFolder();
+
+                var pngFile = await thumbfolder.CreateFileAsync(Utils.GenerateRandomString() + ".png", CreationCollisionOption.ReplaceExisting);
+
+                if (pngFile == null) return null;
+                var randomStream = await pngFile.OpenAsync(FileAccessMode.ReadWrite);
+                await pdfPage.RenderToStreamAsync(randomStream, new PdfPageRenderOptions() {DestinationHeight=660, DestinationWidth=540});
+                await randomStream.FlushAsync();
+
+                randomStream.Dispose();
+                pdfPage.Dispose();
+                    
+                return pngFile.Path;
             }
             catch (Exception)
             {

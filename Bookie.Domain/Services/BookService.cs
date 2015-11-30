@@ -51,6 +51,11 @@ namespace Bookie.Domain.Services
             _repository.Remove(book);
         }
 
+        public bool Exists(Book book)
+        {
+            return _repository.Exists(book);
+        }
+
 
     }
 }

@@ -98,11 +98,7 @@ namespace Bookie.Views
             }
         }
 
-        private ApplicationViewOrientation GetOrientation()
-        {
-            var applicationView = ApplicationView.GetForCurrentView();
-            return applicationView.Orientation;
-        }
+
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -154,9 +150,9 @@ namespace Bookie.Views
         public double PageNumberToOffset(int pageNumber)
         {
             var size = GetScreenSize();
-            switch (GetOrientation())
+            switch (ViewModel.PageOrientation)
             {
-                case ApplicationViewOrientation.Landscape:
+                case Orientation.Horizontal:
                     if ((int) ScrollViewer.ExtentWidth == 0)
                     {
                         var pp2 = size.Width*ViewModel.PageCount/ViewModel.PageCount;
@@ -168,7 +164,7 @@ namespace Bookie.Views
                     var result1 = pp1*pageNumber - pp1;
                     return result1;
 
-                case ApplicationViewOrientation.Portrait:
+                case Orientation.Vertical:
                     // If Scrollviewer hasnt been loaded with pages yet
                     if ((int) ScrollViewer.ExtentHeight == 0)
                     {
@@ -187,14 +183,14 @@ namespace Bookie.Views
 
         private int OffsetToPageNumber(double offset)
         {
-            switch (GetOrientation())
+            switch (ViewModel.PageOrientation)
             {
-                case ApplicationViewOrientation.Landscape:
+                case Orientation.Horizontal:
                     var offsetToPage = ScrollViewer.ExtentWidth/ViewModel.PageCount;
                     var pageNumber = offset/offsetToPage;
                     return Convert.ToInt32(pageNumber + 1);
 
-                case ApplicationViewOrientation.Portrait:
+                case Orientation.Vertical:
                     var offsetToPage2 = ScrollViewer.ExtentHeight/ViewModel.PageCount;
                     var pageNumber2 = offset/offsetToPage2;
                     return Convert.ToInt32(pageNumber2 + 1);
@@ -204,15 +200,15 @@ namespace Bookie.Views
 
         public void ScrollToPage(double offset)
         {
-            switch (GetOrientation())
+            switch (ViewModel.PageOrientation)
             {
-                case ApplicationViewOrientation.Landscape:
+                case Orientation.Horizontal:
                     //  ScrollViewer.ScrollToHorizontalOffset(offset);
 
                     ScrollViewer.ChangeView(offset, ScrollViewer.VerticalOffset, ScrollViewer.ZoomFactor);
                     break;
 
-                case ApplicationViewOrientation.Portrait:
+                case Orientation.Vertical:
                     //  ScrollViewer.ScrollToVerticalOffset(offset);
                     ScrollViewer.ChangeView(ScrollViewer.HorizontalOffset, offset, ScrollViewer.ZoomFactor);
 
@@ -222,14 +218,14 @@ namespace Bookie.Views
 
         private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            switch (GetOrientation())
+            switch (ViewModel.PageOrientation)
             {
-                case ApplicationViewOrientation.Landscape:
+                case Orientation.Horizontal:
                     ViewModel.CurrentPage = OffsetToPageNumber(ScrollViewer.HorizontalOffset);
                     break;
 
 
-                case ApplicationViewOrientation.Portrait:
+                case Orientation.Vertical:
                     ViewModel.CurrentPage = OffsetToPageNumber(ScrollViewer.VerticalOffset);
                     break;
             }
@@ -316,6 +312,11 @@ namespace Bookie.Views
         private void Button_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var s = "t";
+        }
+
+        private void AppBarButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.PageOrientation = ViewModel.PageOrientation == Orientation.Vertical ? Orientation.Horizontal : Orientation.Vertical;
         }
     }
 }

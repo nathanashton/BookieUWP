@@ -14,6 +14,8 @@
         <StackPanel Margin="0,10,0,0" Orientation="Vertical">
             <TextBlock Width="280" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
                        Margin="0,10,0,10" Text="{Binding Operation}" />
+            <TextBlock Width="280" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                       Margin="0,10,0,10" Text="{Binding OperationSubText}" />
             <ProgressBar IsIndeterminate="False" Height="20" Value="{Binding Progress}" />
         </StackPanel>
     </Grid>

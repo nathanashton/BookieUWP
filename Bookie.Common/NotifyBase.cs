@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using Windows.UI.Core;
 
-namespace Bookie.Mvvm
+namespace Bookie.Common
 {
     public class NotifyBase : INotifyPropertyChanged
     {

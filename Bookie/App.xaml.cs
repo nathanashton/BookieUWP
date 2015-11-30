@@ -28,7 +28,7 @@ namespace Bookie
         ///     Initializes the singleton application object.  This is the first line of authored code
         ///     executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        private readonly ILogger Log;
+         public static ILogger Log;
 
         public App()
         {
@@ -69,7 +69,7 @@ namespace Bookie
             Suspending += OnSuspending;
             using (var db = new Context())
             {
-                db.Database.Migrate();
+             db.Database.Migrate();
             }
             var covers = Globals.GetCoversFolder();
 
