@@ -30,7 +30,7 @@ namespace Bookie.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Book>().Ignore(e => e.Image);
-            modelBuilder.Entity<Book>().HasOne(e => e.Source).WithMany(r => r.Books).ForeignKey(r => r.SourceId);
+            modelBuilder.Entity<Book>().HasOne(e => e.Source).WithMany(r => r.Books).HasForeignKey(r => r.SourceId);
 
             modelBuilder.Entity<Book>().HasOne(e => e.Cover).WithOne(r => r.Book);
             modelBuilder.Entity<Book>().HasMany(e => e.BookMarks).WithOne(t => t.Book);

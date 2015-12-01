@@ -67,10 +67,10 @@ namespace Bookie
                 WindowsCollectors.Session);
             InitializeComponent();
             Suspending += OnSuspending;
-            using (var db = new Context())
-            {
-             db.Database.Migrate();
-            }
+            //using (var db = new Context())
+            //{
+            //    db.Database.Migrate();
+            //}
             var covers = Globals.GetCoversFolder();
 
 

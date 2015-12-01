@@ -50,7 +50,8 @@ namespace Bookie.Data.Migrations
                         name: "FK_Book_Source_SourceId",
                         column: x => x.SourceId,
                         principalTable: "Source",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
             migrationBuilder.CreateTable(
                 name: "BookMark",
@@ -68,7 +69,8 @@ namespace Bookie.Data.Migrations
                         name: "FK_BookMark_Book_BookId",
                         column: x => x.BookId,
                         principalTable: "Book",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
             migrationBuilder.CreateTable(
                 name: "Cover",
@@ -84,7 +86,8 @@ namespace Bookie.Data.Migrations
                         name: "FK_Cover_Book_Id",
                         column: x => x.Id,
                         principalTable: "Book",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
         }
 

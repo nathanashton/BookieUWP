@@ -10,9 +10,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Syncfusion.Pdf.Parsing;
 using static System.String;
 
 namespace Bookie.Domain
@@ -200,9 +202,13 @@ namespace Bookie.Domain
                             book = UseIsbn(pdfFiles[i] as StorageFile, book);
                         }
 
+
+
                         var cover = new Cover();
                         var coverPath = _pdfCover.GenerateCoverImage(book, 0, _sourcerepo, storageFolder, pdfFiles[i] as StorageFile).Result;
                         cover.FileName = Path.GetFileName(coverPath);
+
+                        
                         book.Cover = cover;
                         book = _bookService.Add(book);
                         Worker.ReportProgress(progress, book);

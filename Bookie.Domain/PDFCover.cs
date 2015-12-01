@@ -30,23 +30,29 @@ namespace Bookie.Domain
 
                 if (_pdfDocument == null || _pdfDocument.PageCount <= 0) return null;
                 //Get Pdf page
-                var pdfPage = _pdfDocument.GetPage(pageIndex);
 
-                if (pdfPage == null) return null;
-                // next, generate a bitmap of the page
-                var thumbfolder = await Globals.GetCoversFolder();
 
-                var pngFile = await thumbfolder.CreateFileAsync(Utils.GenerateRandomString() + ".png", CreationCollisionOption.ReplaceExisting);
+                using (var pdfPage = _pdfDocument.GetPage(pageIndex))
+                {
+                    if (pdfPage == null) return null;
+                    // next, generate a bitmap of the page
+                    var thumbfolder = await Globals.GetCoversFolder();
 
-                if (pngFile == null) return null;
-                var randomStream = await pngFile.OpenAsync(FileAccessMode.ReadWrite);
-                await pdfPage.RenderToStreamAsync(randomStream, new PdfPageRenderOptions() {DestinationHeight=660, DestinationWidth=540});
-                await randomStream.FlushAsync();
+                    var pngFile = await thumbfolder.CreateFileAsync(Utils.GenerateRandomString() + ".png", CreationCollisionOption.ReplaceExisting);
 
-                randomStream.Dispose();
-                pdfPage.Dispose();
-                    
-                return pngFile.Path;
+                    if (pngFile == null) return null;
+                    using (var randomStream = await pngFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        await pdfPage.RenderToStreamAsync(randomStream, new PdfPageRenderOptions() { DestinationHeight = 340, DestinationWidth = 240 });
+                        await randomStream.FlushAsync();
+
+                    }
+
+
+                    return pngFile.Path;
+                }
+
+
             }
             catch (Exception)
             {

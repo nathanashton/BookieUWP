@@ -37,8 +37,8 @@ namespace Bookie.Data.Repositories
         {
             using (var ctx = new Context())
             {
-                return
-                    await ctx.Books.Include(r => r.Cover).Include(x => x.BookMarks).Include(t => t.Source).ToListAsync();
+                return await ctx.Books.Include(x=> x.BookMarks).Include(t=> t.Source).Include(r=> r.Cover).ToListAsync();
+                // await ctx.Books.Include(r => r.Cover).Include(x => x.BookMarks).Include(t => t.Source).ToListAsync();
             }
         }
 

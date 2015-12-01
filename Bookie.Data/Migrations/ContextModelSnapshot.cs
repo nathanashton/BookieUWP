@@ -13,7 +13,7 @@ namespace Bookie.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Annotation("ProductVersion", "7.0.0-beta8-15964");
+                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348");
 
             modelBuilder.Entity("Bookie.Common.Model.Book", b =>
                 {
@@ -90,21 +90,21 @@ namespace Bookie.Data.Migrations
                 {
                     b.HasOne("Bookie.Common.Model.Source")
                         .WithMany()
-                        .ForeignKey("SourceId");
+                        .HasForeignKey("SourceId");
                 });
 
             modelBuilder.Entity("Bookie.Common.Model.BookMark", b =>
                 {
                     b.HasOne("Bookie.Common.Model.Book")
                         .WithMany()
-                        .ForeignKey("BookId");
+                        .HasForeignKey("BookId");
                 });
 
             modelBuilder.Entity("Bookie.Common.Model.Cover", b =>
                 {
                     b.HasOne("Bookie.Common.Model.Book")
                         .WithOne()
-                        .ForeignKey("Bookie.Common.Model.Cover", "Id");
+                        .HasForeignKey("Bookie.Common.Model.Cover", "Id");
                 });
         }
     }
