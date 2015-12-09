@@ -13,6 +13,7 @@ namespace Bookie.Common
         public static List<Theme> Themes { get; set; }
         public static Theme Theme { get; set; }
 
+
         public static void LoadSettings()
         {
             // Load all available themes

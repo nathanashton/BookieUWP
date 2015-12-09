@@ -102,6 +102,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BMark.cs" />
     <Compile Include="Converters\BoolImageConverter.cs" />
     <Compile Include="Converters\BoolVisibilityConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
@@ -164,6 +165,7 @@
     <Content Include="Assets\bookmark.png" />
     <Content Include="Assets\nocover.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\Square310x310Logo.scale-100.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

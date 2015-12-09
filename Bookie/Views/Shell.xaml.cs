@@ -27,9 +27,24 @@ namespace Bookie.Views
 
 
             ShellViewModel.ShowMessageEvent += ShellViewModel_ShowMessageEvent1;
+            GoToViewerEvent += Shell_GoToViewerEvent;
 
 
+        }
 
+        public static void GoToViewer()
+        {
+            if (GoToViewerEvent != null)
+            {
+                GoToViewerEvent(null, null);
+            }
+        }
+
+        private void Shell_GoToViewerEvent(object sender, EventArgs e)
+        {
+            if (ShellViewModel.SelectedBook == null) return;
+            SplitViewFrame.Navigate(typeof(PdfPage));
+            SplitViewFrame.DataContext = new ViewModels.PdfViewModel();
         }
 
         private void ShellViewModel_ShowMessageEvent1(Common.EventArgs.BookieMessageEventArgs e)
@@ -46,14 +61,14 @@ namespace Bookie.Views
             {
                 return;
             }
-            if (menuItem != null && menuItem.IsNavigation)
+            if (menuItem.IsNavigation)
             {
                 SplitViewFrame.Navigate(menuItem.NavigationDestination);
                 SplitViewFrame.DataContext = menuItem.ViewModel;
             }
             else
             {
-                if (menuItem != null) menuItem.Command.Execute(null);
+                menuItem.Command.Execute(null);
             }
         }
 
@@ -91,5 +106,14 @@ namespace Bookie.Views
             FlyoutBase.ShowAttachedFlyout(SplitViewFrame as FrameworkElement);
             timer.Start();
         }
+
+
+        public static event EventHandler GoToViewerEvent;
+
+
+
+      
+    
+        
     }
 }

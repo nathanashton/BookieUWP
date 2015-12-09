@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Bookie.Common.EventArgs;
 using Bookie.Common.Model;
@@ -46,6 +47,8 @@ namespace Bookie.ViewModels
         public delegate void MessageHandler(BookieMessageEventArgs e);
 
         public static event MessageHandler ShowMessageEvent;
+
+        public static List<Book> Books;
 
         public static void ShowMessage(string message, string moredetails)
         {

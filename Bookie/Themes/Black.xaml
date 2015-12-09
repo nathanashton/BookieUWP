@@ -11,7 +11,14 @@
     <Brush x:Key="CommandBarBackground">Black</Brush>
     <Brush x:Key="CommandBarForeground">White</Brush>
 
-    <Brush x:Key="MainBackground">#2b2b2b</Brush>
+    <Color x:Key="MainBackgroundColorGradient">#00000000</Color>
+
+    <Brush x:Key="MainBackground">Black</Brush>
+    <Color x:Key="MainBackgroundColor">Black</Color>
+
+
+
+
     <Brush x:Key="MainText">White</Brush>
     <Brush x:Key="SubText">#BCBCB6</Brush>
 

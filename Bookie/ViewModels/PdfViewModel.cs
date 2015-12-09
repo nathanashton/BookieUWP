@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Windows.Data.Pdf;
@@ -29,6 +30,30 @@ namespace Bookie.ViewModels
                 NotifyPropertyChanged("FullScreen");
             }
         }
+
+        private List<string> _bMarks;
+
+        public List<string> BMarks
+        {
+            get { return _bMarks; }
+            set { _bMarks = value;
+                NotifyPropertyChanged("BMarks");
+            }
+        }
+
+        private string _selectedBookMarkString;
+
+        public string SelectedBookMarkString
+        {
+            get { return _selectedBookMarkString; }
+            set
+            {
+                _selectedBookMarkString = value;
+                NotifyPropertyChanged("SelectedBookMarkString");
+            }
+        }
+
+
         private readonly BookMarkService _bookMarkService;
         private readonly BookService _bookService;
         private Visibility _bookMarksVisibility;
@@ -52,6 +77,7 @@ namespace Bookie.ViewModels
             _bookMarkService = new BookMarkService(new BookMarkRepository());
             _bookService = new BookService(new BookRepository());
             BookMarksVisibility = Visibility.Collapsed;
+            BMarks = new List<string>();
         }
 
         public PdfLoadedDocument doc
@@ -92,6 +118,9 @@ namespace Bookie.ViewModels
             {
                 _currentPage = value;
                 NotifyPropertyChanged("CurrentPage");
+                
+
+                //Loop through BMarks, if matching page number is found t
             }
         }
 
@@ -303,5 +332,7 @@ namespace Bookie.ViewModels
                 PdfLoadedEvent(this, null);
             }
         }
+
+
     }
 }

@@ -5,6 +5,9 @@ using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Bookie.Data.Repositories;
+using Bookie.Domain.Services;
+using Bookie.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/p/?LinkID=234238
 
@@ -42,6 +45,8 @@ namespace Bookie.Views
 
                 // Optional: Add a progress ring to your splash screen to show users that content is loading
                 PositionRing();
+
+                PositionText();
             }
 
             // Create a Frame to act as the navigation context
@@ -69,6 +74,11 @@ namespace Bookie.Views
                 splashImageRect.Y + splashImageRect.Height + splashImageRect.Height*0.1);
         }
 
+        private void PositionText()
+        {
+         
+        }
+
         private void ExtendedSplash_OnResize(object sender, WindowSizeChangedEventArgs e)
         {
             // Safely update the extended splash screen image coordinates. This function will be fired in response to snapping, unsnapping, rotation, etc...
@@ -91,13 +101,17 @@ namespace Bookie.Views
 
         private async void DismissExtendedSplash()
         {
-            await Task.Delay(TimeSpan.FromSeconds(3)); // set your desired delay  
+
+            var AllBooks = await new BookService(new BookRepository()).GetAllAsync();
+            ShellViewModel.Books = AllBooks;
 
             // Navigate to mainpage
             rootFrame.Navigate(typeof (Shell));
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;
         }
+
+    
 
         private void DismissSplashButton_Click(object sender, RoutedEventArgs e)
         {

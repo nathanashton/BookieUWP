@@ -20,13 +20,49 @@ using static System.String;
 namespace Bookie.ViewModels
 {
     public class MainPageViewModel : NotifyBase, IProgressSubscriber
-    { private double _shelfHeight;
+    {
+        private Visibility _bookDetailsVisibility;
+        private Visibility _editBookVisibility;
+
+        public Visibility BookDetailsVisibility
+        {
+            get { return _bookDetailsVisibility; }
+            set { _bookDetailsVisibility = value;
+                NotifyPropertyChanged("BookDetailsVisibility");
+            }
+        }
+
+
+        public Visibility EditBookVisibility
+        {
+            get { return _editBookVisibility; }
+            set
+            {
+                _editBookVisibility = value;
+                NotifyPropertyChanged("EditBookVisibility");
+            }
+        }
+
+
+
+
+        private double _shelfHeight;
 
         public double ShelfHeight
         {
             get { return _shelfHeight; }
             set { _shelfHeight = value;
                 NotifyPropertyChanged("ShelfHeight");
+            }
+        }
+
+        private double _offsetPosition;
+
+        public double OffsetPosition
+        {
+            get { return _offsetPosition; }
+            set { _offsetPosition = value;
+                NotifyPropertyChanged("OffsetPosition");
             }
         }
 
@@ -144,7 +180,15 @@ namespace Bookie.ViewModels
 
             ProgressService.RegisterSubscriber(this);
             AllBooks = new List<Book>();
-            RefreshBooksFromDb();
+
+
+            AllBooks = ShellViewModel.Books;
+            FilteredBooks = new ObservableCollection<Book>(AllBooks);
+            GetTags();
+            UpdateShelfBooks();
+            FilterCount = "Found " + FilteredBooks.Count + " results";
+
+
             Ratings = new List<int>();
             Ratings.Add(0);
             Ratings.Add(1);
@@ -153,6 +197,13 @@ namespace Bookie.ViewModels
             Ratings.Add(4);
             Ratings.Add(5);
             BooksScroll = ScrollMode.Enabled;
+        }
+
+        private async void GetTags()
+        {
+            Tagger t = new Tagger(new BookRepository());
+            var result = await t.Go();
+            Tags = new System.Collections.ObjectModel.ObservableCollection<TagResult>(result);
         }
 
         public ObservableCollection<Letter> Letters
@@ -444,7 +495,7 @@ namespace Bookie.ViewModels
             
 
             var f = new ObservableCollection<Book>(AllBooks);
-            if (!IsNullOrEmpty(FilterQuery))
+            if (!IsNullOrWhiteSpace(FilterQuery) && !IsNullOrEmpty(FilterQuery))
             {
                 var result = f.Where(x => x.Title.ToLower().Contains(FilterQuery.ToLower()));
                 f = new ObservableCollection<Book>(result);

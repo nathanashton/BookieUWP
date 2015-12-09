@@ -8,17 +8,10 @@
     mc:Ignorable="d">
     <Page.Resources>
         <converters:StarRatingConverter x:Key="StarRatingConverter" />
-        <converters:BoolImageConverter x:Key="BoolImageConverter" />
         <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
         <converters:InvertBoolVisibilityConverter x:Key="InvertBoolVisibilityConverter" />
-
         <converters:PageNumberConverter x:Key="PageNumberConverter" />
         <converters:PageNumberConverter2 x:Key="PageNumberConverter2" />
-        
-        <ControlTemplate x:Key="buttonTemplate" TargetType="Button">
-            <Path Data="M0,0 L0,80 L-80,0 z" Fill="{ThemeResource NavBarBackground}" Stroke="{ThemeResource NavBarBackground}" StrokeThickness="1" />
-        </ControlTemplate>
-        
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -40,15 +33,22 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <CommandBar Visibility="{Binding FullScreen, Converter={StaticResource BoolVisibilityConverter}}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50"
-                        Background="{ThemeResource CommandBarBackground}" Template="{StaticResource CommandBarControlTemplate1}">
-                
-                <AppBarButton Tapped="AppBarButton_Tapped" Icon="Orientation"/>
-                
+            <CommandBar Visibility="{Binding FullScreen, Converter={StaticResource BoolVisibilityConverter}}"
+                        Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Padding="0" Height="50"
+                        Background="{ThemeResource CommandBarBackground}"
+                        Template="{StaticResource CommandBarControlTemplate1}">
+
+                <AppBarButton Tapped="AppBarButton_Tapped" Icon="Orientation" />
+
                 <AppBarButton Icon="Bookmarks" Foreground="{ThemeResource CommandBarForeground}">
                     <AppBarButton.Flyout>
                         <Flyout>
-                            <Grid Height="500">
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="Background" Value="{ThemeResource MainBackground}" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <Grid Height="500" Background="{ThemeResource MainBackground}">
 
 
                                 <ListView SelectionMode="Single"
@@ -73,9 +73,16 @@
                 <AppBarButton Icon="Zoom" Foreground="{ThemeResource CommandBarForeground}">
                     <AppBarButton.Flyout>
                         <Flyout>
-                            <StackPanel Margin="10" Orientation="Vertical">
-                                <TextBlock HorizontalAlignment="Center" Margin="5" Text="Goto" Foreground="{ThemeResource MainText}"/>
-                                <TextBox x:Name="JumpToPage" Margin="5" Width="50" Height="25" LostFocus="TextBox_LostFocus" TextChanged="TextBox_TextChanged" />
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="Background" Value="{ThemeResource MainBackground}" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                            <StackPanel Margin="10" Orientation="Vertical" Background="{ThemeResource MainBackground}">
+                                <TextBlock HorizontalAlignment="Center" Margin="5" Text="Goto"
+                                           Foreground="{ThemeResource MainText}" />
+                                <TextBox x:Name="JumpToPage" Margin="5" Width="50" Height="25"
+                                         LostFocus="TextBox_LostFocus" TextChanged="TextBox_TextChanged" />
 
                             </StackPanel>
                         </Flyout>
@@ -85,29 +92,29 @@
 
             <Grid Visibility="{Binding Progress}" Background="Transparent" Canvas.ZIndex="99" Grid.Row="1"
                   Grid.Column="0" Grid.ColumnSpan="2">
-                <ProgressRing Foreground="{ThemeResource MainText}" Width="40" VerticalAlignment="Stretch"
-                              VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="40"
-                              IsActive="True" />
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ProgressRing Foreground="{ThemeResource MainText}" Width="40" Height="40"
+                                  IsActive="True" />
+                    <TextBlock Margin="0,20,0,0"  TextAlignment="Center" HorizontalAlignment="Center" Text="...loading" Foreground="White" FontSize="12" />
+
+                    <TextBlock Margin="0,20,0,0" TextAlignment="Center" HorizontalAlignment="Center" Text="{Binding SelectedBook.Title}" Foreground="White" FontSize="14" />
+                </StackPanel>
             </Grid>
 
             <Grid Visibility="{Binding BookMarksVisibility}" Grid.Column="0" Grid.Row="1" Width="350"
                   HorizontalAlignment="Stretch">
-
-                <ListView ItemClick="listView_ItemClick_1" x:Name="listView" IsItemClickEnabled="True" >
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Height" Value="10" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            
-                            <TextBlock FontSize="12" Padding="0" Margin="0" Text="{Binding}" />
-                            
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
+                <ScrollViewer Background="#1D1D1D" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl x:Name="listView" ItemsSource="{Binding BMarks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Padding="0" Margin="20,10,20,10">
+                                    <TextBlock Foreground="White" FontSize="12" Text="{Binding}"
+                                               TextTrimming="CharacterEllipsis" Tapped="TextBlock_Tapped" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
 
 
@@ -147,27 +154,31 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
+
                             <Grid HorizontalAlignment="Center" Tapped="Grid_Tapped" DoubleTapped="Grid_DoubleTapped">
                                 <Grid Canvas.ZIndex="2000" HorizontalAlignment="Left" VerticalAlignment="Top"
                                       Width="30" Height="30" Background="Black">
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
                                                Text="{Binding PageNumber}" Foreground="White" />
                                 </Grid>
-                                <Button Background="{ThemeResource CommandBarBackground}" Width="80" Height="80" Opacity="{Binding BookMark,Converter={StaticResource InvertBoolVisibilityConverter}}"
+                                <Button Background="{ThemeResource CommandBarBackground}" Width="80" Height="80"
+                                        Opacity="{Binding BookMark,Converter={StaticResource InvertBoolVisibilityConverter}}"
                                         Command="{Binding DataContext.BookMarkCommand, ElementName=lv}"
                                         CommandParameter="{Binding PageIndex}" HorizontalAlignment="Right"
                                         Canvas.ZIndex="2000" VerticalAlignment="Top" Content="" />
-                                
+
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
                                         Width="{Binding Width}">
-                                    <Grid Background="Black" HorizontalAlignment="Center"
+                                    <Grid Background="White" HorizontalAlignment="Center"
                                           Height="{Binding Height}" Width="{Binding Width}" />
+
                                 </Border>
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
                                         Width="{Binding Width}">
                                     <Image Source="{Binding ImageSourceVsisForeground}" HorizontalAlignment="Center"
                                            Height="{Binding Height}" Width="{Binding Width}" />
                                 </Border>
+
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -180,7 +191,8 @@
                         ValueChanged="slider_ValueChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Grid>-->
 
-            <Grid Visibility="{Binding FullScreen, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="{ThemeResource CommandBarBackground}">
+            <Grid Visibility="{Binding FullScreen, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="3"
+                  Grid.Column="0" Grid.ColumnSpan="2" Height="40" Background="{ThemeResource CommandBarBackground}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="0.5*" />
@@ -188,24 +200,28 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                  
+
                     <TextBlock VerticalAlignment="Center"
                                Text="{Binding CurrentPage, Converter={StaticResource PageNumberConverter}}"
-                               FontSize="14" HorizontalAlignment="Left" Foreground="{ThemeResource CommandBarForeground}" />
+                               FontSize="14" HorizontalAlignment="Left"
+                               Foreground="{ThemeResource CommandBarForeground}" />
                     <TextBlock VerticalAlignment="Center"
                                Text="{Binding PageCount, Converter={StaticResource PageNumberConverter2}}"
-                               FontSize="14" HorizontalAlignment="Left" Margin="0,0,20,0" Foreground="{ThemeResource CommandBarForeground}" />
+                               FontSize="14" HorizontalAlignment="Left" Margin="0,0,20,0"
+                               Foreground="{ThemeResource CommandBarForeground}" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left">
-                    <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{Binding SelectedBook.Title}" FontSize="14"
-                               HorizontalAlignment="Right" Margin="20,0,20,0" Foreground="{ThemeResource CommandBarForeground}"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding SelectedBook.Title}" FontSize="14"
+                               HorizontalAlignment="Right" Margin="20,0,20,0"
+                               Foreground="{ThemeResource CommandBarForeground}" />
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0,0,20,0"
                                Foreground="{ThemeResource RatingStars}"
                                Text="{Binding SelectedBook.Rating, Converter={StaticResource StarRatingConverter}}"
                                FontFamily="Segoe MDL2 Assets" />
                 </StackPanel>
-                <Button Grid.Column="0" Background="{ThemeResource NavBarBackground}"  Height="40" Width="50" Command="{Binding ToggleBookMarksCommand}" />
+                <Button Grid.Column="0" Background="{ThemeResource NavBarBackground}" Height="40" Width="50"
+                        Command="{Binding ToggleBookMarksCommand}" />
             </Grid>
         </Grid>
     </Grid>
