@@ -4,6 +4,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:viewModels="using:Bookie.ViewModels"
+      xmlns:popups="using:Windows.UI.Popups"
       mc:Ignorable="d">
     <Page.Resources>
         <Flyout x:Key="myFlyout" Placement="Top">
@@ -14,7 +15,9 @@
         <viewModels:ShellViewModel />
     </Page.DataContext>
 
+
     <Grid>
+
         <SplitView x:Name="MySplitView"
                    IsPaneOpen="False"
                    CompactPaneLength="60"
@@ -56,7 +59,6 @@
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid>
-
                     <!-- Navigation Frame -->
                     <Frame x:Name="SplitViewFrame" Background="{ThemeResource MainBackground}"  FlyoutBase.AttachedFlyout="{StaticResource myFlyout}">
                         <Frame.ContentTransitions>

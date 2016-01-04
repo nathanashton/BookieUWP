@@ -31,9 +31,9 @@ namespace Bookie.ViewModels
             }
         }
 
-        private List<string> _bMarks;
+        private List<BMark> _bMarks;
 
-        public List<string> BMarks
+        public List<BMark> BMarks
         {
             get { return _bMarks; }
             set { _bMarks = value;
@@ -77,7 +77,7 @@ namespace Bookie.ViewModels
             _bookMarkService = new BookMarkService(new BookMarkRepository());
             _bookService = new BookService(new BookRepository());
             BookMarksVisibility = Visibility.Collapsed;
-            BMarks = new List<string>();
+            BMarks = new List<BMark>();
         }
 
         public PdfLoadedDocument doc

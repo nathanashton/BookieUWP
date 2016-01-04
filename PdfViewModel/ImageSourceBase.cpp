@@ -68,6 +68,7 @@ namespace PdfViewModel
 				params.DestinationWidth = pageRect.right - pageRect.left;
 
 				params.BackgroundColor = D2D1::ColorF(D2D1::ColorF::White);
+				
 
 				// When this flag is set to FALSE high contrast mode will be honored by PDF API's
 				params.IgnoreHighContrast = FALSE;

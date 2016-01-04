@@ -27,9 +27,15 @@ namespace Bookie.Views
 
 
             ShellViewModel.ShowMessageEvent += ShellViewModel_ShowMessageEvent1;
+           ShellViewModel.ShowMessageDialogEvent += ShellViewModel_ShowMessageDialogEvent;
             GoToViewerEvent += Shell_GoToViewerEvent;
 
 
+        }
+
+        private void ShellViewModel_ShowMessageDialogEvent(Common.EventArgs.BookieMessageEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public static void GoToViewer()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Bookie.Common.EventArgs;
 using Bookie.Common.Model;
@@ -48,6 +49,9 @@ namespace Bookie.ViewModels
 
         public static event MessageHandler ShowMessageEvent;
 
+        public static event MessageHandler ShowMessageDialogEvent;
+
+
         public static List<Book> Books;
 
         public static void ShowMessage(string message, string moredetails)
@@ -58,6 +62,11 @@ namespace Bookie.ViewModels
             }
         }
 
+        public static async void ShowMessageDialog(string message)
+        {
+            MessageDialog m = new MessageDialog(message);
+            await m.ShowAsync();
+        }
 
         public ElementTheme Theme
         {

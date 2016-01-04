@@ -41,28 +41,48 @@ namespace Bookie.Views
 
         private void AddBookMark(PdfLoadedBookmark bookmark)
         {
+            // no nested bookmarks so add it
             if (bookmark.Count == 0)
             {
-                ViewModel.BMarks.Add(bookmark.Title);
-                _bookmarksDictionary.Add(bookmark.Title, bookmark);
+                var bmark = new BMark();
+                bmark.Description = bookmark.Title;
+                bmark.BookMark = bookmark;
+
+                ViewModel.BMarks.Add(bmark);
+
+               // _bookmarksDictionary.Add(bookmark.Title, bookmark);
             }
             else
             {
                 if (ViewModel.BMarks.Count == 0) return;
-                ViewModel.BMarks.Add(bookmark.Title);
-                _bookmarksDictionary.Add(bookmark.Title, bookmark);
+
+                //has nested bookmarks so add it then loop through its children doing the same.
+                var bmark = new BMark();
+                bmark.Description = bookmark.Title;
+                bmark.BookMark = bookmark;
+                ViewModel.BMarks.Add(bmark);
+
+               // _bookmarksDictionary.Add(bookmark.Title, bookmark);
+
                 foreach (PdfLoadedBookmark value in bookmark)
                 {
                     if (value.Count == 0)
                     {
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append(bookmark.Title);
-                        sb.Append(Environment.NewLine);
-                        sb.Append("   ");
-                        sb.Append(value.Title);
+                        var bmark2 = new BMark();
+                        bmark2.Description = value.Title;
+                        bmark2.BookMark = value;
+                       // ViewModel.BMarks.Add("\t" + bookmark.Title);
+                        ViewModel.BMarks.Add(bmark2);
 
-                        ViewModel.BMarks.Add(sb.ToString());
-                        _bookmarksDictionary.Add(sb.ToString(), value);
+
+                        //StringBuilder sb = new StringBuilder();
+                        //sb.Append("title: " + bookmark.Title);
+                        //sb.Append(Environment.NewLine);
+                        //sb.Append("-->");
+                        //sb.Append("value: " + value.Title);
+
+                        //ViewModel.BMarks.Add(sb.ToString());
+                       // _bookmarksDictionary.Add(sb.ToString(), value);
                     }
                     else
                     {

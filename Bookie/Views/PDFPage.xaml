@@ -107,8 +107,8 @@
                     <ItemsControl x:Name="listView" ItemsSource="{Binding BMarks}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Padding="0" Margin="20,10,20,10">
-                                    <TextBlock Foreground="White" FontSize="12" Text="{Binding}"
+                                <StackPanel Padding="0" Margin="20,10,20,0">
+                                    <TextBlock Foreground="White" FontSize="12" Text="{Binding Description}"
                                                TextTrimming="CharacterEllipsis" Tapped="TextBlock_Tapped" />
                                 </StackPanel>
                             </DataTemplate>
@@ -176,7 +176,9 @@
                                 <Border BorderBrush="Black" BorderThickness="1" Height="{Binding Height}"
                                         Width="{Binding Width}">
                                     <Image Source="{Binding ImageSourceVsisForeground}" HorizontalAlignment="Center"
-                                           Height="{Binding Height}" Width="{Binding Width}" />
+                                           Height="{Binding Height}" Width="{Binding Width}" >
+
+                                    </Image>
                                 </Border>
 
                             </Grid>

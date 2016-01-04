@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="Black">
+    <Grid Background="#2b2b2b">
         <Canvas>
             <Image x:Name="extendedSplashImage" Source="ms-appx:///Assets/SplashScreen.png" />
 

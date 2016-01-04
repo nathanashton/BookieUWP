@@ -49,6 +49,7 @@ namespace PdfViewModel
 		{
 			sisNative = vsisNative; // save the native image surface in the base class
 			ComPtr<IDXGIDevice> dxgiDevice;
+			
 			pdfViewContext->Renderer->GetDXGIDevice(&dxgiDevice);
 			if (dxgiDevice != nullptr)
 			{
@@ -109,7 +110,7 @@ namespace PdfViewModel
 			{
 				ULONG drawingBoundsCount = 0;
 				DX::ThrowIfFailed(vsisNative->GetUpdateRectCount(&drawingBoundsCount));
-
+				
 				std::unique_ptr<RECT[]> drawingBounds(new RECT[drawingBoundsCount]);
 				DX::ThrowIfFailed(vsisNative->GetUpdateRects(drawingBounds.get(), drawingBoundsCount));
 

@@ -120,6 +120,7 @@ namespace PdfViewModel
 		// image composition or sub-pixel animation of text. ClearType is still a method of choice when it
 		// comes to direct rendering of text to the destination surface with no subsequent composition required.
 		d2dDeviceContext->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
+//		d2dDeviceContext->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
 
 		DX::ThrowIfFailed(
 			PdfCreateRenderer(dxgiDevice.Get(), &pdfRenderer)

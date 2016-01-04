@@ -1,8 +1,4 @@
-﻿using Bookie.Common;
-using Bookie.Common.EventArgs;
-using Bookie.Common.Model;
-using Bookie.ViewModels;
-using System;
+﻿using System;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -14,8 +10,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Bookie.Common;
+using Bookie.Common.EventArgs;
+using Bookie.Common.Model;
+using Bookie.ViewModels;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Bookie.Views
 {
@@ -26,9 +25,13 @@ namespace Bookie.Views
     {
         private readonly Brush _gridBrushColor = new SolidColorBrush(Color.FromArgb(255, 43, 43, 43));
         private readonly Brush _shelfBrushColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
-        private int columnCount = 8;
 
-        private MainPageViewModel viewmodel;
+        private double _offsetPosition;
+
+        private ScrollViewer _scroll;
+        private int _columnCount = 8;
+
+        private MainPageViewModel _viewmodel;
 
         public MainPage()
         {
@@ -45,14 +48,6 @@ namespace Bookie.Views
             localSettings.Values["OffsetPosition"] = _offsetPosition;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-        }
-
-        private ScrollViewer _scroll;
-
-        private double _offsetPosition;
-
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
         {
             Window.Current.SizeChanged += Current_SizeChanged;
@@ -64,18 +59,14 @@ namespace Bookie.Views
             DetermineVisualState();
             if (DataContext == null)
             {
-                viewmodel = new MainPageViewModel();
+                _viewmodel = new MainPageViewModel();
             }
-            viewmodel = DataContext as MainPageViewModel;
-            viewmodel.ShelfVisibility = Visibility.Collapsed;
+            _viewmodel = DataContext as MainPageViewModel;
+            if (_viewmodel != null)
+            {
+                _viewmodel.ShelfVisibility = Visibility.Collapsed;
+            }
             UpdateLettersWidths();
-
-            //var scrollViewer = booksGridView.GetFirstDescendantOfType<ScrollViewer>();
-
-            //var scrollbars = scrollViewer.GetDescendantsOfType<ScrollBar>().ToList();
-
-            //var verticalBar = scrollbars.FirstOrDefault(x => x.Orientation == Orientation.Vertical);
-            //verticalBar.Scroll += VerticalBar_Scroll;
         }
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
@@ -86,24 +77,24 @@ namespace Bookie.Views
 
         private void UpdateLettersWidths()
         {
-            if (viewmodel == null) return;
+            if (_viewmodel == null) return;
             if (ActualWidth > 20)
             {
                 var s = ActualWidth - 20;
-                viewmodel.LetterWidth = s / 27;
+                _viewmodel.LetterWidth = s/27;
             }
             else
             {
                 // We are in the Viewer
                 var s = 20;
-                viewmodel.LetterWidth = s / 27;
+                _viewmodel.LetterWidth = s/27;
             }
         }
 
         private void DetermineVisualState()
         {
             var applicationView = ApplicationView.GetForCurrentView();
-            columnCount = applicationView.Orientation == ApplicationViewOrientation.Landscape ? 8 : 4;
+            _columnCount = applicationView.Orientation == ApplicationViewOrientation.Landscape ? 8 : 4;
             UpdateLettersWidths();
         }
 
@@ -112,60 +103,38 @@ namespace Bookie.Views
             UpdateLettersWidths();
         }
 
-        private async void AppBarButton_Tapped_3(object sender, TappedRoutedEventArgs e)
+        private void AppBarButton_Tapped_3(object sender, TappedRoutedEventArgs e)
         {
-            if (viewmodel.ShelfHeight == 0)
-            {
-                viewmodel.ShelfHeight = 198;
-            }
-            else
-            {
-                viewmodel.ShelfHeight = 0;
-            }
+            ShellViewModel.ShowMessageDialog("Test message");
+            _viewmodel.ShelfHeight = _viewmodel.ShelfHeight == 0 ? 198 : 0;
         }
 
         private void MessagingService_messages(object sender, BookieMessageEventArgs e)
         {
+            throw new NotImplementedException("Messaging Service");
         }
 
         private async void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            //try
-            //{
-            //    var t = (Book) (e.OriginalSource as Canvas).DataContext;
-            //    viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
-            //    FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-            //}
-            //catch (Exception)
-            //{
-            //    var t = (Book) (e.OriginalSource as TextBlock).DataContext;
-            //    viewmodel.SelectedBook = viewmodel.FilteredBooks.FirstOrDefault(x => x.Id == t.Id);
-            //    FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-            //}
-            viewmodel.BookDetailsVisibility = Visibility.Visible;
-            viewmodel.EditBookVisibility = Visibility.Collapsed;
-
+            _viewmodel.BookDetailsVisibility = Visibility.Visible;
+            _viewmodel.EditBookVisibility = Visibility.Collapsed;
             await BookDetailsPopup.ShowAsync();
-        }
-
-        private async void Button_Tapped(object sender, TappedRoutedEventArgs e)
-        {
         }
 
         private void EditPopup_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             if (cbox.IsChecked == false)
             {
-                viewmodel.SelectedBook.DatePublished = null;
+                _viewmodel.SelectedBook.DatePublished = null;
             }
 
-            viewmodel.UpdateBook(viewmodel.SelectedBook);
+            _viewmodel.UpdateBook(_viewmodel.SelectedBook);
             var a = new BookEventArgs
             {
-                Book = viewmodel.SelectedBook,
+                Book = _viewmodel.SelectedBook,
                 State = BookEventArgs.BookState.Updated
             };
-            viewmodel.BookChanged(this, a);
+            _viewmodel.BookChanged(this, a);
             tbutton.IsChecked = false;
         }
 
@@ -195,8 +164,7 @@ namespace Bookie.Views
 
         private void ggview_DragEnter_1(object sender, DragEventArgs e)
         {
-            viewmodel.BooksScroll = ScrollMode.Disabled;
-
+            DisableScroll();
             // Drag over shelf
             object sourceItem;
             object s;
@@ -208,31 +176,30 @@ namespace Bookie.Views
             // If it is being dragged back onto the shelf, do nothing an return
             if (sender == s)
             {
-                viewmodel.ShelfBrush = _shelfBrushColor;
+                _viewmodel.ShelfBrush = _shelfBrushColor;
                 e.Handled = true;
                 return;
             }
 
             e.Data.Properties.TryGetValue("item", out sourceItem);
             var existsInShelf =
-                viewmodel.ShelfBooks.FirstOrDefault(
-                    x => x.FullPathAndFileName == ((Book)sourceItem).FullPathAndFileName);
+                _viewmodel.ShelfBooks.FirstOrDefault(
+                    x => x.FullPathAndFileName == ((Book) sourceItem).FullPathAndFileName);
             if (existsInShelf != null)
             {
                 // Item already exists on shelf
-                viewmodel.ShelfBrush = new SolidColorBrush(Colors.Red);
+                _viewmodel.ShelfBrush = new SolidColorBrush(Colors.Red);
                 e.AcceptedOperation = DataPackageOperation.None;
                 return;
             }
             // Doesnt exist on shelf so add, and show green highlight
             e.AcceptedOperation = DataPackageOperation.Copy;
-            viewmodel.ShelfBrush = new SolidColorBrush(Colors.DarkOliveGreen);
+            _viewmodel.ShelfBrush = new SolidColorBrush(Colors.DarkOliveGreen);
         }
 
         private void gview_DragEnter(object sender, DragEventArgs e)
         {
-            viewmodel.BooksScroll = ScrollMode.Disabled;
-
+            DisableScroll();
             //Drag from shelf back to main
             object sourceItem;
             object s;
@@ -243,33 +210,42 @@ namespace Bookie.Views
             // If it is being dragged back onto the shelf, do nothing an return
             if (sender == s)
             {
-                viewmodel.ShelfBrush = _shelfBrushColor;
-                viewmodel.GridBrush = _gridBrushColor;
+                _viewmodel.ShelfBrush = _shelfBrushColor;
+                _viewmodel.GridBrush = _gridBrushColor;
                 e.Handled = true;
                 return;
             }
 
             e.Data.Properties.TryGetValue("item", out sourceItem);
             e.AcceptedOperation = DataPackageOperation.Move;
-            viewmodel.GridBrush = new SolidColorBrush(Colors.DarkOliveGreen);
+            _viewmodel.GridBrush = new SolidColorBrush(Colors.DarkOliveGreen);
+        }
+
+        private void DisableScroll()
+        {
+            _viewmodel.BooksScroll = ScrollMode.Disabled;
+        }
+
+        private void EnableScroll()
+        {
+            _viewmodel.BooksScroll = ScrollMode.Enabled;
         }
 
         private void gview_DragLeave(object sender, DragEventArgs e)
         {
-            viewmodel.BooksScroll = ScrollMode.Enabled;
-            viewmodel.GridBrush = _gridBrushColor;
+            _viewmodel.BooksScroll = ScrollMode.Enabled;
+            _viewmodel.GridBrush = _gridBrushColor;
         }
 
         private void ggview_DragLeave(object sender, DragEventArgs e)
         {
-            viewmodel.BooksScroll = ScrollMode.Enabled;
-            viewmodel.ShelfBrush = _shelfBrushColor;
+            _viewmodel.BooksScroll = ScrollMode.Enabled;
+            _viewmodel.ShelfBrush = _shelfBrushColor;
         }
 
         private void gview_Drop(object sender, DragEventArgs e)
         {
-            viewmodel.BooksScroll = ScrollMode.Enabled;
-
+            EnableScroll();
             object gridSource;
             e.Data.Properties.TryGetValue("gridSource", out gridSource);
 
@@ -281,26 +257,27 @@ namespace Bookie.Views
             if (sourceItem == null)
                 return;
 
-            viewmodel.ShelfBrush = _shelfBrushColor;
-            viewmodel.GridBrush = _gridBrushColor;
+            _viewmodel.ShelfBrush = _shelfBrushColor;
+            _viewmodel.GridBrush = _gridBrushColor;
 
             //Remove it from shelf
-            var book = (Book)sourceItem;
-            viewmodel.ShelfBooks.Remove(book);
+            var book = (Book) sourceItem;
+            _viewmodel.ShelfBooks.Remove(book);
             book.Shelf = false;
 
-            var a = new BookEventArgs();
-            a.Book = book;
-            a.State = BookEventArgs.BookState.Updated;
-            viewmodel.BookChanged(this, a);
-            viewmodel.UpdateBook(book);
+            var a = new BookEventArgs
+            {
+                Book = book,
+                State = BookEventArgs.BookState.Updated
+            };
+            _viewmodel.BookChanged(this, a);
+            _viewmodel.UpdateBook(book);
             ShellViewModel.ShowMessage("Removed from shelf", null);
         }
 
         private void ggview_Drop(object sender, DragEventArgs e)
         {
-            viewmodel.BooksScroll = ScrollMode.Enabled;
-
+            EnableScroll();
             object gridSource;
             e.Data.Properties.TryGetValue("gridSource", out gridSource);
 
@@ -312,146 +289,96 @@ namespace Bookie.Views
             if (sourceItem == null)
                 return;
 
-            viewmodel.ShelfBrush = _shelfBrushColor;
-            viewmodel.GridBrush = _gridBrushColor;
+            _viewmodel.ShelfBrush = _shelfBrushColor;
+            _viewmodel.GridBrush = _gridBrushColor;
 
-            var book = (Book)sourceItem;
-            viewmodel.ShelfBooks.Add(book);
+            var book = (Book) sourceItem;
+            _viewmodel.ShelfBooks.Add(book);
             book.Shelf = true;
-            var a = new BookEventArgs();
-            a.Book = book;
-            a.State = BookEventArgs.BookState.Updated;
-            viewmodel.BookChanged(this, a);
-            viewmodel.UpdateBook(book);
+            var a = new BookEventArgs
+            {
+                Book = book,
+                State = BookEventArgs.BookState.Updated
+            };
+            _viewmodel.BookChanged(this, a);
+            _viewmodel.UpdateBook(book);
             ShellViewModel.ShowMessage("Added to shelf", null);
         }
 
         private void gview_DropCompleted(UIElement sender, DropCompletedEventArgs args)
         {
-            viewmodel.BooksScroll = ScrollMode.Enabled;
-            viewmodel.ShelfBrush = _shelfBrushColor;
-            viewmodel.GridBrush = _gridBrushColor;
+            EnableScroll();
+            _viewmodel.ShelfBrush = _shelfBrushColor;
+            _viewmodel.GridBrush = _gridBrushColor;
         }
 
         private void ggview_DropCompleted(UIElement sender, DropCompletedEventArgs args)
         {
-            viewmodel.BooksScroll = ScrollMode.Enabled;
-            viewmodel.ShelfBrush = _shelfBrushColor;
-            viewmodel.GridBrush = _gridBrushColor;
+            EnableScroll();
+            _viewmodel.ShelfBrush = _shelfBrushColor;
+            _viewmodel.GridBrush = _gridBrushColor;
         }
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var book = (Book)(sender as Grid).DataContext;
-            viewmodel.SelectedBook = book;
-            booksGridView.ScrollIntoView(viewmodel.SelectedBook);
+            var grid = sender as Grid;
+            if (grid == null) return;
+            var book = (Book) grid.DataContext;
+            _viewmodel.SelectedBook = book;
+            booksGridView.ScrollIntoView(_viewmodel.SelectedBook);
         }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             if (booksGridView.Items == null) return;
-
-            var s = (ScrollViewer)sender;
-            _scroll = s;
-            var offset = s.VerticalOffset;
+            _scroll = (ScrollViewer) sender;
+            var offset = _scroll.VerticalOffset;
             offset -= 1;
 
             _offsetPosition = offset;
 
-            var index = ((int)offset - 1) * columnCount;
-
+            var index = ((int) offset - 1)*_columnCount;
             var item = booksGridView.Items[index];
-
-            if (item != null)
-            {
-                var letter = (item as Book).Title.ToCharArray();
-                var letter2 = letter[0].ToString().ToLower();
-                if (viewmodel != null)
-                {
-                    viewmodel.SelectLetter(letter2);
-                }
-            }
-        }
-
-        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-        {
-            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(obj, i);
-
-                if (child is T)
-                {
-                    return (T)child;
-                }
-                child = FindVisualChild<T>(child);
-                if (child != null)
-                {
-                    return (T)child;
-                }
-            }
-            return null;
+            if (item == null) return;
+            var titleLetterArray = (item as Book).Title.ToCharArray();
+            var letterLowerCase = titleLetterArray[0].ToString().ToLower();
+            _viewmodel?.SelectLetter(letterLowerCase);
         }
 
         private void Grid_Tapped_1(object sender, TappedRoutedEventArgs e)
         {
-            var t = (sender as Grid).DataContext;
-            var book = t as Letter;
-            var lower = book.Name.ToLower();
+            var grid = sender as Grid;
+            if (grid == null) return; 
+            var letter = grid.DataContext as Letter;
+            if (letter == null) return;
+            var lower = letter.Name.ToLower();
             var found =
-                viewmodel.FilteredBooks.FirstOrDefault(x => x.Title.ToCharArray()[0].ToString().ToLower() == lower);
+                _viewmodel.FilteredBooks.FirstOrDefault(x => x.Title.ToCharArray()[0].ToString().ToLower() == lower);
             if (found == null) return;
-            viewmodel.SelectLetter(lower);
+            _viewmodel.SelectLetter(lower);
             booksGridView.ScrollIntoView(found);
         }
 
         private void Flyout_Closed(object sender, object e)
         {
-            viewmodel.Filter();
-        }
-
-        private ScrollViewer FindScrollViewer(DependencyObject d)
-        {
-            if (d is ScrollViewer)
-                return d as ScrollViewer;
-
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
-            {
-                var sw = FindScrollViewer(VisualTreeHelper.GetChild(d, i));
-                if (sw != null) return sw;
-            }
-            return null;
-        }
-
-        private void booksGridView_Loaded(object sender, RoutedEventArgs e)
-        {
-            //var localSettings = ApplicationData.Current.LocalSettings;
-            //var offset = localSettings.Values["OffsetPosition"];
-            //if (offset != null)
-            //{
-            //}
-        }
+            _viewmodel.Filter();
+        }  
 
         private void Button_Tapped_1(object sender, TappedRoutedEventArgs e)
         {
             Shell.GoToViewer();
         }
 
-        private void ToggleButton_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-        }
-
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            viewmodel.BookDetailsVisibility = Visibility.Collapsed;
-            viewmodel.EditBookVisibility = Visibility.Visible;
-
-
+            _viewmodel.BookDetailsVisibility = Visibility.Collapsed;
+            _viewmodel.EditBookVisibility = Visibility.Visible;
         }
 
         private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            viewmodel.BookDetailsVisibility = Visibility.Visible;
-            viewmodel.EditBookVisibility = Visibility.Collapsed;
+            _viewmodel.BookDetailsVisibility = Visibility.Visible;
+            _viewmodel.EditBookVisibility = Visibility.Collapsed;
         }
 
         private void BookDetailsPopup_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
